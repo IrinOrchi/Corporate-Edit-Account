@@ -17,14 +17,14 @@ import { AuthService } from '../../Services/shared/auth.service';
 import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespaceValidator, noBlacklistCharacters, companyAddressValidator } from '../../utils/validators';
 import { Router } from '@angular/router';
 @Component({
-  selector: 'app-create-account-page',
+  selector: 'app-edit-account-page',
   standalone: true,
   imports: [MathCaptchaComponent,PricingPolicyComponent,RadioGroupComponent,InputFieldComponent,
     TextAreaComponent,ReactiveFormsModule,CommonModule,ErrorModalComponent,MathCaptchaComponent,AddIndustryModalComponent],
-  templateUrl: './create-account-page.component.html',
-  styleUrls: ['./create-account-page.component.scss']
+  templateUrl: './edit-account-page.component.html',
+  styleUrls: ['./edit-account-page.component.scss']
 })
-export class CreateAccountPageComponent implements OnInit {
+export class EditAccountPageComponent implements OnInit {
   filePath = filePath;
   countrie = countrie;
   disabilities = disabilities;
