@@ -1,0 +1,24 @@
+<div class="mb-[20px]">
+  <label [for]="id" class="text-gray-700 text-[16px] font-inter">
+    {{ label }}
+    <span ngIf="isRequired" class="text-red-600"></span>
+  </label>
+  <textarea
+  class="flex  items-center font-[16px]  gap-2 px-4 py-3.5 font-inter w-full rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
+    [name]="name"
+    [id]="id"
+    [placeholder]="placeholder"
+    [maxLength]="maxLength"
+    [formControl]="control"
+    rows="2"
+  ></textarea>
+</div>
+<style>
+  textarea::placeholder {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    
+  }
+</style>

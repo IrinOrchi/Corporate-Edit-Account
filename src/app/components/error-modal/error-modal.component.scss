@@ -1,0 +1,15 @@
+/* Modal background overlay */
+.modal-overlay {
+    @apply fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50;
+  }
+  
+  /* Modal box styling */
+  .modal-box {
+    @apply bg-white rounded-lg shadow-xl p-6 sm:max-w-lg sm:w-full;
+  }
+  
+  /* OK Button styling */
+  .ok-button {
+    @apply bg-blue-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-600;
+  }
+  

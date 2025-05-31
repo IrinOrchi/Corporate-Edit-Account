@@ -1,0 +1,69 @@
+.error-message {
+    color: #e3342f;
+    font-size: 0.875rem; 
+    margin-top: -14px; 
+    display: block; 
+    margin-bottom: 24px;
+  }
+  
+  .your-container {
+    @apply bg-[#F9FAFB] w-[1750px] h-[3022px];
+  }
+
+
+  .row {
+    background-image: url('/public/assets/images/disability.svg'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+}
+.question {
+  color: #212121;
+  font-size: 16px; 
+  font-weight: 500; 
+  line-height: 1.5rem; 
+  letter-spacing: 0.02em; 
+  font-family: 'Inter', sans-serif;
+}
+.error-border {
+  border: 2px solid red;
+}
+
+.industry-list {
+  max-height: 150px; /* Initial max height */
+  overflow-y: hidden; /* Hidden scroll initially */
+  transition: max-height 0.3s ease-in-out;
+}
+
+.industry-list.expanded {
+  max-height: 400px; /* Expanded max height */
+  overflow-y: auto; /* Enable scroll when expanded */
+}
+.custom-select option {
+  padding-left: 30px; /* Adjust as needed for flag width */
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 20px 20px; /* Adjust flag size */
+}
+
+@media (max-width: 320px) {
+  #resImg  {
+    background: url('/public/assets/images/midBackground.svg') no-repeat center;
+    background-size: cover;
+  }
+}
+.dropdown-container {
+  .dropdown-upwards {
+    bottom: 100%;
+    margin-bottom: 0.25rem;
+    top: auto;
+    margin-top: 0;
+  }
+
+  .dropdown-downwards {
+    top: 100%;
+    margin-top: 0.25rem;
+    bottom: auto;
+    margin-bottom: 0;
+  }
+}

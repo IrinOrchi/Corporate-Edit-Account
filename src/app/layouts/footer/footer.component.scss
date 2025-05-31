@@ -1,0 +1,73 @@
+
+
+.footer-component {
+    background-color: #f5fbff;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  
+    h2 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+  
+      @media (max-height: 1280px) {
+        font-size: 0.9rem;
+      }
+    }
+  }
+  
+  ul {
+    list-style: none;
+    padding-left: 0;
+  
+    // font-size: 1rem;
+  }
+  
+  li {
+    padding: 0.2rem 0;
+  
+    a {
+      text-decoration: none;
+      color: #263238;
+      transition: all 0.3s;
+  
+      &:hover {
+        color: #f57c00;
+      }
+    }
+  }
+  
+  .icon-container {
+    margin-bottom: 1rem;
+  }
+  
+  .store-badges {
+    img {
+      width: 7rem;
+      height: auto;
+      margin-top: 0.2rem;
+      margin-bottom: 0.2rem;
+      margin-right: 0.3rem;
+  
+      @media (max-height: 990px) {
+        width: 5rem;
+      }
+    }
+  }
+  
+  .footer-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-right: 0.5rem;
+  
+    @media (max-height: 1400px) {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+  
+  .brand-logo {
+    max-height: 2.5rem;
+    width: auto;
+    margin-bottom: 2rem;
+  }

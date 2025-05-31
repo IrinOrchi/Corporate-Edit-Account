@@ -1,0 +1,116 @@
+
+.bottom-footer-component {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 4rem;
+    background-color: #165273;
+    color: #fff;
+  
+    @media (max-width: 990px) {
+      height: unset;
+      min-height: 12rem;
+    }
+  }
+  
+  .footer-dropdown-text {
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    cursor: pointer;
+  
+    &:hover {
+      color: #f57c00;
+    }
+  
+    @media (max-width: 1400px) {
+      font-size: 0.75rem;
+    }
+  
+    @media (max-width: 1280px) {
+      font-size: 0.8rem;
+    }
+  
+    @media (max-width: 990px) {
+      margin-top: 0.3rem;
+      margin-bottom: 0.3rem;
+    }
+  
+    a {
+      text-decoration: none;
+      color: #fff;
+      transition: all 0.3s;
+  
+      &:hover {
+        color: #f57c00;
+      }
+    }
+  }
+  
+  .footer-dropdown-body {
+    background-color: #165273;
+  
+    .dropdown-item {
+      color: #fff;
+  
+      &:hover {
+        color: #263238;
+      }
+    }
+  }
+  
+  .support-text {
+    font-size: 1rem;
+    font-weight: 500;
+    
+    &:hover {
+      color: #f57c00;
+    }
+  
+    @media (max-width: 1420px) {
+      font-size: 0.7rem;
+    }
+  
+    @media (max-width: 992px) {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+    }
+  }
+  
+  .phone-number {
+    color: #f57c00;
+  
+    a {
+      text-decoration: none;
+      color: #f57c00;
+      transition: all 0.3s;
+  
+      &:hover {
+        color: #f57c00;
+      }
+  
+      &:visited {
+        color: #f57c00;
+      }
+    }
+  }
+  
+  .bottom-footer-icon {
+    width: 1.2rem;
+    margin-right: 0.3rem;
+    height: auto;
+  
+    @media (max-width: 1420px) {
+      width: 0.8rem;
+    }
+  }
+  
+  .otetherprt {
+    padding-left: 72px;
+  }
+  
+  @media screen and (max-width: 1200px) {
+    .otetherprt {
+      padding-left: 0px;
+    }
+  }

@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.form-group {
+  @apply mb-4;
+}
+body.no-scroll {
+  overflow: hidden;   
+  height: 100%;       
+  width: 100%;        
+}
+
+select.form-control, 
+textarea.form-control {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm;
+}
+
+select.form-control {
+  @apply appearance-none;
+}
+
+select.form-control[disabled], 
+textarea.form-control[disabled] {
+  @apply bg-gray-100;
+}
+
+textarea.form-control {
+  @apply resize-none h-28;
+}
+
+textarea[placeholder]::placeholder {
+  @apply italic text-gray-400;
+}
+
+textarea::placeholder {
+  @apply text-sm;
+}
+
+/* Specific for country, district, and thana */
+select.form-control option {
+  @apply text-gray-700;
+}
+
+/* This ensures proper styling for the dropdown arrows */
+.select-arrow {
+  @apply pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500;
+}
+
+.required-indicator {
+  @apply text-red-500;
+}
+
+.form-container {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+@media (min-width: 768px) {
+  .form-container {
+    @apply grid-cols-2 gap-6;
+  }
+}
+
+textarea::placeholder {
+  @apply text-sm text-gray-500;
+}
+
+textarea.form-control {
+  @apply leading-5;
+}
+
+textarea.form-control:focus {
+  @apply border-blue-500;
+}

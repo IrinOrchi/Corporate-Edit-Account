@@ -1,0 +1,216 @@
+<div class="flex items-center justify-between">
+  <h3 class="text-[#212121] font-inter text-[20px] font-semibold leading-[30px] mb-2">
+    Pricing Policy of Bdjobs.com recruitment services
+  </h3>
+  <button
+  type="button"
+   (click)="toggleContent('pricingPolicy')" class="flex items-center">
+    @if (visibility['pricingPolicy']) {
+      <img src="assets/images/Arrow.svg" alt="minus" class="w-[22px] h-[22px]" />
+    } @else {
+      <img src="assets/images/dropdown.svg" alt="minus" class="w-[22px] h-[22px]" />
+    }
+  </button>
+</div>
+
+@if (visibility['pricingPolicy']) {
+  <div class="mt-4">
+
+  <!-- Standard Listing Section -->
+<div class="flex flex-col w-full">
+  <div class="flex items-center justify-start w-full gap-2"> 
+ 
+    <div class="relative text-[#0F6DDB]">
+      <img src="assets/images/receipt.svg" alt="icon" class="w-6 h-6" />
+    </div>
+
+    <div class="text-[#0F6DDB] text-[24px] font-inter font-semibold leading-[36px]">
+      Standard Listing
+    </div>
+
+   
+    <button
+      type="button"
+      (click)="toggleContent('standardListing')"
+      class="flex items-center ml-auto"> 
+      @if (visibility['standardListing']) {
+        <img src="assets/images/Arrow.svg" alt="minus" class="w-[20px] h-[20px]" />
+      } @else {
+        <img src="assets/images/dropdown.svg" alt="minus" class="w-[20px] h-[20px]" />
+      }
+    </button>
+  </div>
+
+
+      <div class="flex items-end gap-1 mt-2">
+        <span class="text-[#212121] text-[36px] font-inter font-semibold">Tk 2,850</span>
+        <span class="text-[#212121] text-[16px] font-inter font-medium">Per job + 5% VAT</span>
+      </div>
+      <div class="w-[970px] text-[#212121] text-[16px] font-inter font-medium leading-[24px] break-words mt-2">
+        Jobs displayed in Category / Classified section for 30 days
+      </div>
+    </div>
+
+    @if (visibility['standardListing']) {
+      <div class="gap-4 mt-6">
+        <div class="text-[#212121] text-[20px] font-inter font-semibold leading-[36px]">
+          Bulk Subscription / Corporate Membership (CM)
+        </div>
+        <div class="text-[#212121] text-[16px] font-inter font-medium leading-[24px]">
+          <span>Publish your jobs as </span>
+          <span class="text-[#0F6DDB] font-semibold">Standard Listing</span>
+          <span> in the classified section and enjoy </span>
+          <span class="text-[#0F6DDB] font-bold">amazing</span>
+          <span> discounts!</span>
+        </div>
+        <div class="mt-4">
+          <img src="assets/images/Table 01.svg" class="flex flex-col items-start self-stretch w-full md:w-1/2 lg:w-full" />
+        </div>
+        <div class="mt-4">
+          <img src="assets/images/Table 02.svg" class="w-full md:w-1/2 lg:w-full flex flex-col items-start gap-[32px] self-stretch" />
+        </div>
+      </div>
+    }
+  </div>
+
+
+<div class="border-t border-[#DAE5EC] w-full my-4"></div>
+
+<!-- Premium Section -->
+<div class="flex items-center justify-between w-full gap-2">
+  
+  <div class="relative text-[#0F6DDB]">
+    <img src="assets/images/receipt.svg" alt="icon" class="w-6 h-6" />
+  </div>
+  <div class="text-[#0F6DDB] text-[24px] font-inter font-semibold leading-[36px]">
+    Premium
+  </div>
+  <button
+   type="button"
+   (click)="toggleContent('premium')" class="flex items-center ml-auto">
+    @if (visibility['premium']) {
+      <img src="assets/images/Arrow.svg" alt="minus" class="w-[20px] h-[20px]" />
+    } @else {
+      <img src="assets/images/dropdown.svg" alt="minus" class="w-[20px] h-[20px]" />
+    }
+  </button>
+</div>
+
+<div class="flex items-end gap-1 mt-2">
+  <span class="text-[#212121] text-[36px] font-inter font-semibold">Tk 3,900</span>
+  <span class="text-[#212121] text-[16px] font-inter font-medium">Per job + 5% VAT</span>
+</div>
+<div class="w-[970px] text-[#212121] text-[16px] font-inter font-medium leading-[24px] break-words mt-2">
+  Jobs displayed in Category / Classified section with Logo and different background color to make your jobs stand out among thousands of jobs listed on the site.
+</div>
+
+@if (visibility['premium']) {
+  <div class="gap-4 mt-6">
+    <div class="w-full max-w-[970px] h-[88px] flex flex-col justify-start items-start gap-2">
+      <div class="w-full text-[#0F6DDB] text-[24px] font-inter font-semibold leading-[36px] flex items-center gap-2">
+        <div class="relative text-[#0F6DDB]">
+          <img src="assets/images/receipt.svg" alt="icon" class="w-6 h-6" />
+        </div>
+        <span>Premium Plus</span>
+        <div class="bg-[#FFF1F3] px-2 py-[2px] rounded-[12px] text-[#C01048] text-[12px] font-inter font-semibold">
+          NEW
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-end gap-1 -mt-10">
+      <span class="text-[#212121] text-[36px] font-inter font-semibold">Tk 5,900</span>
+      <span class="text-[#212121] text-[16px] font-inter font-medium">Per job + 5% VAT</span>
+    </div>
+    <div class="w-[970px] text-[#212121] text-[16px] font-inter font-medium leading-[24px] break-words mt-2">
+      Keep your Stand-out jobs displayed on the first page of the respected job category for 10 days.
+    </div>
+
+    <div class="gap-4 mt-6">
+      <div class="text-[#212121] text-[20px] font-inter font-semibold leading-[36px]">
+        Bulk Subscription / Corporate Membership (CM)
+      </div>
+      <div class="text-[#212121] text-[16px] font-inter font-medium leading-[24px]">
+        <span>Publish your jobs as </span>
+        <span class="text-[#0F6DDB] font-semibold">Stand-Out</span>
+        <span> in the classified section and enjoy </span>
+        <span class="text-[#0F6DDB] font-bold">amazing</span>
+        <span> discounts!</span>
+      </div>
+      <div class="mt-4">
+        <img src="assets/images/Premium - Table 1.svg" class="flex flex-col items-start self-stretch w-full md:w-1/2 lg:w-full" />
+      </div>
+      <div class="mt-4">
+        <img src="assets/images/PremiumTable 02.svg" class="w-full md:w-1/2 lg:w-full flex flex-col items-start gap-[32px] self-stretch" />
+      </div>
+    </div>
+  </div>
+}
+
+<div class="border-t border-[#DAE5EC] w-full my-4"></div>
+
+<!-- Hot Jobs Section -->
+<div class="flex items-center justify-between w-full gap-2">
+  <div class="relative text-[#0F6DDB]">
+    <img src="assets/images/receipt.svg" alt="icon" class="w-6 h-6" />
+  </div>
+  <div class="text-[#0F6DDB] text-[24px] font-inter font-semibold leading-[36px]">
+    Hot Jobs
+  </div>
+  <button 
+  type="button"
+  (click)="toggleContent('hotJobs')" class="flex items-center ml-auto">
+    @if (visibility['hotJobs']) {
+      <img src="assets/images/Arrow.svg" alt="minus" class="w-[20px] h-[20px]" />
+    } @else {
+      <img src="assets/images/dropdown.svg" alt="minus" class="w-[20px] h-[20px]" />
+    }
+  </button>
+</div>
+
+<div class="w-[970px] text-[#212121] text-[16px] font-inter font-medium leading-[24px] break-words mt-2">
+  Display your company logo and position name on the homepage of
+  <a href="https://www.bdjobs.com/" target="_blank" class="text-[#0F6DDB] underline">https://www.bdjobs.com</a> - linked with a custom-designed web page for your job announcements.
+  These jobs will also be displayed in the classified section as Stand-out jobs.
+</div>
+
+@if (visibility['hotJobs']) {
+  <div class="gap-4 mt-6">
+    <div class="mt-4">
+      <img src="assets/images/HotJobs.svg" class="flex flex-col items-start self-stretch w-full md:w-1/2 lg:w-full" />
+    </div>
+  </div>
+}
+
+<div class="border-t border-[#DAE5EC] w-full my-4"></div>
+
+<!-- CV Bank Access Section -->
+<div class="flex items-center justify-between w-full gap-2">
+  <div class="relative text-[#0F6DDB]">
+    <img src="assets/images/document-text.svg" alt="icon" class="w-6 h-6" />
+  </div>
+  <div class="text-[#0F6DDB] text-[24px] font-inter font-semibold leading-[36px]">
+    CV Bank Access Service
+  </div>
+  <button
+  type="button" (click)="toggleContent('cvBankAccess')" class="flex items-center ml-auto">
+    @if (visibility['cvBankAccess']) {
+      <img src="assets/images/Arrow.svg" alt="minus" class="w-[20px] h-[20px]" />
+    } @else {
+      <img src="assets/images/dropdown.svg" alt="minus" class="w-[20px] h-[20px]" />
+    }
+  </button>
+</div>
+
+<div class="w-[970px] text-[#212121] text-[16px] font-inter font-medium leading-[24px] break-words mt-2">
+  Get direct to the <span class="text-[#0F6DDB] font-semibold">largest Database of Professionals</span> in the country. We are currently hosting more than  <span class="text-[#0F6DDB] font-semibold">2,300,000</span> CVs of different professionals.
+</div>
+ @if (visibility['cvBankAccess']) {
+  <div class="gap-4 mt-6">
+  <div class="mt-4">
+    <img src="assets/images/CvBankAccess.svg" class="flex flex-col items-start self-stretch w-full md:w-1/2 lg:w-full" />
+  </div>
+</div>
+ }
+}
+<div class="border-t border-[#DAE5EC] w-full my-4"></div>

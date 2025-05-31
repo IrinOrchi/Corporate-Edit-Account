@@ -1,0 +1,15 @@
+<button
+  class="fixed bottom-[50px] right-[10px] px-3 py-2 mb-0 text-sm font-normal leading-[1.42857143] text-center whitespace-nowrap align-middle select-none rounded-md bg-gray-700 text-white shadow-md transition-all duration-200 cursor-pointer z-20 block
+  lg:bottom-[30px] lg:right-[20px]
+  md:bottom-[40px] md:right-[15px] md:px-2 md:py-1 md:text-xs
+  sm:bottom-[20px] sm:right-[10px] sm:px-1.5 sm:py-0.5 sm:text-[10px]"
+  [class.opacity-0]="!showBackToTop"
+  [class.pointer-events-none]="!showBackToTop"
+  [class.opacity-100]="showBackToTop"
+  [class.show]="showBackToTop"
+  (click)="scrollToTop()"
+  id="toTop"
+>
+  <span class="icon-angle-top"></span>
+  Back to Top
+</button>

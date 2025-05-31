@@ -1,0 +1,952 @@
+
+<div  class="bg-[#F9FAFB] w-auto sm:w-auto h-auto">
+   <!-- Header Section -->
+   <div
+  id="resImg"
+  class="flex flex-col  md:flex-row justify-center items-center  sm:p-6 lg:p-8 shadow-lg w-full min-h-[257px] md:min-h-[287px]"
+  style="background: url('assets/images/mid-header.svg') no-repeat center; background-size: cover;"
+>
+</div>
+
+<style>
+ 
+</style>
+    <!-- Form -->
+    <form action="" [formGroup]="employeeForm" (ngSubmit)="onContinue()">
+  
+      <!-- User Information Section -->
+      <div class="w-auto sm:w-[1290px] h-auto sm:h-[183px] p-6 mx-auto flex-col -mt-24 items-start gap-5 rounded-2xl bg-white shadow-lg">
+        <h2 class="flex items-center mb-4 text-[#0E73A9] font-inter text-[18px] font-semibold leading-[27px]">
+          <span class="mr-2 icon icon-employer"></span>Let's Start by Filling Out Your User Information
+        </h2>
+  
+        <!-- Username Field -->
+        <div class="flex flex-col sm:flex-row sm:gap-6">
+          <div class="flex-1">
+            <app-input-field
+              label="Username"
+              name="txtUserName"
+              id="username"
+              [control]="formControlSignals()['username']"
+              placeholder="Type Username"
+              [maxLength]="20"
+              [isRequired]="true"
+              icon="icon-user-name-outline -mr-2"
+              autocomplete="new-username" 
+              >
+            </app-input-field>
+            <div class="text-red-600">
+              @if (isContinueClicked && firstInvalidField === 'username' && employeeForm.controls['username'].errors?.['required']) {
+                <span class="error-message">Username cannot be empty</span>
+              } 
+              @else if (!employeeForm.controls['username'].errors && usernameExistsMessage) {
+                <span class="error-message">{{ usernameExistsMessage }}</span>
+              } 
+              @else if ( employeeForm.controls['username'].errors?.['invalidCharacters']) {
+                <span class="error-message">Type a valid username except ', %, <, >, ", &, (, ), or space</span>
+              }     
+            </div>
+          </div>
+          
+          <!-- Password Field -->
+          <div class="flex-1">
+            <app-input-field
+              label="Password"
+              name="txtPassword"
+              id="password"
+              [control]="formControlSignals()['password']"
+              placeholder="Use maximum 8 characters"
+              [maxLength]="8"
+              [isRequired]="true"
+              type="password"
+              icon="icon-key-outline"
+              autocomplete="new-password" 
+             >
+            </app-input-field>
+            <div class="text-red-600">
+              @if(isContinueClicked && firstInvalidField === 'password' && employeeForm.controls['password'].errors?.['required']) {
+                <span class="error-message">Password can not be empty</span>
+              }  
+              @if(employeeForm.controls['password'].errors?.['invalidCharacters']) {
+                <span class="error-message"> Type a valid password except ', %, <, >, ", &, (, ), or space</span>
+              }   
+            </div>
+          </div>
+  
+          <!-- Confirm Password Field -->
+          <div class="flex-1">
+            <app-input-field
+              label="Confirm Password"
+              name="txtConfirmPassword"
+              id="confirmPassword"
+              [control]="formControlSignals()['confirmPassword']"
+              placeholder="Retype password"
+              [maxLength]="8"
+              [isRequired]="true"
+              type="password" 
+              icon="icon-key-outline"
+              errorMessage="Confirm Password is required">
+            </app-input-field>
+            <div class="text-red-600">
+              @if(isContinueClicked && firstInvalidField === 'confirmPassword' && employeeForm.controls['confirmPassword'].errors?.['required']) {
+                <span class="error-message">Confirm Password can not be empty</span>
+              }
+              @else if(employeeForm.controls['confirmPassword'].errors?.['minlength']) {
+                <span class="error-message">Minimum length should be 8</span>
+              }
+              @else if(employeeForm.errors?.['passwordsDontMatch']) {
+                <span class="error-message">Passwords do not match
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Company Details Section -->
+      <div class="flex-col items-start gap-5 p-6 mx-auto mt-6 bg-white shadow-lg max-w-7xl rounded-2xl">
+        <h2 class="flex items-center mb-4 text-[#0E73A9] font-inter text-[18px] font-semibold leading-[27px]">
+          <span class="mr-2 icon icon-commercial"></span> Tell Us About Your Company
+        </h2>
+  
+        <!-- Company Name, Bangla Name, and Establishment Year -->
+        <div class="flex flex-col sm:flex-row sm:gap-6">
+  
+          <!-- Company Name in English -->
+          <div class="flex-1">
+            <app-input-field
+              label="Company Name"
+              name="txtCompanyName"
+              id="companyName"
+              [control]="formControlSignals()['companyName']"
+              placeholder="Type Company Name"
+              [maxLength]="120"
+              [isRequired]="true">
+            </app-input-field>
+            <div class="text-red-600" data-error-for="username">
+              @if (
+                isContinueClicked &&
+                firstInvalidField === 'companyName' &&
+                (employeeForm.controls['companyName'].errors?.['required'] || employeeForm.controls['companyName'].errors?.['whitespace'])
+              ) {
+                <span class="error-message">
+                  Company Name cannot be empty.
+                </span>
+              }
+              @else if(companyNameExistsMessage) {
+                <span class="error-message">{{ companyNameExistsMessage }}</span>
+              }
+            </div>
+          </div>
+  
+          <!-- Company Name in Bangla -->
+          <div class="flex-1">
+            <app-input-field
+              label="কোম্পানির নাম (বাংলায়)"
+              name="txtCompanyNameBangla"
+              id="txtCompanyNameBangla"
+              [control]="formControlSignals()['companyNameBangla']"
+              placeholder="Type Company Name"
+              [maxLength]="120"
+              [isRequired]="false">
+            </app-input-field>
+            <div class="text-red-600" data-error-for="companyNameBangla">
+              @if(employeeForm.controls['companyNameBangla'].touched && employeeForm.controls['companyNameBangla'].errors?.['invalidBanglaText']) {
+                <span class="error-message">Please use Bengali characters only  
+                </span>
+              }
+          </div>
+          </div>
+  
+          <!-- Year of Establishment -->
+          <div class="flex-1">
+            <app-input-field
+              label="Year of Establishment"
+              name="txtCompanyEstablished"
+              id="yearsOfEstablishMent"
+              [control]="formControlSignals()['yearsOfEstablishMent']"
+              placeholder="Type Company's Establishment Year"
+              [maxLength]="4"
+              (input)="onInputChange($event)"
+              [isRequired]="true">
+            </app-input-field>
+            <div class="text-red-600">
+              @if(isContinueClicked && firstInvalidField === 'yearsOfEstablishMent' && employeeForm.controls['yearsOfEstablishMent'].errors?.['required']) {
+                <span class="error-message">Please enter Year of Establishment</span>
+              }
+              @else if(isContinueClicked && employeeForm.controls['yearsOfEstablishMent'].errors?.['invalidYear']) {
+                <span class="error-message">Please enter a valid year within the range of 1800 to 2025
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+  
+        <!-- Additional Company Information and Address -->
+        <app-radio-group
+          label="Number of Employees"
+          id="companySize"
+          [control]="formControlSignals()['companySize']"
+          [options]="['1-25', '26-50', '51-100', '101-500', '501-1000', '1000+']"
+          [isRequired]="true">
+        </app-radio-group>
+        <div class="text-red-600">
+          @if(isContinueClicked && firstInvalidField === 'companySize' && employeeForm.controls['companySize'].errors?.['required']) {
+            <span class="-mt-8 text-sm ">Select Company Size</span>
+          }
+      </div> 
+  
+        <h2 class="block mt-4 mb-2 text-[16px] font-semibold text-gray-700">
+          Company Address <span class="text-red-500">*</span>
+        </h2>
+  
+        <div class="flex flex-col px-0 sm:flex-row sm:gap-3">     
+          <!-- Country Dropdown -->
+          <div class="relative dropdown-container mb-2 h-[50px]">
+            <button
+              type="button"
+              class="h-[50px] gap-3 px-4 py-[14px] w-[96%] mx-auto sm:mx-0 sm:w-[400px]  lg:mx-0 rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB] relative"
+              (click)="toggleDropdown()"
+            >
+              @if (selectedCountry) {
+                <span class="flex items-center">
+                  @if (selectedCountry.flagPath) {
+                    <img [src]="selectedCountry.flagPath" alt="Flag" class="w-6 h-6 mr-2" />
+                  }
+                  {{ selectedCountry.OptionText }}
+                </span>
+              } @else {
+                <span class="text-black-400">Select Country</span>
+              }
+              <span class="absolute inset-y-0 right-0 flex items-center pr-2">
+                <i class="icon icon-angle-bottom text-[9px] sm:text-[10px] md:text-[10px] lg:text-[10px]"></i>
+              </span>
+            </button>
+            
+            <!-- Dropdown List -->
+            @if (isOpen) {
+              <div
+              [class.dropdown-upwards]="isDropdownUpwards"
+              [class.dropdown-downwards]="!isDropdownUpwards"
+                class="absolute z-10 mt-1 flex flex-col items-start w-[400px] max-h-60 overflow-y-auto rounded-lg border border-[#DAE5EC] bg-white shadow-lg"
+              >
+                <!-- Search Input -->
+                <input
+                  type="text"
+                  [formControl]="searchTerm"
+                  class="w-full p-2 border-b border-gray-200 rounded-t-lg focus:outline-none"
+                  placeholder="Search"
+                />
+                <!-- Dropdown Items -->
+                <ul class="w-full ">
+                  @for (country of filteredCountries; track country.OptionText) {
+                    <li
+                      (click)="selectCountry(country)"
+                      class="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    >
+                      @if (country.flagPath) {
+                        <img [src]="country.flagPath" alt="Flag" class="w-6 h-6 mr-2" />
+                      }
+                      {{ country.OptionText }}
+                    </li>
+                  } @empty {
+                    <li class="px-4 py-2 text-gray-500">No countries found</li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>           
+        @if (selectedCountry && selectedCountry.OptionText !== 'Bangladesh') {
+          <div class="flex-1">
+            <input
+              type="text"
+              id="outSideBd"
+              required
+              placeholder="Type City Name"
+              class="w-[96%] mx-auto sm:mx-0 sm:w-[400px]  h-[50px]  p-[14px] px-[16px] gap-[10px] rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
+              [formControl]="formControlSignals()['outSideBd']"
+              maxlength="30"
+            >
+            <div class="text-red-600">
+              @if (isContinueClicked && firstInvalidField === 'outSideBd' && employeeForm.controls['outSideBd'].hasError('required')) {
+                <span class="mt-10 text-sm">City can not be empty</span>
+              }
+            </div>
+          </div>
+        } @else {
+          <!-- District -->
+          <div class="flex-1 mb-1 sm:mb-0">
+            <select
+              id="district"
+              class="h-[50px] gap-3 px-4 py-2.5  w-[96%] mx-auto sm:mx-0 sm:w-[400px]  rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
+              [formControl]="formControlSignals()['district']"
+              [disabled]="districts.length === 0" 
+            >
+              <option value="" disabled>Select District</option> 
+              @for (district of districts; track district) {
+                <option [value]="district.OptionValue">
+                  {{ district.OptionText }}
+                </option>
+              }
+            </select>
+            <div class="mt-1 text-red-600">
+              @if (isContinueClicked && firstInvalidField === 'district' && employeeForm.controls['district'].errors?.['required']) {
+                <span class="-mt-20 text-sm">Select a District</span>
+              }
+            </div>
+          </div>
+      
+          <!-- Thana -->
+          <div class="flex-1">
+            <select
+              id="thana"
+              class="h-[50px] gap-3 px-4 py-[14px] w-[96%] mx-auto sm:mx-0 sm:w-[400px]  lg:mx-0 rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
+              [formControl]="formControlSignals()['thana']"
+              [disabled]="thanas.length === 0"
+            >
+              <option value="" disabled>Select Thana</option>
+              @for (thana of thanas; track thana) {
+                <option [value]="thana.OptionValue">
+                  {{ thana.OptionText }}
+                </option>
+              }
+            </select>
+            <div class="mt-1 text-red-600">
+              @if (isContinueClicked && firstInvalidField === 'thana' && employeeForm.controls['thana'].errors?.['required']) {
+                <span class="-mt-20 text-sm">Select a Thana</span>
+              }
+            </div>
+          </div>
+        }
+      </div>       
+        <!-- Company Address Fields -->
+        <div class="grid grid-cols-1 gap-4 mt-6 sm:grid-cols-2">
+            @if (selectedCountry && selectedCountry.OptionText !== 'Bangladesh') {
+            <div class="col-span-1">
+            <app-text-area
+              name="txtCompanyAddress"
+              id="outsideBDCompanyAddress"
+              placeholder="Write Company Detail Address In English"
+              [control]="formControlSignals()['outsideBDCompanyAddress']"
+              [maxLength]="300"
+              [rows]="4">
+            </app-text-area>
+            <div class="text-red-600">
+              @if (
+            isContinueClicked &&
+            firstInvalidField === 'outsideBDCompanyAddress' &&
+            (employeeForm.controls['outsideBDCompanyAddress'].errors?.['required'] || employeeForm.controls['outsideBDCompanyAddress'].errors?.['whitespace'])
+          ) {
+            <span class="error-message">
+              Company Address cannot be empty
+            </span>
+          }
+            @else if (
+            (isContinueClicked || employeeForm.controls['outsideBDCompanyAddress'].touched) &&
+            firstInvalidField === 'outsideBDCompanyAddress' &&
+            employeeForm.controls['outsideBDCompanyAddress'].errors?.['minlength']
+          ) {
+            <span class="error-message">
+          Your input is too short. Please add more details            </span>
+          }
+          @else if (
+            (isContinueClicked || employeeForm.controls['outsideBDCompanyAddress'].touched) &&
+            firstInvalidField === 'outsideBDCompanyAddress' &&
+            employeeForm.controls['outsideBDCompanyAddress'].errors?.['invalidPattern']
+          ) {
+            <span class="error-message">
+            Please enter a valid address            </span>
+          }
+            </div>
+            </div>  
+          <div class="col-span-1">
+            <app-text-area
+              name="txtCompanyAddressBng"
+              id="txtCompanyAddressBng"
+              placeholder="Write Company Detail Address In Bangla"
+              [control]="formControlSignals()['outsideBDCompanyAddressBng']"
+              [maxLength]="300"
+              [rows]="4">
+            </app-text-area>
+            <div class="text-red-600">
+              @if(employeeForm.controls['outsideBDCompanyAddressBng'].touched && employeeForm.controls['outsideBDCompanyAddressBng'].errors?.['invalidBanglaText']) {
+                <span class="error-message">Please use Bengali characters only 
+                </span>
+              }
+            </div>    
+          </div> 
+        }        
+        @else {
+          <div class="col-span-1">      
+          <app-text-area
+          name="txtCompanyAddress"
+          id="companyAddress"
+          placeholder="Write Company Detail Address In English"
+          [control]="formControlSignals()['companyAddress']"
+          [maxLength]="300"
+          [isRequired]="true"
+          [rows]="4">
+        </app-text-area>
+        <div class="text-red-600">
+          @if (
+            isContinueClicked &&
+            firstInvalidField === 'companyAddress' &&
+            (employeeForm.controls['companyAddress'].errors?.['required'] || employeeForm.controls['companyAddress'].errors?.['whitespace'])
+          ) {
+            <span class="error-message">
+              Company Address cannot be empty
+            </span>
+          }
+          @else if (
+            (isContinueClicked || employeeForm.controls['companyAddress'].touched) &&
+            firstInvalidField === 'companyAddress' &&
+            employeeForm.controls['companyAddress'].errors?.['minlength']
+          ) {
+            <span class="error-message">
+          Your input is too short. Please add more details            </span>
+          }
+          @else if (
+            (isContinueClicked || employeeForm.controls['companyAddress'].touched) &&
+            firstInvalidField === 'companyAddress' &&
+            employeeForm.controls['companyAddress'].errors?.['invalidPattern']
+          ) {
+            <span class="error-message">
+            Please enter a valid address            </span>
+          }
+        </div> 
+          </div>
+        <div class="col-span-1">
+          <app-text-area
+            name="txtCompanyAddressBng"
+            id="txtCompanyAddressBng"
+            placeholder="Write Company Detail Address In Bangla"
+            [control]="formControlSignals()['companyAddressBangla']"
+            [maxLength]="300"
+            [rows]="4">
+          </app-text-area>
+          <div class="text-red-600">
+            @if(employeeForm.controls['companyAddressBangla'].touched && employeeForm.controls['companyAddressBangla'].errors?.['invalidBanglaText']) {
+              <span class="error-message">Please use Bengali characters only   
+              </span>
+            }
+        </div>
+        </div>
+      }
+        </div>
+
+    <!-- Industry Type Section -->
+<div class="flex items-center justify-between mt-4">
+  <!-- Industry Type Dropdown -->
+  <div class="flex-grow">
+    <h2 class="block mb-2 text-[16px] font-semibold text-gray-700">
+      Industry Type <span class="text-red-500">*</span>
+    </h2>
+    <select 
+      formControlName="industryType" 
+      id="industryTypeArray"
+      class="flex w-[96%] mx-auto sm:mx-0 sm:w-[611px] p-[14px_16px] justify-between items-center rounded-lg border border-[#DAE5EC] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]">
+      <option value="-1" >All</option>
+      @for (industry of industries | async; track industry.IndustryId) {
+        <option [value]="industry?.IndustryId">{{ industry?.IndustryName }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Add New Industry Button -->
+  @if (showAddIndustryButton)
+  {
+    <div class="mt-16 ml-4">
+      <button 
+        type="button"
+        class="flex items-center p-2 text-blue-500 rounded-lg hover:text-blue-800"
+        (click)="addNewIndustry()">
+        <span class="mr-1 icon icon-plus"></span>Add a New Industry
+      </button>
+    </div>
+  }
+</div>
+
+<!-- Add Industry Modal -->
+@if (showAddIndustryModal)
+{
+  <app-add-industry-modal 
+    [closeModal]="closeAddIndustryModal.bind(this)"
+    [industries]="industries"
+    [selectedIndustryId]="selectedIndustryId" 
+    (industryTypeChanged)="onNewIndustryTypeChange($event)" 
+    (newIndustry)="onNewIndustryAdded($event)">
+  </app-add-industry-modal>
+}
+<!-- Industry Checkbox List Section -->
+<div class="flex flex-col items-start gap-6 self-stretch h-[282px] lg:w-[1229px] w-[96%] sm:mx-0 mx-auto  rounded-lg border border-[#DAE5EC] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)] p-6 mt-6 mb-2.5"
+     [class.error-border]="isContinueClicked && firstInvalidField === 'industryTypeArray' && employeeForm.controls['industryTypeArray'].errors?.['required']">
+  <div>
+    <input [formControl]="searchControl"
+           class="flex w-auto sm:w-[1151px] px-2 py-1.5 sm:p-[14px] sm:px-[16px] justify-between items-center self-stretch rounded-[8px] border border-[#DAE5EC] bg-white shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)]" 
+           placeholder="Search Industry Type">
+  </div>
+  <!-- Industry List Display -->
+  <div 
+    class="lg:grid lg:grid-cols-3 grid grid-cols-1 items-start gap-[24px] self-stretch industry-list" 
+    [class.expanded]="showAll">
+    @if (filteredIndustryTypes.length > 0) {
+      @for (item of getTypes(); track item.IndustryValue) {
+        <div class="flex items-center text-xs sm:text-sm">
+          <input 
+            name="industry_type"
+            id="industry_type_{{item.IndustryValue}}"
+            type="checkbox" 
+            [value]="item.IndustryValue" 
+            [checked]="isIndustryChecked(item.IndustryValue)"
+            class="w-3 h-3 text-blue-600 border shadow-inner cursor-pointer sm:w-4 sm:h-4 checkbox-input border-black/30 checked:bg-blue-600 checked:border-blue-600" 
+            (change)="onIndustryCheckboxChange($event, item)" />
+          <label 
+          for="industry_type_{{item.IndustryValue}}" 
+          class="ml-2 text-xs sm:text-sm font-inter text-black leading-[1.42857143]">
+            {{ item.IndustryName }}
+          </label>
+        </div>
+      }
+    } 
+  </div>
+
+  @if (!showAll) {
+    <button 
+      type="button"
+      class="text-[#0E73A9] text-sm font-semibold  focus:outline-none underline" 
+      [hidden]="filteredIndustryTypes.length <= 9 || showAll"
+      (click)="toggleShowAll()">
+      See more
+    </button>
+  }
+</div>
+
+<div class="flex flex-wrap gap-2 mt-4">
+  @for (industry of selectedIndustries; track industry.IndustryValue) {
+    <span
+      class="flex items-center bg-[#F3F4F6] text-[#212121] text-[14px] font-inter px-3 py-1 rounded-full shadow-sm"
+    >
+      {{ industry.IndustryName }}
+      <button
+        type="button"
+        class="ml-2 text-[#212121] bg-[#E5E7EB] w-4 h-4 rounded-full flex items-center justify-center hover:bg-gray-300 focus:outline-none"
+        (click)="removeIndustry(industry)"
+      >
+        &times;
+      </button>
+    </span>
+  }
+</div>
+
+<div class="text-red-600">
+  @if(isContinueClicked && firstInvalidField === 'industryTypeArray' && employeeForm.controls['industryTypeArray'].errors?.['required']) {
+    <span class="mt-4 text-sm">Select Industry Type </span>
+  }
+</div>
+
+          <h2 class="block mt-4 mb-2 text-[16px] font-semibold text-gray-700">
+            Business Description
+          </h2>      
+          <app-text-area
+          name="txtDescription"
+          id="txtDescription"
+          [control]="formControlSignals()['businessDesc']"
+          placeholder="Write Business Description"
+          [rows]="4"
+          ></app-text-area> 
+        
+          <div class="flex flex-col sm:flex-row sm:gap-6">
+            <div class="flex-1">
+              <app-input-field
+              label="Business/ Trade License No"
+              name="business_license_no"
+              [control]="formControlSignals()['tradeNo']"
+              id="business_license_no"
+              placeholder="Business/ Trade License No"
+              [value]="''"
+              [maxLength]="30"
+              [isRequired]="false"
+              >
+            </app-input-field>
+          
+            </div>
+            <div class="flex-1">
+              <label for="rlNo" class="block mb-1.5 text-[16px] font-semibold text-gray-700">
+                RL No.<span class="ml-2 text-[16px] font-inter font-normal text-[#757575]">(Only for Recruiting Agency)</span>
+              </label>
+              <input
+                class="mb-2 px-5 py-[14px] h-[50px] w-full font-inter rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
+                (blur)="onRLNoBlur()"
+                (input)="onInputChange($event)"
+                name="rlNo"
+                formControlName="rlNo"
+                id="rlNo"
+                placeholder="Enter Number Only"
+                maxlength="6"
+              />
+              <div class="text-red-600">
+                @if(employeeForm.controls['rlNo'].touched && employeeForm.controls['rlNo'].errors?.['required']) {
+                  <span class="error-message">This is required</span>
+                }
+            </div>  
+          </div>
+            @if (showErrorModal && rlNoHasValue){
+            <app-error-modal>
+            </app-error-modal>
+          }
+            @if (showErrorModal){
+              <app-error-modal (modalClosed)="closeModal()"></app-error-modal>
+          }
+              <div class="flex-1">
+                    <app-input-field
+                    label="Website URL"
+                    name="website_url"
+                    id="website_url"
+                    [control]="formControlSignals()['webUrl']"
+                    placeholder="Type Website URL"
+                    [value]="''"
+                    [maxLength]="50"
+                    [isRequired]="false"
+                    >
+                    </app-input-field>           
+                </div>   
+          </div>
+              </div>
+              <div class="flex-col items-start gap-5 p-6 mx-auto mt-6 bg-white shadow-lg max-w-7xl rounded-2xl">
+                <h2 class="flex items-center mb-4 text-[#0E73A9] font-inter text-[18px] font-semibold leading-[27px]">
+                  <span class="mr-2 icon icon-phone"></span>Provide Contact Person Information
+                </h2>
+                <!-- Contact -->
+            <div class="flex flex-col gap-2 sm:flex-row sm:gap-4 ">
+              <div class="flex-1">
+                <app-input-field
+                label="Contact Person's Name"
+                name="txtContactPerson"
+                id="contactName"
+                [control]="formControlSignals()['contactName']"
+                placeholder="Type contact person's name"
+                [value]="''"
+                [maxLength]="100"
+                [isRequired]="true"
+                >
+              </app-input-field>
+              <div class="mt-0 text-red-600">
+                @if (
+                isContinueClicked &&
+                firstInvalidField === 'contactName' &&
+                (employeeForm.controls['contactName'].errors?.['required'] || employeeForm.controls['contactName'].errors?.['whitespace'])
+              ) {
+                <span class="error-message">
+                  Contact Person's Name cannot be empty
+                </span>
+              }
+            </div>
+              </div>
+              <div class="flex-1">
+                <app-input-field
+                label="Contact Person's Designation"
+                name="txtDesignation"
+                id="contactDesignation"
+                [control]="formControlSignals()['contactDesignation']"
+                placeholder="Type contact person's designation"
+                [value]="''"
+                [maxLength]="100"
+                [isRequired]="true"
+                >
+              </app-input-field>
+              <div class="text-red-600">
+                @if (
+                isContinueClicked &&
+                firstInvalidField === 'contactDesignation' &&
+                (employeeForm.controls['contactDesignation'].errors?.['required'] || employeeForm.controls['contactDesignation'].errors?.['whitespace'])
+              ) {
+                <span class="error-message">
+                  Contact Person's Designation can not be empty</span>
+              }
+            </div>
+              </div>
+            </div>
+          
+            <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
+              <div class="flex-1">
+                <app-input-field
+                label="Contact Person's Email"
+                name="txtContactEmail"
+                id="contactEmail"
+                [control]="formControlSignals()['contactEmail']"
+                placeholder="Type contact person's email"
+                [value]="''"
+                [maxLength]="45"
+                [isRequired]="true"
+                >
+              </app-input-field>
+              <div class="text-red-600">
+                @if (
+                  isContinueClicked &&
+                  firstInvalidField === 'contactEmail' &&
+                  (employeeForm.controls['contactEmail'].errors?.['required'] || employeeForm.controls['contactEmail'].errors?.['whitespace'])
+                ) {
+                  <span class="error-message">
+                    Contact Person's Email can not be empty                  </span>
+                }
+                @else if (employeeForm.controls['contactEmail'].errors?.['email']) {
+                  <span class="error-message">Please enter a valid email address</span>
+                }
+            </div>
+              </div>
+              <div class="flex-1 dropdown-container">
+                <label for="contactMobile" class="block mb-2 text-[16px] font-semibold text-gray-700">
+                  Contact Person's Mobile <span class="text-red-500">*</span>
+                </label>
+                <div class="h-[50px] flex items-center border border-[#DAE5EC] rounded-lg px-1.5 sm:px-3 py-2 w-full h[24px] shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]">
+                  <img 
+                    [src]="currentFlagPath" 
+                    alt="Flag" 
+                    class="w-5 h-5 mr-1 cursor-pointer" 
+                    (click)="toggleDropdownCountry()" 
+                  />
+                  <div class="relative flex items-center">
+                    <button 
+                      class="flex items-center sm:py-2 pl-1 pr-1 sm:px-3 text-[16px] font-inter text-gray-900 bg-white border-r border-[#DAE5EC] hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none"
+                      type="button"
+                      (click)="toggleDropdownCountry()"
+                    >
+                      <span class="mr-1">{{ currentCountry.phoneCode }}</span>
+                      <svg class="w-2 h-2 ml-1 sm:w-3 sm:h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                      </svg>
+                    </button>
+                    
+                    <!-- Dropdown for selecting country -->
+                    @if (isOpenCountry) {
+                      <div 
+                      class="absolute top-10 left-0 bg-white border rounded-lg shadow-md w-[300px] z-10">
+                        <div class="p-2">
+                          <input 
+                            type="text" 
+                            placeholder="Search" 
+                            class="w-full px-2 py-1 border rounded-lg focus:outline-none"
+                            [formControl]="searchControl" 
+                          />
+                        </div>
+                        <!-- Country list with flag, name, and code -->
+                        <ul class="overflow-y-auto max-h-60">
+                          @for (country of filteredCountriesList; track country) {
+                            <li 
+                              (click)="chooseCountry(country)"
+                              class="flex items-center px-2 py-2 cursor-pointer hover:bg-gray-100"
+                            >
+                              <img [src]="filePath[country.name]" alt="Flag" class="w-5 h-5 mr-2" />
+                              <span>{{ country.name }} ({{ country.phoneCode }})</span>
+                            </li>
+                          }
+                        </ul>
+                      </div>
+                    }
+                  </div>                
+                  <!-- Mobile Number Input -->
+                  <input 
+                    type="text" 
+                    id="contactMobile" 
+                    name="txtContactMobile" 
+                    class="flex-1 px-2 py-1 text-black placeholder-gray-400 border-none text-md font-inter focus:outline-none"
+                    placeholder="Enter Mobile Number" 
+                    (input)="onInputChange($event)"
+                    [formControl]="formControlSignals()['contactMobile']"
+                    minlength="10"
+                    maxlength="{{ isBangladesh ? '10' : '15' }}"
+                    required 
+                  />
+                </div>
+                
+              <div class="text-red-600 ">
+                @if (isContinueClicked && firstInvalidField === 'contactMobile'  && employeeForm.controls['contactMobile'].errors?.['required']) {
+                <span class="mt-4 text-sm">Contact Number can not be empty
+                </span>
+                }
+                @else if (isBangladesh && (employeeForm.controls['contactMobile'].errors?.['minlength'] || employeeForm.controls['contactMobile'].errors?.['maxlength'])) {
+                  <span class="mt-4 text-sm">
+                    Contact Number must be 10 digits and won't start from 0
+                  </span>
+                }
+                
+                @else if (employeeForm.controls['contactMobile'].errors?.['mobile']) {
+                  <span class="mt-4 text-sm">Please enter a valid mobile number</span>
+                }
+            </div>          
+              </div>
+            </div>
+              </div>
+
+ <div class="max-w-7xl p-6 mx-auto flex-col mt-6 items-start gap-5 rounded-2xl bg-white border border-[#DAE5EC]">
+
+<!-- Accessibility Profile -->
+<section class="my-4">
+  <h3 class="text-[#0E73A9] font-inter text-[18px] font-medium leading-[30px] mb-4">
+    <span class="icon icon-acsbi-person"></span>
+    Accessibility Profile for Inclusion of Persons with Disabilities
+  </h3>  
+
+  <!-- Checkbox -->
+  <div class="flex items-center mb-4">
+    <input name="facility_for_disability" 
+           id="facility_for_disability" 
+           type="checkbox" 
+           [formControl]="formControlSignals()['facilitiesForDisabilities']"
+           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded cursor-pointer focus:ring-blue-500 focus:ring-offset-0 focus:ring-2">
+    <label for="facility_for_disability" 
+           class="ml-2 text-base font-normal text-black cursor-pointer">
+      Facilities for Person with Disabilities
+    </label>
+  </div>            
+
+  <a href="https://corporate3.bdjobs.com/disability-inclusion-practices.asp" target="_blank" 
+     class="text-[#0E73A9] font-inter text-[16px] font-normal leading-[24px] underline">
+    Click to learn more
+  </a>
+
+
+  
+  @if (employeeForm.get('facilitiesForDisabilities')?.value === 1) {
+      <div  id="DisabilityPanel" class="block -mr-2">
+<div class="container flex flex-wrap p-4 mx-auto mt-2 mb-4 -ml-2 rounded-lg" style="background-image: url('/assets/images/disability.svg'); background-size: 60%; background-repeat: no-repeat; background-position: right;">
+  
+    <div class="w-full mb-6 lg:w-1/2">
+            <fieldset class="mb-4">
+                <legend class="text-[#212121] font-inter text-[16px] font-semibold leading-[24px]">Do you have Disability Inclusion Policy</legend>
+                <label class="mr-4 radio-inline " for="disabilityInclusRadPol1">
+                    <input 
+                    type="radio" 
+                    name="disabilityInclusRadPol" 
+                    id="disabilityInclusRadPol1"
+                    value="1" 
+                    [defaultChecked]="1" 
+                    [formControl]="formControlSignals()['inclusionPolicy']"
+                    >
+                    <span class="ml-1 question">Yes</span>
+                </label>
+                <label class="mr-4 radio-inline" for="disabilityInclusRadPol2">
+                    <input type="radio" 
+                    name="disabilityInclusRadPol" 
+                    id="disabilityInclusRadPol2" 
+                    value="2" 
+                    [formControl]="formControlSignals()['inclusionPolicy']">
+                    <span class="ml-1 question">No</span>
+                </label>
+            </fieldset>
+
+   @if (formControlSignals()['inclusionPolicy'].value === '2') 
+              {    
+                <fieldset class="mb-4">
+                    <legend class="text-[#212121] font-inter text-[16px] font-semibold leading-[24px]">Would you like to have any support for implementing?</legend>
+                    <label class="mr-4 radio-inline" for="disabilityInclusRadPol3">
+                        <input type="radio"
+                         name="disabilityInclusRadPolSupport"
+                         id="disabilityInclusRadPol3" 
+                         value="1" [defaultChecked]="1" 
+                         [formControl]="formControlSignals()['support']">
+                        <span class="ml-1 question">Yes</span>
+                    </label>
+                    <label class="mr-4 radio-inline" for="disabilityInclusRadPol4">
+                        <input type="radio" class =custom-radio name="disabilityInclusRadPolSupport" id="disabilityInclusRadPol4" value="2" [formControl]="formControlSignals()['support']">
+                        <span class="ml-1 question">No</span>
+                    </label>
+                </fieldset>  
+              }   
+                <fieldset class="mb-4">
+                  <legend class="text-[#212121] font-inter text-[16px] font-semibold leading-[24px]">Do you provide Disability Inclusion Training for your Employees?</legend>
+                  <label class="mr-4 radio-inline" for="disabilityInclusRadPol5">
+                      <input type="radio" name="disabilityInclus" id="disabilityInclusRadPol5" value="1" [defaultChecked]="1" [formControl]="formControlSignals()['training']">
+                      <span class="ml-1 question">Yes</span>
+                  </label>
+                  <label class="mr-4 radio-inline " for="disabilityInclusRadPol6">
+                      <input type="radio" name="disabilityInclus" id="disabilityInclusRadPol6" value="2" [formControl]="formControlSignals()['training']">
+                      <span class="ml-1 question">No</span>
+                  </label>
+              </fieldset> 
+        </div>
+</div>
+            
+      <div class="rounded-lg border border-[#DAE5EC] bg-white shadow flex flex-col items-start gap-6 p-6 self-stretch">
+        <h2 class="text-[#212121] font-inter text-[16px] font-semibold leading-[24px] mb-4">
+          As part of Disability Inclusion, what do your company have?
+        </h2>  
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          @for (item of disabilities; track item) {
+            <div class="flex items-start">
+              <input name="disability_type" 
+                    [checked]="formControlSignals()['disabilityWrap'].value?.includes(item.value)" 
+                    type="checkbox" 
+                    id="disability_wrap_{{item.value}}"
+                    [value]="item.value" 
+                    (change)="onCheckboxChange($event)" 
+                    class="h-[16px] w-[16px] text-blue-600 cursor-pointer border-2 shadow-inner border-black/30 
+                            checked:bg-blue-600 checked:border-blue-600 checked:appearance-auto" 
+                    style="min-width: 16px; min-height: 16px;">
+              <label for="disability_wrap_{{item.value}}"  class="text-[16px] leading-[1.42857143] font-inter text-black box-border ml-2">
+                {{ item.label }}
+              </label>
+            </div>            
+          }
+        </div>
+      </div>
+        </div>
+      }
+      </section>
+      </div>
+      <div class="flex-col items-start gap-5 p-2 mx-auto mt-6 max-w-7xl ">
+               <!-- Verification -->
+              <h2 class="font-inter text-[20px] mb-2 font-semibold leading-[38px] text-left text-[#0E73A9]">You're Almost Done!</h2>
+              <app-math-captcha  
+              [employeeForm]="employeeForm"
+              (input)="onInputChange($event)">
+              </app-math-captcha>
+              <div class="text-red-600">
+                @if (isContinueClicked && firstInvalidField === 'captchaInput' &&  employeeForm.controls['captchaInput'].errors?.['required'] || employeeForm.controls['captchaInput'].errors?.['maxLength']) {
+                <span class="mt-6 text-sm">Please type the Verification Code. </span>
+                }
+              </div>
+            </div>
+              <div class="max-w-7xl p-6 mx-auto flex-col mt-4 items-start gap-5 rounded-2xl bg-white border border-[#DAE5EC]">
+                <app-pricing-policy></app-pricing-policy>
+                
+                <div class="flex mt-3">
+                  <div class="flex items-center">
+                    <input name="policy_accept" 
+                           id="isPolicyAcceptedControl" 
+                           type="checkbox" 
+                           [formControl]="formControlSignals()['isPolicyAcceptedControl']"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded cursor-pointer focus:ring-blue-500 focus:ring-offset-0 focus:ring-2">
+                  </div>
+                  <div class="ml-3">
+                    <label for="isPolicyAcceptedControl" 
+                           class="text-base font-normal text-black cursor-pointer">
+                      I Have Read Pricing Policy And Accepted It
+                    </label>
+                  </div>
+                </div>         
+              </div>
+              
+            <section class="flex justify-end mx-auto mt-8 max-w-7xl">
+              <div 
+              (click)="onDisabledButtonClick($event)" 
+              [class.cursor-not-allowed]="!employeeForm.get('isPolicyAcceptedControl')?.value"
+              class="relative inline-flex"
+            >
+            <button 
+            [disabled]="isButtonDisabled" 
+            class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[16px] font-inter px-5 py-3 shadow-md transition duration-300 ease-linear"
+            [class.opacity-65]="!employeeForm.get('isPolicyAcceptedControl')?.value"
+            [class.pointer-events-none]="isButtonDisabled"
+            class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[16px] font-inter px-5 py-3 shadow-md transition duration-300 ease-linear"  
+             >
+              <span *ngIf="isLoading" class="mr-2 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Continue 
+            </button>
+          </div>
+              </section>
+              
+              <div class="mt-6">
+                {{formValue | json}}
+              </div>
+              

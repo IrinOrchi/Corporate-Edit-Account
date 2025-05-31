@@ -1,0 +1,19 @@
+<div class="mb-[20px]" [id]="id">
+  <label [for]="id" class="block text-sm font-medium text-gray-700">
+    {{ label }}
+    @if (isRequired) {
+    <span class="text-red-600">*</span>
+    }
+  </label>
+  <select 
+    class="block w-full h-[34px] py-[6px] px-[12px] mt-3 text-[14px] leading-[1.6] text-[#555] bg-white rounded border-2 border-[#e4e4e4] shadow-inner transition-colors focus:outline-none focus:ring focus:border-[#bdbdbd]" 
+    [name]="name" 
+    [id]="id" 
+    [formControl]="control">
+    @for (option of options; track option) {
+    <option [value]="option.value">
+      {{ option.label }}
+    </option>
+    }
+  </select>
+</div>
