@@ -6,11 +6,11 @@ import { AuthGuard } from './guards/auth.guard';
 export const routes: Routes = [
     {
         path:"",
-        redirectTo: 'register',
+        redirectTo: 'edit',
         pathMatch: 'full'
     },
     {
-        path:'register',
+        path:'edit',
         component: EditAccountPageComponent,
         canActivate: [AuthGuard]
     },
