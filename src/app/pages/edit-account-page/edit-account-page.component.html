@@ -618,28 +618,33 @@
                 <!-- Contact -->
             <div class="flex flex-col gap-2 sm:flex-row sm:gap-4 ">
               <div class="flex-1">
-                <app-input-field
-                label="Contact Person's Name"
-                name="txtContactPerson"
-                id="contactName"
-                [control]="formControlSignals()['contactName']"
-                placeholder="Type contact person's name"
-                [value]="''"
-                [maxLength]="100"
-                [isRequired]="true"
+                <label for="contactName" class="block mb-2 text-[16px] font-semibold text-gray-700">
+                  Contact Person's Name <span class="text-red-500">*</span>
+                </label>
+                <select
+                  id="contactName"
+                  name="txtContactPerson"
+                  class="h-[50px] gap-3 px-4 py-[14px] w-full rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
+                  [formControl]="formControlSignals()['contactName']"
+                  (change)="onContactPersonSelect($event)"
+                  required
                 >
-              </app-input-field>
-              <div class="mt-0 text-red-600">
-                @if (
-                isContinueClicked &&
-                firstInvalidField === 'contactName' &&
-                (employeeForm.controls['contactName'].errors?.['required'] || employeeForm.controls['contactName'].errors?.['whitespace'])
-              ) {
-                <span class="error-message">
-                  Contact Person's Name cannot be empty
-                </span>
-              }
-            </div>
+                  <option value="" disabled>Select Contact Person Name</option>
+                  @for (person of contactPersons; track person.contactId) {
+                    <option [value]="person.contactId">{{ person.contactName }}</option>
+                  }
+                </select>
+                <div class="mt-0 text-red-600">
+                  @if (
+                    isContinueClicked &&
+                    firstInvalidField === 'contactName' &&
+                    (employeeForm.controls['contactName'].errors?.['required'] || employeeForm.controls['contactName'].errors?.['whitespace'])
+                  ) {
+                    <span class="error-message">
+                      Contact Person's Name cannot be empty
+                    </span>
+                  }
+                </div>
               </div>
               <div class="flex-1">
                 <app-input-field

@@ -1,5 +1,5 @@
 import { Component, computed, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule} from '@angular/forms';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CheckNamesService } from '../../Services/check-names.service';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { InputFieldComponent } from '../../components/input-field/input-field.component';
@@ -16,11 +16,21 @@ import { AddIndustryModalComponent } from "../../components/add-industry-modal/a
 import { AuthService } from '../../Services/shared/auth.service';
 import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespaceValidator, noBlacklistCharacters, companyAddressValidator } from '../../utils/validators';
 import { Router } from '@angular/router';
+
+// Add interface for contact person
+interface ContactPerson {
+  contactId: number;
+  contactName: string;
+  designation: string;
+  mobile: string;
+  email: string;
+}
+
 @Component({
   selector: 'app-edit-account-page',
   standalone: true,
   imports: [MathCaptchaComponent,PricingPolicyComponent,RadioGroupComponent,InputFieldComponent,
-    TextAreaComponent,ReactiveFormsModule,CommonModule,ErrorModalComponent,MathCaptchaComponent,AddIndustryModalComponent],
+    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,ErrorModalComponent,MathCaptchaComponent,AddIndustryModalComponent],
   templateUrl: './edit-account-page.component.html',
   styleUrls: ['./edit-account-page.component.scss']
 })
@@ -115,6 +125,8 @@ filteredCountriesList = this.countrie;
 
   private usernameSubject: Subject<string> = new Subject();
   private companyNameSubject: Subject<string> = new Subject();
+  contactPersons: ContactPerson[] = [];
+  selectedContactPerson: ContactPerson | null = null;
   constructor(private checkNamesService: CheckNamesService , private authService: AuthService ,
     private router: Router) {}
   ngOnInit(): void {
@@ -201,6 +213,12 @@ filteredCountriesList = this.countrie;
       if (districtId) {
         this.fetchThanas(districtId);
       }
+    });
+    this.fetchContactPersons();
+    
+    // Add subscription to contact person changes
+    this.employeeForm.get('contactName')?.valueChanges.subscribe((event: Event) => {
+      this.onContactPersonSelect(event);
     });
   }
   filterCountries(): LocationResponseDTO[] {
@@ -900,9 +918,8 @@ onContinue() {
   }
 }
 
-
+//edit account
 private FetchCompanyInformation(): void {
-    // Fetch company information
     this.isLoadingCompanyData = true;
     this.checkNamesService.getCompanyInformation().subscribe({
       next: (response) => {
@@ -910,6 +927,29 @@ private FetchCompanyInformation(): void {
         
         if (response && response.data && response.data.companyInformation && response.data.companyInformation.length > 0) {
           this.companyData = response.data.companyInformation[0]; 
+          
+          if (response.data.recordContactPerson && response.data.recordContactPerson.length > 0) {
+            this.contactPersons = response.data.recordContactPerson;
+            
+            const companyContactId = this.companyData.contactId; 
+            const contactPerson = this.contactPersons.find(person => person.contactId === companyContactId);
+            
+            if (contactPerson) {
+              const contactNameControl = this.employeeForm.get('contactName');
+              if (contactNameControl) {
+                contactNameControl.setValue(contactPerson.contactId.toString());
+                
+                this.employeeForm.patchValue({
+                  contactDesignation: contactPerson.designation,
+                  contactEmail: contactPerson.email,
+                  contactMobile: this.isBangladesh && contactPerson.mobile.startsWith('0') 
+                    ? contactPerson.mobile.substring(1) 
+                    : contactPerson.mobile
+                });
+              }
+            }
+          }
+
           const companyNameControl = this.employeeForm.get('companyName');
           const companyNameBanglaControl = this.employeeForm.get('companyNameBangla');
           const countryControl = this.employeeForm.get('country');
@@ -1042,4 +1082,55 @@ private FetchCompanyInformation(): void {
     });
   }
 
+  fetchContactPersons(): void {
+    console.log('Fetching contact persons...');
+    this.checkNamesService.getCompanyInformation().subscribe({
+      next: (response: any) => {
+        console.log('Contact persons API response:', response);
+        if (response?.data?.recordContactPerson) {
+          console.log('Found contact persons:', response.data.recordContactPerson);
+          this.contactPersons = response.data.recordContactPerson;
+          console.log('Updated contactPersons array:', this.contactPersons);
+        } else {
+          console.warn('No contact persons found in response');
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching contact persons:', error);
+      }
+    });
+  }
+
+  onContactPersonSelect(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const contactId = select.value;
+    
+    if (!contactId) {
+      this.employeeForm.patchValue({
+        contactName: '', 
+        contactDesignation: '',
+        contactEmail: '',
+        contactMobile: ''
+      });
+      return;
+    }
+
+    const selectedPerson = this.contactPersons.find(person => person.contactId.toString() === contactId);
+    
+    if (selectedPerson) {
+      this.selectedContactPerson = selectedPerson;
+      
+      let mobileNumber = selectedPerson.mobile;
+      if (this.isBangladesh && mobileNumber.startsWith('0')) {
+        mobileNumber = mobileNumber.substring(1);
+      }
+
+      this.employeeForm.patchValue({
+        contactName: contactId, 
+        contactDesignation: selectedPerson.designation,
+        contactEmail: selectedPerson.email,
+        contactMobile: mobileNumber
+      }, { emitEvent: false }); 
+    }
+  }
 }
