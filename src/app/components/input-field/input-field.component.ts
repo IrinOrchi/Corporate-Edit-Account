@@ -22,4 +22,5 @@ export class InputFieldComponent {
   @Input() icon?: string; 
   @Input() autocomplete: string = 'off';  
   @Input() control: FormControl<string> = new FormControl()
+  @Input() disabled: boolean = false;
 }

@@ -11,16 +11,21 @@
 
   <input
     [type]="type"
-    [ngClass]="{'px-5': !icon, 'px-10': icon}"
-    class="h-[50px] flex  items-center  py-[14px] font-inter mx-auto w-full sm:w-full sm:mx-0 rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
+    [ngClass]="{
+      'px-5': !icon, 
+      'px-10': icon,
+      'bg-gray-100': disabled,
+      'cursor-not-allowed': disabled
+    }"
+    class="h-[50px] flex items-center py-[14px] font-inter mx-auto w-full sm:w-full sm:mx-0 rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
     [name]="name"
     [id]="id"
     [maxLength]="maxLength"
-    [placeholder]="placeholder "
+    [placeholder]="placeholder"
     [formControl]="control"
     [required]="isRequired"
-    [attr.autocomplete]="autocomplete" 
-    
+    [attr.autocomplete]="autocomplete"
+    [attr.disabled]="disabled"
   />
 </div>
 <style>

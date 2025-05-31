@@ -30,6 +30,8 @@ export class EditAccountPageComponent implements OnInit {
   disabilities = disabilities;
   @ViewChild(MathCaptchaComponent) captchaComponent!: MathCaptchaComponent;
   isCaptchaValid = false;
+  isLoadingCompanyData: boolean = true;
+  companyData: any = null;
   selectedCountry: LocationResponseDTO | null = null;
   searchTerm = new FormControl('');
   isOpenCountry: boolean = false;
@@ -116,11 +118,70 @@ filteredCountriesList = this.countrie;
   constructor(private checkNamesService: CheckNamesService , private authService: AuthService ,
     private router: Router) {}
   ngOnInit(): void {
+    console.log('Component initialized');
+    console.log('Company ID from localStorage:', localStorage.getItem('CompanyId'));
+
     this.searchControl.valueChanges
     .pipe(debounceTime(300)) 
     .subscribe(() => {
       this.filteredCountriesList = this.filteredCountrie();
     });
+
+    // Fetch company information
+    console.log('Starting to fetch company information');
+    this.isLoadingCompanyData = true;
+    this.checkNamesService.getCompanyInformation().subscribe({
+      next: (response) => {
+        console.log('Raw API response:', response);
+        
+        // Check if response has the expected structure
+        if (response && response.data && response.data.companyInformation && response.data.companyInformation.length > 0) {
+          this.companyData = response.data.companyInformation[0];
+          console.log('Company data received:', this.companyData);
+          
+          // Get form controls
+          const companyNameControl = this.employeeForm.get('companyName');
+          const companyNameBanglaControl = this.employeeForm.get('companyNameBangla');
+          
+          if (companyNameControl && companyNameBanglaControl) {
+            // Update the values
+            companyNameControl.setValue(this.companyData.companyName || '');
+            companyNameBanglaControl.setValue(this.companyData.companyNameBng || '');
+            
+            // Force change detection
+            this.employeeForm.updateValueAndValidity({ emitEvent: true });
+            
+            console.log('Form controls updated:', {
+              companyName: {
+                value: companyNameControl.value,
+                disabled: companyNameControl.disabled,
+                valid: companyNameControl.valid,
+                rawValue: this.companyData.companyName
+              },
+              companyNameBangla: {
+                value: companyNameBanglaControl.value,
+                disabled: companyNameBanglaControl.disabled,
+                valid: companyNameBanglaControl.valid,
+                rawValue: this.companyData.companyNameBng
+              }
+            });
+          } else {
+            console.error('Form controls not found');
+          }
+        } else {
+          console.error('Invalid API response format or no company information found:', response);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching company information:', error);
+        this.isLoadingCompanyData = false;
+      },
+      complete: () => {
+        console.log('Company information fetch completed');
+        this.isLoadingCompanyData = false;
+      }
+    });
+
     this.isBangladesh = true;
     this.setupUsernameCheck();
     this.setupCompanyNameCheck();

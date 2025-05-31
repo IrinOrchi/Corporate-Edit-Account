@@ -15,6 +15,7 @@ export class CheckNamesService {
   private rlnoapiUrl = 'https://api.bdjobs.com/employeraccount/api/CorporateCommon/RlNoCheck';
   private organizationCheckUrl = 'https://api.bdjobs.com/employeraccount/api/CorporateCommon/OrganizationCheck';
   private insertAccountApiUrl = 'https://api.bdjobs.com/employeraccount/api/CreateAccount/insert';
+  private editAccountApiUrl = 'https://api.bdjobs.com/EmployerAccount/api/EditAccount/GetEditAccount';
   constructor(private http: HttpClient) {}
 
 
@@ -156,6 +157,24 @@ export class CheckNamesService {
       catchError((error) => {
         console.error('Error inserting account data:', error);
         return throwError(() => new Error('Failed to insert account data'));
+      })
+    );
+  }
+
+  // Get company information for edit account
+  getCompanyInformation(): Observable<any> {
+    const companyId = localStorage.getItem('CompanyId');
+    if (!companyId) {
+      console.error('Company ID not found in localStorage');
+      return throwError(() => new Error('Company ID not found in local storage'));
+    }
+    
+    console.log('Making API call with companyId:', companyId);
+    const url = `${this.editAccountApiUrl}?companyId=${encodeURIComponent(companyId)}`;
+    return this.http.get<any>(url).pipe(
+      catchError((error) => {
+        console.error('Error fetching company information:', error);
+        return throwError(() => new Error('Error fetching company information'));
       })
     );
   }
