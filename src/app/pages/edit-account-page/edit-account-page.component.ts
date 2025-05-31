@@ -127,61 +127,8 @@ filteredCountriesList = this.countrie;
       this.filteredCountriesList = this.filteredCountrie();
     });
 
-    // Fetch company information
-    console.log('Starting to fetch company information');
-    this.isLoadingCompanyData = true;
-    this.checkNamesService.getCompanyInformation().subscribe({
-      next: (response) => {
-        console.log('Raw API response:', response);
-        
-        // Check if response has the expected structure
-        if (response && response.data && response.data.companyInformation && response.data.companyInformation.length > 0) {
-          this.companyData = response.data.companyInformation[0];
-          console.log('Company data received:', this.companyData);
-          
-          // Get form controls
-          const companyNameControl = this.employeeForm.get('companyName');
-          const companyNameBanglaControl = this.employeeForm.get('companyNameBangla');
-          
-          if (companyNameControl && companyNameBanglaControl) {
-            // Update the values
-            companyNameControl.setValue(this.companyData.companyName || '');
-            companyNameBanglaControl.setValue(this.companyData.companyNameBng || '');
-            
-            // Force change detection
-            this.employeeForm.updateValueAndValidity({ emitEvent: true });
-            
-            console.log('Form controls updated:', {
-              companyName: {
-                value: companyNameControl.value,
-                disabled: companyNameControl.disabled,
-                valid: companyNameControl.valid,
-                rawValue: this.companyData.companyName
-              },
-              companyNameBangla: {
-                value: companyNameBanglaControl.value,
-                disabled: companyNameBanglaControl.disabled,
-                valid: companyNameBanglaControl.valid,
-                rawValue: this.companyData.companyNameBng
-              }
-            });
-          } else {
-            console.error('Form controls not found');
-          }
-        } else {
-          console.error('Invalid API response format or no company information found:', response);
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching company information:', error);
-        this.isLoadingCompanyData = false;
-      },
-      complete: () => {
-        console.log('Company information fetch completed');
-        this.isLoadingCompanyData = false;
-      }
-    });
-
+    this.FetchCompanyInformation();
+   
     this.isBangladesh = true;
     this.setupUsernameCheck();
     this.setupCompanyNameCheck();
@@ -656,60 +603,67 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
   
   
   // Fetch countries (Outside Bangladesh included)
-  private fetchCountries(): void {
-    const selectedCountryText = this.selectedCountry?.OptionText || this.employeeForm.get('country')?.value;
-    const requestPayload = { OutsideBd: '1', DistrictId: '',   CountryId: selectedCountryText,  };
-    this.checkNamesService.getLocations(requestPayload).subscribe({
-      next: (response: any) => {
-        console.log("Full response:", response);
+  private fetchCountries(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const requestPayload = { OutsideBd: '1', DistrictId: '', CountryId: '' };
+      this.checkNamesService.getLocations(requestPayload).subscribe({
+        next: (response: any) => {
+          console.log("Full countries response:", response);
   
-        if (response.responseCode === 1 && Array.isArray(response.data)) {  
-          const countryData = response.data;
-          if (countryData.length > 0) {
-            this.countries = countryData.map((item: any) => ({
-              OptionValue: item.optionValue,
-              OptionText: item.optionText,
-              flagPath: this.filePath[item.optionText] || '', 
-            }));
-  
-            this.employeeForm.get('country')?.setValue('Bangladesh'); 
+          if (response.responseCode === 1 && Array.isArray(response.data)) {
+            const countryData = response.data;
+            if (countryData.length > 0) {
+              this.countries = countryData.map((item: any) => ({
+                OptionValue: item.optionValue,
+                OptionText: item.optionText,
+                flagPath: this.filePath[item.optionText] || '',
+              }));
+              resolve();
+            } else {
+              console.error('No countries found in the response.');
+              this.countries = [];
+              reject(new Error('No countries found'));
+            }
           } else {
-            console.error('No countries found in the response.');
+            console.error('Unexpected responseCode or response format:', response);
             this.countries = [];
+            reject(new Error('Invalid response format'));
           }
-        } else {
-          console.error('Unexpected responseCode or response format:', response);
+        },
+        error: (error: any) => {
+          console.error('Error fetching countries:', error);
           this.countries = [];
+          reject(error);
         }
-      },
-      error: (error: any) => {
-        console.error('Error fetching countries:', error);
-        this.countries = [];
-      },
+      });
     });
   }
 // Fetch districts within Bangladesh
-private fetchDistricts(): void {
-  const requestPayload = { OutsideBd: '0', DistrictId: '' };
-  this.checkNamesService.getLocations(requestPayload).subscribe({
-    next: (response: any) => {
-      if (response.responseCode === 1 && Array.isArray(response.data)) {
-        const districtData = response.data;
-        this.districts = districtData.map((item: any) => ({
-          OptionValue: `${item.optionValue}##${item.optionText}`, 
-          OptionText: item.optionText,
-        }));
-
-        this.thanas = [];
-      } else {
-        console.error('Unexpected responseCode or response format:', response);
+private fetchDistricts(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const requestPayload = { OutsideBd: '0', DistrictId: '' };
+    this.checkNamesService.getLocations(requestPayload).subscribe({
+      next: (response: any) => {
+        if (response.responseCode === 1 && Array.isArray(response.data)) {
+          const districtData = response.data;
+          this.districts = districtData.map((item: any) => ({
+            OptionValue: `${item.optionValue}##${item.optionText}`,
+            OptionText: item.optionText,
+          }));
+          this.thanas = [];
+          resolve();
+        } else {
+          console.error('Unexpected responseCode or response format:', response);
+          this.districts = [];
+          reject(new Error('Invalid response format'));
+        }
+      },
+      error: (error: any) => {
+        console.error('Error fetching districts:', error);
         this.districts = [];
+        reject(error);
       }
-    },
-    error: (error: any) => {
-      console.error('Error fetching districts:', error);
-      this.districts = [];
-    },
+    });
   });
 }
   toggleDropdown() {
@@ -759,27 +713,31 @@ private fetchDistricts(): void {
   
   }
 // Fetch thanas for the selected district
-private fetchThanas(districtFormattedValue: string): void {
-  const districtId = districtFormattedValue.split('##')[0]; 
-  const requestPayload = { OutsideBd: '0', DistrictId: districtId };
-  this.checkNamesService.getLocations(requestPayload).subscribe({
-    next: (response: any) => {
-      if (response.responseCode === 1 && Array.isArray(response.data)) {
-        const thanaData = response.data;
-
-        this.thanas = thanaData.map((item: any) => ({
-          OptionValue: `${item.optionValue}##${item.optionText}`,
-          OptionText: item.optionText,
-        }));
-      } else {
-        console.error('Unexpected responseCode or response format:', response);
+private fetchThanas(districtFormattedValue: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const districtId = districtFormattedValue.split('##')[0];
+    const requestPayload = { OutsideBd: '0', DistrictId: districtId };
+    this.checkNamesService.getLocations(requestPayload).subscribe({
+      next: (response: any) => {
+        if (response.responseCode === 1 && Array.isArray(response.data)) {
+          const thanaData = response.data;
+          this.thanas = thanaData.map((item: any) => ({
+            OptionValue: `${item.optionValue}##${item.optionText}`,
+            OptionText: item.optionText,
+          }));
+          resolve();
+        } else {
+          console.error('Unexpected responseCode or response format:', response);
+          this.thanas = [];
+          reject(new Error('Invalid response format'));
+        }
+      },
+      error: (error: any) => {
+        console.error('Error fetching thanas:', error);
         this.thanas = [];
+        reject(error);
       }
-    },
-    error: (error: any) => {
-      console.error('Error fetching thanas:', error);
-      this.thanas = [];
-    },
+    });
   });
 }
 setupSearch(): void {
@@ -941,5 +899,147 @@ onContinue() {
     });
   }
 }
+
+
+private FetchCompanyInformation(): void {
+    // Fetch company information
+    this.isLoadingCompanyData = true;
+    this.checkNamesService.getCompanyInformation().subscribe({
+      next: (response) => {
+        console.log('Raw API response:', response);
+        
+        if (response && response.data && response.data.companyInformation && response.data.companyInformation.length > 0) {
+          this.companyData = response.data.companyInformation[0]; 
+          const companyNameControl = this.employeeForm.get('companyName');
+          const companyNameBanglaControl = this.employeeForm.get('companyNameBangla');
+          const countryControl = this.employeeForm.get('country');
+          const districtControl = this.employeeForm.get('district');
+          const thanaControl = this.employeeForm.get('thana');
+          const companyAddressControl = this.employeeForm.get('companyAddress');
+          const yearsOfEstablishMentControl = this.employeeForm.get('yearsOfEstablishMent');
+          const businessDescControl = this.employeeForm.get('businessDesc');
+          const tradeNoControl = this.employeeForm.get('tradeNo');
+          const rlNoControl = this.employeeForm.get('rlNo');
+          const webUrlControl = this.employeeForm.get('webUrl');
+          
+          if (companyNameControl && companyNameBanglaControl && yearsOfEstablishMentControl) {
+            // Set company basic information
+            companyNameControl.setValue(this.companyData.companyName);
+            companyNameBanglaControl.setValue(this.companyData.companyNameBng);
+            yearsOfEstablishMentControl.setValue(this.companyData.yearsOfEstablishMent);
+
+            // Set business description
+            if (businessDescControl) {
+              businessDescControl.setValue(this.companyData.businessDescription || '');
+              console.log('Business description set:', this.companyData.businessDescription);
+            }
+
+            // Set license number
+            if (tradeNoControl) {
+              tradeNoControl.setValue(this.companyData.licenseNo || '');
+              console.log('License number set:', this.companyData.licenseNo);
+            }
+
+            // Set RL number
+            if (rlNoControl) {
+              rlNoControl.setValue(this.companyData.rL_No || '');
+              this.rlNoHasValue = !!this.companyData.rL_No;
+              console.log('RL number set:', this.companyData.rL_No);
+            }
+
+            // Set website URL
+            if (webUrlControl) {
+              webUrlControl.setValue(this.companyData.url || '');
+              console.log('Website URL set:', this.companyData.url);
+            }
+
+            // Handle location data
+            const countryName = this.companyData.country || '';
+            this.fetchCountries().then(() => {
+              const matchedCountry = this.countries.find(c => 
+                c.OptionText.toLowerCase() === countryName.toLowerCase()
+              );
+
+              if (matchedCountry) {
+                console.log('Found matching country:', matchedCountry);
+                this.selectedCountry = matchedCountry;
+                countryControl?.setValue(matchedCountry.OptionText);
+
+                if (matchedCountry.OptionText === 'Bangladesh') {
+                  this.fetchDistricts().then(() => {
+                    const districtName = this.companyData.city || '';
+                    
+                    const matchedDistrict = this.districts.find(d => 
+                      d.OptionText.toLowerCase() === districtName.toLowerCase()
+                    );
+
+                    if (matchedDistrict) {
+                      console.log('Found matching district:', matchedDistrict);
+                      districtControl?.setValue(matchedDistrict.OptionValue);
+                      this.fetchThanas(matchedDistrict.OptionValue).then(() => {
+                        const thanaName = this.companyData.area || '';
+                        console.log('Looking for thana:', thanaName);
+                        
+                        const matchedThana = this.thanas.find(t => 
+                          t.OptionText.toLowerCase() === thanaName.toLowerCase()
+                        );
+
+                        if (matchedThana) {
+                          console.log('Found matching thana:', matchedThana);
+                          thanaControl?.setValue(matchedThana.OptionValue);
+                        } else {
+                          console.warn('No matching thana found for:', thanaName);
+                        }
+                      });
+                    } else {
+                      console.warn('No matching district found for:', districtName);
+                    }
+                  });
+                } else {
+                  this.outsideBd = true;
+                  const outSideBdControl = this.employeeForm.get('outSideBd');
+                  const outsideBDCompanyAddressControl = this.employeeForm.get('outsideBDCompanyAddress');
+                  
+                  outSideBdControl?.setValue(this.companyData.city || '');
+                  outsideBDCompanyAddressControl?.setValue(this.companyData.companyAddress || '');
+                }
+              } 
+            });
+
+            companyAddressControl?.setValue(this.companyData.companyAddress || '');
+            
+            // Log all form values for verification
+            console.log('Form controls updated:', {
+              companyName: companyNameControl.value,
+              companyNameBangla: companyNameBanglaControl.value,
+              yearsOfEstablishMent: yearsOfEstablishMentControl.value,
+              businessDescription: businessDescControl?.value,
+              licenseNo: tradeNoControl?.value,
+              rlNo: rlNoControl?.value,
+              webUrl: webUrlControl?.value,
+              location: {
+                country: this.companyData.country,
+                city: this.companyData.city,
+                area: this.companyData.area,
+                address: this.companyData.companyAddress
+              }
+            });
+
+            this.employeeForm.updateValueAndValidity({ emitEvent: true });
+          } else {
+            console.error('Form controls not found');
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching company information:', error);
+        this.isLoadingCompanyData = false;
+      },
+      complete: () => {
+        console.log('Company information fetch completed');
+        this.isLoadingCompanyData = false;
+      }
+    });
+  }
 
 }
