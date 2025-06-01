@@ -1,111 +1,20 @@
-<div  class="bg-[#F9FAFB] w-auto sm:w-auto h-auto">
-   <!-- Header Section -->
-   <div
-  id="resImg"
-  class="flex flex-col  md:flex-row justify-center items-center  sm:p-6 lg:p-8 shadow-lg w-full min-h-[257px] md:min-h-[287px]"
-  style="background: url('assets/images/mid-header.svg') no-repeat center; background-size: cover;"
->
-</div>
-
-<style>
- 
-</style>
+<div  class="bg-[#F9FAFB] w-auto sm:w-auto h-auto ">
+  
     <!-- Form -->
     <form action="" [formGroup]="employeeForm" (ngSubmit)="onContinue()">
-  
-      <!-- User Information Section -->
-      <div class="w-auto sm:w-[1290px] h-auto sm:h-[183px] p-6 mx-auto flex-col -mt-24 items-start gap-5 rounded-2xl bg-white shadow-lg">
-        <h2 class="flex items-center mb-4 text-[#0E73A9] font-inter text-[18px] font-semibold leading-[27px]">
-          <span class="mr-2 icon icon-employer"></span>Let's Start by Filling Out Your User Information
-        </h2>
-  
-        <!-- Username Field -->
-        <div class="flex flex-col sm:flex-row sm:gap-6">
-          <div class="flex-1">
-            <app-input-field
-              label="Username"
-              name="txtUserName"
-              id="username"
-              [control]="formControlSignals()['username']"
-              placeholder="Type Username"
-              [maxLength]="20"
-              [isRequired]="true"
-              icon="icon-user-name-outline -mr-2"
-              autocomplete="new-username" 
-              >
-            </app-input-field>
-            <div class="text-red-600">
-              @if (isContinueClicked && firstInvalidField === 'username' && employeeForm.controls['username'].errors?.['required']) {
-                <span class="error-message">Username cannot be empty</span>
-              } 
-              @else if (!employeeForm.controls['username'].errors && usernameExistsMessage) {
-                <span class="error-message">{{ usernameExistsMessage }}</span>
-              } 
-              @else if ( employeeForm.controls['username'].errors?.['invalidCharacters']) {
-                <span class="error-message">Type a valid username except ', %, <, >, ", &, (, ), or space</span>
-              }     
-            </div>
-          </div>
-          
-          <!-- Password Field -->
-          <div class="flex-1">
-            <app-input-field
-              label="Password"
-              name="txtPassword"
-              id="password"
-              [control]="formControlSignals()['password']"
-              placeholder="Use maximum 8 characters"
-              [maxLength]="8"
-              [isRequired]="true"
-              type="password"
-              icon="icon-key-outline"
-              autocomplete="new-password" 
-             >
-            </app-input-field>
-            <div class="text-red-600">
-              @if(isContinueClicked && firstInvalidField === 'password' && employeeForm.controls['password'].errors?.['required']) {
-                <span class="error-message">Password can not be empty</span>
-              }  
-              @if(employeeForm.controls['password'].errors?.['invalidCharacters']) {
-                <span class="error-message"> Type a valid password except ', %, <, >, ", &, (, ), or space</span>
-              }   
-            </div>
-          </div>
-  
-          <!-- Confirm Password Field -->
-          <div class="flex-1">
-            <app-input-field
-              label="Confirm Password"
-              name="txtConfirmPassword"
-              id="confirmPassword"
-              [control]="formControlSignals()['confirmPassword']"
-              placeholder="Retype password"
-              [maxLength]="8"
-              [isRequired]="true"
-              type="password" 
-              icon="icon-key-outline"
-              errorMessage="Confirm Password is required">
-            </app-input-field>
-            <div class="text-red-600">
-              @if(isContinueClicked && firstInvalidField === 'confirmPassword' && employeeForm.controls['confirmPassword'].errors?.['required']) {
-                <span class="error-message">Confirm Password can not be empty</span>
-              }
-              @else if(employeeForm.controls['confirmPassword'].errors?.['minlength']) {
-                <span class="error-message">Minimum length should be 8</span>
-              }
-              @else if(employeeForm.errors?.['passwordsDontMatch']) {
-                <span class="error-message">Passwords do not match
-                </span>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
+
   
       <!-- Company Details Section -->
-      <div class="flex-col items-start gap-5 p-6 mx-auto mt-6 bg-white shadow-lg max-w-7xl rounded-2xl">
+      <div class="flex-col items-start gap-5 p-6 mx-auto mt-12 border border-gray-200 bg-white shadow-lg max-w-7xl rounded-xl ">
+         <!-- Header Section -->
+      <div
+        id="resImg"
+        class="flex flex-col md:flex-row justify-center items-center w-full h-[200px] md:h-[250px] bg-contain bg-center bg-no-repeat mx-auto -mt-12 mb-4"
+        style="background-image: url('assets/images/editAccountHeader.svg');">
+      </div>
+
         <h2 class="flex items-center mb-4 text-[#0E73A9] font-inter text-[18px] font-semibold leading-[27px]">
-          <span class="mr-2 icon icon-commercial"></span> Tell Us About Your Company
+          <span class="mr-2 icon icon-commercial"></span> Company details information
         </h2>
   
         <!-- Company Name, Bangla Name, and Establishment Year -->
