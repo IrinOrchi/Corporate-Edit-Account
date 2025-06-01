@@ -931,6 +931,30 @@ private FetchCompanyInformation(): void {
         if (response && response.data && response.data.companyInformation && response.data.companyInformation.length > 0) {
           this.companyData = response.data.companyInformation[0]; 
           console.log('Company Data from API:', this.companyData);
+
+          const facilitiesForDisabilitiesControl = this.employeeForm.get('facilitiesForDisabilities');
+          if (facilitiesForDisabilitiesControl) {
+            facilitiesForDisabilitiesControl.setValue(this.companyData.facilityPWD ? 1 : 0);
+          }
+
+          const companySizeControl = this.employeeForm.get('companySize');
+          if (companySizeControl && this.companyData.minimumEmployee !== undefined && this.companyData.maximumEmployee !== undefined) {
+            let companySizeValue = '';
+            if (this.companyData.minimumEmployee <= 10 && this.companyData.maximumEmployee <= 10) {
+              companySizeValue = '1-10';
+            } else if (this.companyData.minimumEmployee <= 25 && this.companyData.maximumEmployee <= 25) {
+              companySizeValue = '11-25';
+            } else if (this.companyData.minimumEmployee <= 50 && this.companyData.maximumEmployee <= 50) {
+              companySizeValue = '26-50';
+            } else if (this.companyData.minimumEmployee <= 100 && this.companyData.maximumEmployee <= 100) {
+              companySizeValue = '51-100';
+            } else if (this.companyData.minimumEmployee <= 500 && this.companyData.maximumEmployee <= 500) {
+              companySizeValue = '101-500';
+            } else if (this.companyData.minimumEmployee > 500) {
+              companySizeValue = '500+';
+            }
+            companySizeControl.setValue(companySizeValue);
+          }
           
           if (response.data.industryName && Array.isArray(response.data.industryName)) {
             this.allIndustryTypes = response.data.industryName.map((industry: { organizationId: number; organizationName: string }) => ({
