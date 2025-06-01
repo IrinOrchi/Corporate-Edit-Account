@@ -954,15 +954,10 @@
       </div>
             <section class="flex justify-end mx-auto mt-8 max-w-7xl">
               <div 
-              (click)="onDisabledButtonClick($event)" 
-              [class.cursor-not-allowed]="!employeeForm.get('isPolicyAcceptedControl')?.value"
-              class="relative inline-flex"
-            >
+              class="relative inline-flex">
             <button 
-            [disabled]="isButtonDisabled" 
+            type="button"
             class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[16px] font-inter px-5 py-3 shadow-md transition duration-300 ease-linear"
-            [class.opacity-65]="!employeeForm.get('isPolicyAcceptedControl')?.value"
-            [class.pointer-events-none]="isButtonDisabled"
             class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[16px] font-inter px-5 py-3 shadow-md transition duration-300 ease-linear"  
              >
               <span *ngIf="isLoading" class="mr-2 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -970,7 +965,6 @@
             </button>
           </div>
               </section>
-              
               <div class="mt-6">
                 {{formValue | json}}
               </div>

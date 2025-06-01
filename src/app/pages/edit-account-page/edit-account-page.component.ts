@@ -29,8 +29,8 @@ interface ContactPerson {
 @Component({
   selector: 'app-edit-account-page',
   standalone: true,
-  imports: [MathCaptchaComponent,PricingPolicyComponent,RadioGroupComponent,InputFieldComponent,
-    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,ErrorModalComponent,MathCaptchaComponent,AddIndustryModalComponent],
+  imports: [RadioGroupComponent,InputFieldComponent,
+    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,ErrorModalComponent,AddIndustryModalComponent],
   templateUrl: './edit-account-page.component.html',
   styleUrls: ['./edit-account-page.component.scss']
 })
@@ -825,37 +825,12 @@ onInputChange(event: Event) {
 toggleShowAll() {
   this.showAll = !this.showAll;
 }
-checkCaptchaValidity() {
-  this.isCaptchaValid = this.captchaComponent.isCaptchaValid();
-}
-
-get isButtonDisabled(): boolean {
-  return (!this.employeeForm.get('isPolicyAcceptedControl')?.value && !this.isCaptchaValid);
-}
-onDisabledButtonClick(event: Event): void {
-  if (this.isButtonDisabled) {
-    alert('Please accept the pricing policy to proceed');
-    return;
-  }
-}
-
 
 onContinue() {
-  this.checkCaptchaValidity();
   this.isContinueClicked = true;
   this.isLoading = true;
-
-  if (this.isLoading && !this.employeeForm.get('isPolicyAcceptedControl')?.value && !this.isCaptchaValid) {
-    return;
-  }
-
   console.log('Current form values:', this.employeeForm.value);
-  const credentials = {
-    username: this.employeeForm.value.username || '',
-    password: this.employeeForm.value.password || '',
-  };
-  this.authService.updateCredentials(credentials);
-
+ 
   const controls = this.employeeForm.controls;
   let firstInvalidKey: string | null = null;
   let firstErrorMsgElement: HTMLElement | null = null;
@@ -907,12 +882,7 @@ onContinue() {
     return;
   }
 
-  if (!this.isCaptchaValid) {
-    console.error('Captcha validation failed.');
-    alert('Enter the Valid Verification Code');
-    this.isLoading = false;
-    return;
-  }
+ 
 
   if (this.employeeForm.valid) {
     const payload = this.employeeForm.value;
