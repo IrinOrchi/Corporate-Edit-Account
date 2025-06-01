@@ -923,10 +923,10 @@ private FetchCompanyInformation(): void {
     this.isLoadingCompanyData = true;
     this.checkNamesService.getCompanyInformation().subscribe({
       next: (response) => {
-        console.log('Raw API response:', response);
         
         if (response && response.data && response.data.companyInformation && response.data.companyInformation.length > 0) {
           this.companyData = response.data.companyInformation[0]; 
+          console.log('Company Data from API:', this.companyData);
           
           if (response.data.recordContactPerson && response.data.recordContactPerson.length > 0) {
             this.contactPersons = response.data.recordContactPerson;
@@ -956,6 +956,8 @@ private FetchCompanyInformation(): void {
           const districtControl = this.employeeForm.get('district');
           const thanaControl = this.employeeForm.get('thana');
           const companyAddressControl = this.employeeForm.get('companyAddress');
+          const companyAddressBanglaControl = this.employeeForm.get('companyAddressBangla');
+          const outsideBDCompanyAddressBngControl = this.employeeForm.get('outsideBDCompanyAddressBng');
           const yearsOfEstablishMentControl = this.employeeForm.get('yearsOfEstablishMent');
           const businessDescControl = this.employeeForm.get('businessDesc');
           const tradeNoControl = this.employeeForm.get('tradeNo');
@@ -966,31 +968,34 @@ private FetchCompanyInformation(): void {
             // Set company basic information
             companyNameControl.setValue(this.companyData.companyName);
             companyNameBanglaControl.setValue(this.companyData.companyNameBng);
-            yearsOfEstablishMentControl.setValue(this.companyData.yearsOfEstablishMent);
+            yearsOfEstablishMentControl.setValue(this.companyData.companyEstablishment || '');
+
+            // Set company address in Bangla based on country
+            if (this.companyData.country === 'Bangladesh') {
+              companyAddressBanglaControl?.setValue(this.companyData.companyAddressBng || '');
+            } else {
+              outsideBDCompanyAddressBngControl?.setValue(this.companyData.companyAddressBng || '');
+            }
 
             // Set business description
             if (businessDescControl) {
               businessDescControl.setValue(this.companyData.businessDescription || '');
-              console.log('Business description set:', this.companyData.businessDescription);
             }
 
             // Set license number
             if (tradeNoControl) {
               tradeNoControl.setValue(this.companyData.licenseNo || '');
-              console.log('License number set:', this.companyData.licenseNo);
             }
 
             // Set RL number
             if (rlNoControl) {
               rlNoControl.setValue(this.companyData.rL_No || '');
               this.rlNoHasValue = !!this.companyData.rL_No;
-              console.log('RL number set:', this.companyData.rL_No);
             }
 
             // Set website URL
             if (webUrlControl) {
               webUrlControl.setValue(this.companyData.url || '');
-              console.log('Website URL set:', this.companyData.url);
             }
 
             // Handle location data
@@ -1001,7 +1006,6 @@ private FetchCompanyInformation(): void {
               );
 
               if (matchedCountry) {
-                console.log('Found matching country:', matchedCountry);
                 this.selectedCountry = matchedCountry;
                 countryControl?.setValue(matchedCountry.OptionText);
 
@@ -1014,32 +1018,23 @@ private FetchCompanyInformation(): void {
                     );
 
                     if (matchedDistrict) {
-                      console.log('Found matching district:', matchedDistrict);
                       districtControl?.setValue(matchedDistrict.OptionValue);
                       this.fetchThanas(matchedDistrict.OptionValue).then(() => {
-                        const thanaName = this.companyData.area || '';
-                        console.log('Looking for thana:', thanaName);
-                        
+                        const thanaName = this.companyData.area || '';                        
                         const matchedThana = this.thanas.find(t => 
                           t.OptionText.toLowerCase() === thanaName.toLowerCase()
                         );
 
                         if (matchedThana) {
-                          console.log('Found matching thana:', matchedThana);
                           thanaControl?.setValue(matchedThana.OptionValue);
-                        } else {
-                          console.warn('No matching thana found for:', thanaName);
-                        }
+                        } 
                       });
-                    } else {
-                      console.warn('No matching district found for:', districtName);
-                    }
+                    } 
                   });
                 } else {
                   this.outsideBd = true;
                   const outSideBdControl = this.employeeForm.get('outSideBd');
-                  const outsideBDCompanyAddressControl = this.employeeForm.get('outsideBDCompanyAddress');
-                  
+                  const outsideBDCompanyAddressControl = this.employeeForm.get('outsideBDCompanyAddress'); 
                   outSideBdControl?.setValue(this.companyData.city || '');
                   outsideBDCompanyAddressControl?.setValue(this.companyData.companyAddress || '');
                 }
@@ -1047,53 +1042,21 @@ private FetchCompanyInformation(): void {
             });
 
             companyAddressControl?.setValue(this.companyData.companyAddress || '');
-            
-            // Log all form values for verification
-            console.log('Form controls updated:', {
-              companyName: companyNameControl.value,
-              companyNameBangla: companyNameBanglaControl.value,
-              yearsOfEstablishMent: yearsOfEstablishMentControl.value,
-              businessDescription: businessDescControl?.value,
-              licenseNo: tradeNoControl?.value,
-              rlNo: rlNoControl?.value,
-              webUrl: webUrlControl?.value,
-              location: {
-                country: this.companyData.country,
-                city: this.companyData.city,
-                area: this.companyData.area,
-                address: this.companyData.companyAddress
-              }
-            });
-
+       
             this.employeeForm.updateValueAndValidity({ emitEvent: true });
-          } else {
-            console.error('Form controls not found');
-          }
+          } 
         }
       },
-      error: (error) => {
-        console.error('Error fetching company information:', error);
-        this.isLoadingCompanyData = false;
-      },
-      complete: () => {
-        console.log('Company information fetch completed');
-        this.isLoadingCompanyData = false;
-      }
+   
     });
   }
 
   fetchContactPersons(): void {
-    console.log('Fetching contact persons...');
     this.checkNamesService.getCompanyInformation().subscribe({
       next: (response: any) => {
-        console.log('Contact persons API response:', response);
         if (response?.data?.recordContactPerson) {
-          console.log('Found contact persons:', response.data.recordContactPerson);
           this.contactPersons = response.data.recordContactPerson;
-          console.log('Updated contactPersons array:', this.contactPersons);
-        } else {
-          console.warn('No contact persons found in response');
-        }
+        } 
       },
       error: (error) => {
         console.error('Error fetching contact persons:', error);
