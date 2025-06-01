@@ -144,8 +144,6 @@ filteredCountriesList = this.countrie;
     this.FetchCompanyInformation();
    
     this.isBangladesh = true;
-    this.setupUsernameCheck();
-    this.setupCompanyNameCheck();
     this.fetchIndustries();
     this.setupSearch();
     this.fetchIndustryTypes();
@@ -228,19 +226,7 @@ filteredCountriesList = this.countrie;
       country.OptionText.toLowerCase().includes(this.searchTerm.value?.toLowerCase() || '')
     );
   }
-  setupUsernameCheck(): void {
-    const usernameControl = this.employeeForm.get('username') as FormControl;
-    usernameControl.valueChanges
-      .pipe(
-        debounceTime(300), 
-        distinctUntilChanged(), 
-        filter((value: string) => !this.containsBlacklistCharacters(value)) 
-      )
-      .subscribe((value) => {
-        this.usernameSubject.next(value);
-        this.checkUniqueUsername(value); 
-      });
-  }
+
   private containsBlacklistCharacters(value: string): boolean {
     const blacklistPattern = /[!@&#${}%*\s]/; 
     return blacklistPattern.test(value);
@@ -252,55 +238,7 @@ filteredCountriesList = this.countrie;
       country.name.toLowerCase().includes(query)
     );
   }
-  setupCompanyNameCheck(): void {
-   const companyNameControl = this.employeeForm.get('companyName') as FormControl;
-    companyNameControl.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe((value) => {
-        this.companyNameSubject.next(value);
-        this.checkUniqueCompanyName(value);
-      });
-  }
-  private checkUniqueUsername(username: string): void {
-    this.checkNamesService.checkUniqueUserName(username).subscribe({
-      next: (response: any) => {
-        console.log('API Response:', response);
-  
-        if (response.responseType === 'Success' && response.responseCode === 1 && !response.data) {
-          this.usernameExistsMessage = ''; 
-        } else if (response.responseType === 'Error' && response.responseCode === 0 && response.data) {
-          this.usernameExistsMessage = response.data; 
-        } else {
-          this.usernameExistsMessage = 'Unexpected response from the server.'; 
-        }
-      },
-     
-    });
-  }
-  
-  // Check for unique company name 
-  private checkUniqueCompanyName(companyName: string): void {
-    const trimmedCompanyName = companyName.trim();
-    if (!trimmedCompanyName) {
-      return;
-    }
-  this.checkNamesService.checkUniqueCompanyName(trimmedCompanyName).subscribe({
-    next: (response: any) => {
-      console.log('API Response:', response);
-
-      if (response.responseType === 'Success' && response.responseCode === 1 && !response.data) {
-        this.companyNameExistsMessage = ''; 
-      } else if (response.responseType === 'Error' && response.responseCode === 0 && response.data) {
-        this.companyNameExistsMessage = response.data; 
-      } else {
-        this.companyNameExistsMessage = 'Unexpected response from the server.';
-      }
-    },
-    error: (error: any) => {
-      console.error('Error checking company name:', error);
-    },
-  });
-}
+ 
   // rl
   onRLNoBlur(): void {
     this.employeeForm.controls['rlNo'].markAsTouched();
