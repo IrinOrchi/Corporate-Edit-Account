@@ -45,6 +45,7 @@ export class EditAccountPageComponent implements OnInit {
   selectedCountry: LocationResponseDTO | null = null;
   searchTerm = new FormControl('');
   isOpenCountry: boolean = false;
+  isOpenCountryBilling: boolean = false;
   isOpen: boolean = false;
   showAddIndustryButton: boolean = false; 
   fieldsOrder: string[] = [];
@@ -698,6 +699,9 @@ private fetchDistricts(): Promise<void> {
   toggleDropdownCountry() {
     this.isOpenCountry = !this.isOpenCountry;
   }
+  toggleDropdownCountryBilling() {
+    this.isOpenCountryBilling = !this.isOpenCountryBilling;
+  }
   checkDropdownPosition() {
     const dropdownButton = document.querySelector('.dropdown-container button') as HTMLElement;
     const viewportHeight = window.innerHeight;
@@ -715,6 +719,7 @@ private fetchDistricts(): Promise<void> {
     if (!isInsideDropdown) {
       this.isOpen = false;
       this.isOpenCountry = false;
+      this.isOpenCountryBilling = false;
     }
   }
 
@@ -795,6 +800,7 @@ setupSearch(): void {
     this.isBangladesh = country.name === 'Bangladesh';
     this.currentFlagPath = this.filePath[country.name];
     this.isOpenCountry = false;
+    this.isOpenCountryBilling= false;
   }
   private updateFlagPath() {
    const countryCode = this.employeeForm.controls['contactMobile'].value;
