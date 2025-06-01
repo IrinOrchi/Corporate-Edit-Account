@@ -93,6 +93,7 @@ filteredCountriesList = this.countrie;
     inclusionPolicy: new FormControl(0),
     support: new FormControl(0),
     disabilityWrap: new FormControl(''),
+    billingAddress: new FormControl(''),
     training: new FormControl(0),
     industryName: new FormControl('', [Validators.maxLength(100),]),
     hidEntrepreneur: new FormControl(''),
@@ -1030,6 +1031,7 @@ private FetchCompanyInformation(): void {
           const outsideBDCompanyAddressBngControl = this.employeeForm.get('outsideBDCompanyAddressBng');
           const yearsOfEstablishMentControl = this.employeeForm.get('yearsOfEstablishMent');
           const businessDescControl = this.employeeForm.get('businessDesc');
+          const billingAddressControl = this.employeeForm.get('billingAddress');
           const tradeNoControl = this.employeeForm.get('tradeNo');
           const rlNoControl = this.employeeForm.get('rlNo');
           const webUrlControl = this.employeeForm.get('webUrl');
@@ -1050,6 +1052,10 @@ private FetchCompanyInformation(): void {
             // Set business description
             if (businessDescControl) {
               businessDescControl.setValue(this.companyData.businessDescription || '');
+            }
+            // Set billing address
+            if (billingAddressControl) {
+              billingAddressControl.setValue(this.companyData.billingAddress || '');
             }
 
             // Set license number

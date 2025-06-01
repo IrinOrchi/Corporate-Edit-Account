@@ -717,7 +717,7 @@
                 (employeeForm.controls['billingAddress'].errors?.['required'] || employeeForm.controls['billingAddress'].errors?.['whitespace'])
               ) {
                 <span class="error-message">
-                  Contact Person's Name cannot be empty
+                  Billing Address can not be empty
                 </span>
               }
             </div>
@@ -952,39 +952,6 @@
       }
       </section>
       </div>
-      <div class="flex-col items-start gap-5 p-2 mx-auto mt-6 max-w-7xl ">
-               <!-- Verification -->
-              <h2 class="font-inter text-[20px] mb-2 font-semibold leading-[38px] text-left text-[#0E73A9]">You're Almost Done!</h2>
-              <app-math-captcha  
-              [employeeForm]="employeeForm"
-              (input)="onInputChange($event)">
-              </app-math-captcha>
-              <div class="text-red-600">
-                @if (isContinueClicked && firstInvalidField === 'captchaInput' &&  employeeForm.controls['captchaInput'].errors?.['required'] || employeeForm.controls['captchaInput'].errors?.['maxLength']) {
-                <span class="mt-6 text-sm">Please type the Verification Code. </span>
-                }
-              </div>
-            </div>
-              <div class="max-w-7xl p-6 mx-auto flex-col mt-4 items-start gap-5 rounded-2xl bg-white border border-[#DAE5EC]">
-                <app-pricing-policy></app-pricing-policy>
-                
-                <div class="flex mt-3">
-                  <div class="flex items-center">
-                    <input name="policy_accept" 
-                           id="isPolicyAcceptedControl" 
-                           type="checkbox" 
-                           [formControl]="formControlSignals()['isPolicyAcceptedControl']"
-                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded cursor-pointer focus:ring-blue-500 focus:ring-offset-0 focus:ring-2">
-                  </div>
-                  <div class="ml-3">
-                    <label for="isPolicyAcceptedControl" 
-                           class="text-base font-normal text-black cursor-pointer">
-                      I Have Read Pricing Policy And Accepted It
-                    </label>
-                  </div>
-                </div>         
-              </div>
-              
             <section class="flex justify-end mx-auto mt-8 max-w-7xl">
               <div 
               (click)="onDisabledButtonClick($event)" 
@@ -999,7 +966,7 @@
             class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[16px] font-inter px-5 py-3 shadow-md transition duration-300 ease-linear"  
              >
               <span *ngIf="isLoading" class="mr-2 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              Continue 
+              Save 
             </button>
           </div>
               </section>
