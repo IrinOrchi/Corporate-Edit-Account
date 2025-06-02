@@ -1,0 +1,104 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/50 z-[1050]">
+  <div class="bg-white rounded-2xl shadow-lg w-[520px] max-h-[150vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="px-8 pt-8 pb-6 border-b border-[#dae5ec] flex justify-between items-center">
+      <div class="flex items-center gap-5">
+        <div class="w-[50px] h-[50px] flex justify-center items-center p-3.5 bg-white rounded-md shadow border border-[#dae5ec]">
+          <i class="icon icon-commercial w-8 h-6 text-xl text-[#0E73A9]"></i>
+        </div>
+        <div class="flex-col">
+          <h2 class="text-[#212121] text-[20px] font-bold font-inter tracking-tight">Company logo</h2>
+          <p class="text-[#595959] text-[16px] font-normal font-inter leading-normal">You didn't upload your company logo yet</p>
+        </div>
+      </div>
+      <button 
+        type="button"
+        class="text-gray-500 hover:text-gray-700 text-xl w-[38px] h-[38px] rounded-lg flex items-center justify-center" 
+        (click)="closeModal()">
+        ✕
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-8 py-6">
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        <div 
+          class="border-2 border-dashed rounded-lg p-4 flex items-center justify-center min-h-[200px] mb-6 relative"
+          [class.border-blue-500]="isDragging"
+          [class.bg-blue-50]="isDragging"
+          [class.border-gray-300]="!isDragging"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          (click)="triggerFileInput()">
+          @if (!previewUrl) {
+            <div class="flex flex-col items-center justify-center gap-4 text-center">
+               <div class="w-16 h-16 flex items-center justify-center">
+                 <img src="assets/images/Logoimage.svg" alt="Company Logo" class="w-16 h-16 object-contain">
+               </div>
+                <p 
+                  class="text-[#0E73A9] text-lg font-medium mb-1 underline cursor-pointer"
+                  (click)="triggerFileInput()">
+                  Click here to upload your file
+                </p>
+                <p class="text-[#595959] text-sm">*Logo width must be within 300 pixels and height must be within 300 pixels.</p>
+            </div>
+          } @else {
+            <div class="relative w-full h-full flex items-center justify-center">
+              <img [src]="previewUrl" alt="Preview" class="max-h-[300px] max-w-full object-contain rounded-lg">
+              <button 
+                type="button"
+                class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
+                (click)="removeImage(); $event.stopPropagation()">
+                ✕
+              </button>
+            </div>
+          }
+          <input 
+            type="file" 
+            id="fileInput" 
+            accept="image/*" 
+            class="hidden" 
+            (change)="onFileSelected($event)"
+            formControlName="image">
+        </div>
+
+        <!-- Smaller Images and Upload Button -->
+        <div class="grid grid-cols-4 gap-4">
+          @for (i of [].constructor(gridSize); let index = $index; track index) {
+            @if (uploadedImages[index]) {
+              <div 
+                class="w-20 h-20 border rounded-lg flex items-center justify-center cursor-pointer"
+                [class.border-blue-500]="uploadedImages[index].file === selectedFile"
+                (click)="selectImage(uploadedImages[index])">
+                 <img [src]="uploadedImages[index].previewUrl" alt="Smaller Logo" class="w-full h-full object-contain p-1">
+              </div>
+            } @else if (index === uploadedImages.length && uploadedImages.length < 4) {
+              <!-- Upload Button -->
+              <div 
+                class="w-20 h-20 border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
+                (click)="triggerFileInput()">
+                <i class="icon icon-plus text-xl text-gray-500"></i>
+                <span class="text-sm text-gray-700">Upload</span>
+              </div>
+            } @else {
+              <div class="w-20 h-20 border rounded-lg flex items-center justify-center bg-gray-100">
+                 <!-- Empty slot placeholder -->
+              </div>
+            }
+          }
+        </div>
+
+        <!-- Use Button -->
+        <div class="mt-6 flex justify-end">
+          <button 
+            type="submit"
+            class="px-6 py-3 bg-[#05A44B] text-white rounded-lg hover:bg-[#05A44B]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="!uploadForm.valid">
+            Use
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+// Custom scrollbar for the modal
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+// Animation for drag and drop
+.border-dashed {
+  transition: all 0.2s ease-in-out;
+}
+
+// Preview image container
+.relative {
+  img {
+    object-fit: contain;
+    max-width: 100%;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Icon styles
+.icon {
+  &-image, &-upload {
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+} 

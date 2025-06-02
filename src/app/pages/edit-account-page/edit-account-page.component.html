@@ -15,10 +15,16 @@
 
         <!-- Container for Icon and Name -->
         <div class="flex items-center mb-8 -mt-20 ml-6">
-          <div class="relative w-20 h-20 bg-white border border-gray-200 rounded-lg shadow flex items-center justify-center mr-4">   
-            <span class="icon icon-commercial text-gray-600 text-4xl"></span>
-            <span class="absolute top-[-6px] right-[-6px] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer">
-              <img src="assets/images/profile icon.svg" alt="Profile Icon" class="w-[28px] h-[28px] text-white">
+          <div class="relative w-20 h-20 bg-white border border-gray-200 rounded-lg shadow flex items-center justify-center mr-4">
+            @if (profileImageUrl) {
+              <img [src]="profileImageUrl" alt="Company Profile" class="w-full h-full object-cover rounded-lg">
+            } @else {
+              <span class="icon icon-commercial text-gray-600 text-4xl"></span>
+            }
+            <span 
+              class="absolute top-[-6px] right-[-6px] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer bg-white shadow-md hover:bg-gray-50"
+              (click)="openProfileImageModal()">
+              <img src="assets/images/profile icon.svg" alt="Profile Icon" class="w-[28px] h-[28px]">
             </span>
           </div>
           <!-- Company Name -->
@@ -950,4 +956,12 @@
               <div class="mt-6">
                 {{formValue | json}}
               </div>
+              
+<!-- Profile Image Modal -->
+@if (showProfileImageModal) {
+  <app-profile-image-modal
+    [closeModal]="closeProfileImageModal.bind(this)"
+    (imageUploaded)="onProfileImageUploaded($event)">
+  </app-profile-image-modal>
+}
               

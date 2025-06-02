@@ -17,6 +17,7 @@ import { AddIndustryModalComponent } from "../../components/add-industry-modal/a
 import { AuthService } from '../../Services/shared/auth.service';
 import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespaceValidator, noBlacklistCharacters, companyAddressValidator } from '../../utils/validators';
 import { Router } from '@angular/router';
+import { ProfileImageModalComponent } from '../../components/profile-image-modal/profile-image-modal.component';
 
 
 
@@ -24,7 +25,7 @@ import { Router } from '@angular/router';
   selector: 'app-edit-account-page',
   standalone: true,
   imports: [RadioGroupComponent,InputFieldComponent,
-    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,AddIndustryModalComponent],
+    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,AddIndustryModalComponent,ProfileImageModalComponent],
   templateUrl: './edit-account-page.component.html',
   styleUrls: ['./edit-account-page.component.scss']
 })
@@ -125,6 +126,8 @@ filteredCountriesList = this.countrie;
   private companyNameSubject: Subject<string> = new Subject();
   contactPersons: ContactPerson[] = [];
   selectedContactPerson: ContactPerson | null = null;
+  showProfileImageModal = false;
+  profileImageUrl: string | null = null;
   constructor(private checkNamesService: CheckNamesService , private authService: AuthService ,
     private router: Router) {}
   ngOnInit(): void {
@@ -1089,5 +1092,30 @@ private FetchCompanyInformation(): void {
         contactMobile: mobileNumber
       }, { emitEvent: false }); 
     }
+  }
+
+  openProfileImageModal() {
+    this.showProfileImageModal = true;
+  }
+
+  closeProfileImageModal() {
+    this.showProfileImageModal = false;
+  }
+
+  onProfileImageUploaded(file: File) {
+    // Here you would typically upload the file to your server
+    // For now, we'll just create a local preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.profileImageUrl = reader.result as string;
+      // Update the profile icon in the UI
+      const profileIcon = document.querySelector('.icon-commercial') as HTMLElement;
+      if (profileIcon) {
+        profileIcon.style.backgroundImage = `url(${this.profileImageUrl})`;
+        profileIcon.style.backgroundSize = 'cover';
+        profileIcon.style.backgroundPosition = 'center';
+      }
+    };
+    reader.readAsDataURL(file);
   }
 }
