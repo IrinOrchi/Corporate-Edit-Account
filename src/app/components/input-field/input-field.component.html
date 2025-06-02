@@ -14,9 +14,10 @@
     [ngClass]="{
       'px-5': !icon, 
       'px-10': icon,
-      'bg-[#eee]': disabled
+      'bg-[#eee]': disabled,
+      'bg-white': !disabled
     }"
-    class="h-[50px] flex items-center py-[14px] font-inter mx-auto w-full sm:w-full sm:mx-0 rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
+    class="h-[50px] flex items-center py-[14px] font-inter mx-auto w-full sm:w-full sm:mx-0 rounded-lg border border-[#DAE5EC] shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
     [name]="name"
     [id]="id"
     [maxLength]="maxLength"
