@@ -13,6 +13,20 @@
         style="background-image: url('assets/images/editAccountHeader.svg');">
       </div>
 
+        <!-- Container for Icon and Name -->
+        <div class="flex items-center mb-8 -mt-20 ml-6">
+          <div class="relative w-20 h-20 bg-white border border-gray-200 rounded-lg shadow flex items-center justify-center mr-4">   
+            <span class="icon icon-commercial text-gray-600 text-4xl"></span>
+            <span class="absolute top-[-6px] right-[-6px] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer">
+              <img src="assets/images/profile icon.svg" alt="Profile Icon" class="w-[28px] h-[28px] text-white">
+            </span>
+          </div>
+          <!-- Company Name -->
+          <div class="flex-1 flex items-center">
+            <span class="text-xl font-semibold text-gray-900">{{ employeeForm.controls['companyName'].value }}</span>
+          </div>
+        </div>
+
         <h2 class="flex items-center mb-4 text-[#0E73A9] font-inter text-[18px] font-semibold leading-[27px]">
           <span class="mr-2 icon icon-commercial"></span> Company details information
         </h2>
