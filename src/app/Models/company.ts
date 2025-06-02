@@ -52,6 +52,14 @@ export interface CreateAccountResponseDTO {
   Message: string;
   CorporateAccountID: number;
 }
+export interface ContactPerson {
+  contactId: number;
+  contactName: string;
+  designation: string;
+  mobile: string;
+  email: string;
+}
+
 
 
 // export interface OrganizationRequestDTO {

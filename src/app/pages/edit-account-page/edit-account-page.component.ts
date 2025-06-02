@@ -7,6 +7,7 @@ import { TextAreaComponent } from '../../components/text-area/text-area.componen
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { IndustryTypeResponseDTO, IndustryType, LocationResponseDTO, RLNoRequestModel } from '../../Models/company';
+import { ContactPerson } from '../../Models/company';
 import { ErrorModalComponent } from "../../components/error-modal/error-modal.component";
 import { RadioGroupComponent } from '../../components/radio-group/radio-group.component';
 import { PricingPolicyComponent } from '../../components/pricing-policy/pricing-policy.component';
@@ -17,14 +18,7 @@ import { AuthService } from '../../Services/shared/auth.service';
 import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespaceValidator, noBlacklistCharacters, companyAddressValidator } from '../../utils/validators';
 import { Router } from '@angular/router';
 
-// Add interface for contact person
-interface ContactPerson {
-  contactId: number;
-  contactName: string;
-  designation: string;
-  mobile: string;
-  email: string;
-}
+
 
 @Component({
   selector: 'app-edit-account-page',
@@ -242,70 +236,70 @@ filteredCountriesList = this.countrie;
   }
  
   // rl
-  onRLNoBlur(): void {
-    this.employeeForm.controls['rlNo'].markAsTouched();
+  // onRLNoBlur(): void {
+  //   this.employeeForm.controls['rlNo'].markAsTouched();
   
-    if (this.rlNoHasValue && this.employeeForm.controls['rlNo'].invalid) {
-      this.showError = true;
-      this.rlErrorMessage = 'RL Number is required';  
-      this.showErrorModal = true; 
-    } else {
-      this.showError = false; 
-      this.showErrorModal = false; 
-    }
+  //   if (this.rlNoHasValue && this.employeeForm.controls['rlNo'].invalid) {
+  //     this.showError = true;
+  //     this.rlErrorMessage = 'RL Number is required';  
+  //     this.showErrorModal = true; 
+  //   } else {
+  //     this.showError = false; 
+  //     this.showErrorModal = false; 
+  //   }
   
-    if (this.rlNoHasValue && this.employeeForm.controls['rlNo'].valid) {
-      this.verifyRLNo();
-    }
-  }
+  //   if (this.rlNoHasValue && this.employeeForm.controls['rlNo'].valid) {
+  //     this.verifyRLNo();
+  //   }
+  // }
   
-  verifyRLNo(): void {
-    const rlNo: string = this.employeeForm.get('rlNo')?.value?.toString();
-    const companyName: string = this.employeeForm.get('companyName')?.value?.toString();
+  // verifyRLNo(): void {
+  //   const rlNo: string = this.employeeForm.get('rlNo')?.value?.toString();
+  //   const companyName: string = this.employeeForm.get('companyName')?.value?.toString();
   
-    if (rlNo && companyName) {
-      const rlRequest: RLNoRequestModel = { RLNo: rlNo };
-      console.log('Company Name Input:', companyName);
-      this.checkNamesService.verifyRLNo(rlRequest).subscribe({
-        next: (response: any) => {
-          console.log('RL No Response:', response);
+  //   if (rlNo && companyName) {
+  //     const rlRequest: RLNoRequestModel = { RLNo: rlNo };
+  //     console.log('Company Name Input:', companyName);
+  //     this.checkNamesService.verifyRLNo(rlRequest).subscribe({
+  //       next: (response: any) => {
+  //         console.log('RL No Response:', response);
   
-          if (
-            response.responseType === 'Success' &&
-            response.responseCode === 1 &&
-            response.data?.error === '0' &&
-            response.data?.company_Name === companyName
-          ) {
-            this.showError = false;
-            this.rlErrorMessage = '';
-            this.showErrorModal = false;
-          } else {
-            this.showError = true;
-            this.rlErrorMessage =
-              response.data?.error !== '0'
-                ? 'Invalid RL No.'
-                : 'Company name does not match.';
-            this.showErrorModal = true;
-          }
-        },
-        error: (error: any) => {
-          console.error('Error verifying RL No:', error);
-          this.showError = true;
-          this.rlErrorMessage = 'An error occurred while verifying RL No.';
-          this.showErrorModal = true;
-        },
-      });
-    } else {
-      this.showError = true;
-      this.rlErrorMessage = 'RL No and Company Name are required.';
-      this.showErrorModal = true;
-    }
-  }
-  closeModal(): void {
-  this.employeeForm.controls['rlNo'].reset();
-  this.rlNoHasValue = false; 
-  this.showErrorModal = false; 
-  }
+  //         if (
+  //           response.responseType === 'Success' &&
+  //           response.responseCode === 1 &&
+  //           response.data?.error === '0' &&
+  //           response.data?.company_Name === companyName
+  //         ) {
+  //           this.showError = false;
+  //           this.rlErrorMessage = '';
+  //           this.showErrorModal = false;
+  //         } else {
+  //           this.showError = true;
+  //           this.rlErrorMessage =
+  //             response.data?.error !== '0'
+  //               ? 'Invalid RL No.'
+  //               : 'Company name does not match.';
+  //           this.showErrorModal = true;
+  //         }
+  //       },
+  //       error: (error: any) => {
+  //         console.error('Error verifying RL No:', error);
+  //         this.showError = true;
+  //         this.rlErrorMessage = 'An error occurred while verifying RL No.';
+  //         this.showErrorModal = true;
+  //       },
+  //     });
+  //   } else {
+  //     this.showError = true;
+  //     this.rlErrorMessage = 'RL No and Company Name are required.';
+  //     this.showErrorModal = true;
+  //   }
+  // }
+  // closeModal(): void {
+  // this.employeeForm.controls['rlNo'].reset();
+  // this.rlNoHasValue = false; 
+  // this.showErrorModal = false; 
+  // }
   // Fetch all industries
   fetchIndustries(): void {
     this.checkNamesService.getAllIndustryIds().pipe(
@@ -741,7 +735,7 @@ setupSearch(): void {
     this.isBangladesh = country.name === 'Bangladesh';
     this.currentFlagPath = this.filePath[country.name];
     this.isOpenCountry = false;
-    this.isOpenCountryBilling= false;
+    this.isOpenCountryBilling = false;
   }
   private updateFlagPath() {
    const countryCode = this.employeeForm.controls['contactMobile'].value;
@@ -980,7 +974,11 @@ private FetchCompanyInformation(): void {
             }
             // Set billing contact number
             if (billingContactControl) {
-              billingContactControl.setValue(this.companyData.billingContact || '');
+              let billingNumber = this.companyData.billingContact || '';
+              if (this.isBangladesh && billingNumber.startsWith('0')) {
+                billingNumber = billingNumber.substring(1);
+              }
+              billingContactControl.setValue(billingNumber);
             }
 
             // Set RL number
