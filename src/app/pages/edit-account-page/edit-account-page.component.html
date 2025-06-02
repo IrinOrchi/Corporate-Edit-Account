@@ -29,7 +29,9 @@
               [control]="formControlSignals()['companyName']"
               placeholder="Type Company Name"
               [maxLength]="120"
-              [isRequired]="true">
+              [isRequired]="true"
+              [disabled]="true"
+              [ngClass]="{'opacity-75': true}">
             </app-input-field>
             <div class="text-red-600" data-error-for="username">
               @if (
@@ -483,14 +485,13 @@
                 RL No.<span class="ml-2 text-[16px] font-inter font-normal text-[#757575]">(Only for Recruiting Agency)</span>
               </label>
               <input
-                class="mb-2 px-5 py-[14px] h-[50px] w-full font-inter rounded-lg border border-[#DAE5EC] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]"
-                (blur)="onRLNoBlur()"
-                (input)="onInputChange($event)"
+                class="mb-2 px-5 py-[14px] h-[50px] w-full font-inter rounded-lg border border-[#DAE5EC] bg-[#eee] shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB] disabled:bg-[#eee]"
                 name="rlNo"
-                formControlName="rlNo"
+                [formControl]="formControlSignals()['rlNo']"
                 id="rlNo"
                 placeholder="Enter Number Only"
                 maxlength="6"
+                [ngClass]="{'opacity-75': true}"
               />
               <div class="text-red-600">
                 @if(employeeForm.controls['rlNo'].touched && employeeForm.controls['rlNo'].errors?.['required']) {
@@ -498,13 +499,6 @@
                 }
             </div>  
           </div>
-            @if (showErrorModal && rlNoHasValue){
-            <app-error-modal>
-            </app-error-modal>
-          }
-            @if (showErrorModal){
-              <app-error-modal (modalClosed)="closeModal()"></app-error-modal>
-          }
               <div class="flex-1">
                     <app-input-field
                     label="Website URL"
@@ -565,6 +559,8 @@
                 [value]="''"
                 [maxLength]="100"
                 [isRequired]="true"
+                [disabled]="true"
+                [ngClass]="{'opacity-75': true}"
                 >
               </app-input-field>
               <div class="text-red-600">
@@ -591,6 +587,8 @@
                 [value]="''"
                 [maxLength]="45"
                 [isRequired]="true"
+                [disabled]="true"
+              [ngClass]="{'opacity-75': true}"
                 >
               </app-input-field>
               <div class="text-red-600">
@@ -611,7 +609,7 @@
                 <label for="contactMobile" class="block mb-2 text-[16px] font-semibold text-gray-700">
                   Contact Person's Mobile <span class="text-red-500">*</span>
                 </label>
-                <div class="h-[50px] flex items-center border border-[#DAE5EC] rounded-lg px-1.5 sm:px-3 py-2 w-full h[24px] shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]">
+                <div class="h-[50px] flex  bg-[#eee]  items-center border border-[#DAE5EC] rounded-lg px-1.5 sm:px-3 py-2 w-full h[24px] shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]">
                   <img 
                     [src]="currentFlagPath" 
                     alt="Flag" 
@@ -620,8 +618,9 @@
                   />
                   <div class="relative flex items-center">
                     <button 
-                      class="flex items-center sm:py-2 pl-1 pr-1 sm:px-3 text-[16px] font-inter text-gray-900 bg-white border-r border-[#DAE5EC] hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none"
+                      class="flex items-center  bg-[#eee]  sm:py-2 pl-1 pr-1 sm:px-3 text-[16px] font-inter text-gray-900 border-r border-[#DAE5EC] hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none"
                       type="button"
+                      [ngClass]="{'opacity-75': true}"
                       (click)="toggleDropdownCountry()"
                     >
                       <span class="mr-1">{{ currentCountry.phoneCode }}</span>
@@ -662,11 +661,12 @@
                     type="text" 
                     id="contactMobile" 
                     name="txtContactMobile" 
-                    class="flex-1 px-2 py-1 text-black placeholder-gray-400 border-none text-md font-inter focus:outline-none"
+                    class="flex-1 px-2 py-1 text-black  bg-[#eee]  placeholder-gray-400 border-none text-md font-inter focus:outline-none"
                     placeholder="Enter Mobile Number" 
                     (input)="onInputChange($event)"
                     [formControl]="formControlSignals()['contactMobile']"
                     minlength="10"
+                    [ngClass]="{'opacity-75': true}"
                     maxlength="{{ isBangladesh ? '10' : '15' }}"
                     required 
                   />
@@ -775,33 +775,17 @@
                   <!-- Mobile Number Input -->
                   <input 
                     type="text" 
-                    id="contactMobile" 
-                    name="txtContactMobile" 
+                    id="billingContact" 
+                    name="txtbillingContact" 
                     class="flex-1 px-2 py-1 text-black placeholder-gray-400 border-none text-md font-inter focus:outline-none"
                     placeholder="Enter Mobile Number" 
                     (input)="onInputChange($event)"
-                    [formControl]="formControlSignals()['contactMobile']"
+                    [formControl]="formControlSignals()['billingContact']"
                     minlength="10"
                     maxlength="{{ isBangladesh ? '10' : '15' }}"
                     required 
                   />
-                </div>
-                
-              <div class="text-red-600 ">
-                @if (isContinueClicked && firstInvalidField === 'contactMobile'  && employeeForm.controls['contactMobile'].errors?.['required']) {
-                <span class="mt-4 text-sm">Contact Number can not be empty
-                </span>
-                }
-                @else if (isBangladesh && (employeeForm.controls['contactMobile'].errors?.['minlength'] || employeeForm.controls['contactMobile'].errors?.['maxlength'])) {
-                  <span class="mt-4 text-sm">
-                    Contact Number must be 10 digits and won't start from 0
-                  </span>
-                }
-                
-                @else if (employeeForm.controls['contactMobile'].errors?.['mobile']) {
-                  <span class="mt-4 text-sm">Please enter a valid mobile number</span>
-                }
-            </div>          
+                </div>          
               </div>
             </div>
           
@@ -809,28 +793,15 @@
               <div class="flex-1">
                 <app-input-field
                 label="Billing Contact's Email"
-                name="txtContactEmail"
-                id="contactEmail"
-                [control]="formControlSignals()['contactEmail']"
+                name="txtbillingEmail"
+                id="billingEmail"
+                [control]="formControlSignals()['billingEmail']"
                 placeholder="Type contact person's email"
                 [value]="''"
                 [maxLength]="45"
                 [isRequired]="true"
                 >
               </app-input-field>
-              <div class="text-red-600">
-                @if (
-                  isContinueClicked &&
-                  firstInvalidField === 'contactEmail' &&
-                  (employeeForm.controls['contactEmail'].errors?.['required'] || employeeForm.controls['contactEmail'].errors?.['whitespace'])
-                ) {
-                  <span class="error-message">
-                    Contact Person's Email can not be empty</span>
-                }
-                @else if (employeeForm.controls['contactEmail'].errors?.['email']) {
-                  <span class="error-message">Please enter a valid email address</span>
-                }
-            </div>
               </div>
              
             </div>

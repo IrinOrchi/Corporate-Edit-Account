@@ -21,6 +21,17 @@ export class InputFieldComponent {
   @Input() type: string = 'text';
   @Input() icon?: string; 
   @Input() autocomplete: string = 'off';  
-  @Input() control: FormControl<string> = new FormControl()
-  @Input() disabled: boolean = false;
+  @Input() control: FormControl<string> = new FormControl();
+  @Input() set disabled(value: boolean) {
+    if (this.control) {
+      if (value) {
+        this.control.disable();
+      } else {
+        this.control.enable();
+      }
+    }
+  }
+  get disabled(): boolean {
+    return this.control?.disabled ?? false;
+  }
 }

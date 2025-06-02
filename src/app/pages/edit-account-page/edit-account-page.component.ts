@@ -89,11 +89,13 @@ filteredCountriesList = this.countrie;
     contactName: new FormControl('', [Validators.required, noWhitespaceValidator()]),
     contactDesignation: new FormControl('', [Validators.required, noWhitespaceValidator()]),
     contactEmail: new FormControl('', [Validators.required, Validators.email, noWhitespaceValidator()]),
-    contactMobile: new FormControl('', [Validators.required]),
+    contactMobile: new FormControl({ value: '', disabled: true }, [Validators.required]),
     inclusionPolicy: new FormControl(0),
     support: new FormControl(0),
     disabilityWrap: new FormControl(''),
     billingAddress: new FormControl(''),
+    billingEmail: new FormControl(''),
+    billingContact: new FormControl(''),
     training: new FormControl(0),
     industryName: new FormControl('', [Validators.maxLength(100),]),
     hidEntrepreneur: new FormControl(''),
@@ -101,7 +103,7 @@ filteredCountriesList = this.countrie;
     outsideBDCompanyAddressBng: new FormControl(''),
     captchaInput: new FormControl('', [Validators.required, Validators.maxLength(2),Validators.pattern('^[0-9]*$')]),
     companyAddressBangla: new FormControl('',[banglaTextValidator()]),
-    rlNo: new FormControl(null,[Validators.pattern('^[0-9]*$')]),
+    rlNo: new FormControl({value: null, disabled: true},[Validators.pattern('^[0-9]*$')]),
     isPolicyAcceptedControl: new FormControl('')
   },{ validators: passwordMatchValidator() }
 );
@@ -942,6 +944,8 @@ private FetchCompanyInformation(): void {
           const billingAddressControl = this.employeeForm.get('billingAddress');
           const tradeNoControl = this.employeeForm.get('tradeNo');
           const rlNoControl = this.employeeForm.get('rlNo');
+          const contactEmailBillingControl = this.employeeForm.get('billingEmail');
+          const billingContactControl = this.employeeForm.get('billingContact');
           const webUrlControl = this.employeeForm.get('webUrl');
           
           if (companyNameControl && companyNameBanglaControl && yearsOfEstablishMentControl) {
@@ -969,6 +973,14 @@ private FetchCompanyInformation(): void {
             // Set license number
             if (tradeNoControl) {
               tradeNoControl.setValue(this.companyData.licenseNo || '');
+            }
+            // Set contact email for billing
+            if (contactEmailBillingControl) {
+              contactEmailBillingControl.setValue(this.companyData.billingEmail || '');
+            }
+            // Set billing contact number
+            if (billingContactControl) {
+              billingContactControl.setValue(this.companyData.billingContact || '');
             }
 
             // Set RL number
