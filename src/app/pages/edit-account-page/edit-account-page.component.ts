@@ -30,7 +30,7 @@ interface ContactPerson {
   selector: 'app-edit-account-page',
   standalone: true,
   imports: [RadioGroupComponent,InputFieldComponent,
-    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,ErrorModalComponent,AddIndustryModalComponent],
+    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,AddIndustryModalComponent],
   templateUrl: './edit-account-page.component.html',
   styleUrls: ['./edit-account-page.component.scss']
 })

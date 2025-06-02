@@ -623,7 +623,7 @@
                       [ngClass]="{'opacity-75': true}"
                       (click)="toggleDropdownCountry()"
                     >
-                      <span class="mr-1">{{ currentCountry.phoneCode }}</span>
+                      <span class="mr-1">({{ currentCountry.phoneCode }})</span>
                       <svg class="w-2 h-2 ml-1 sm:w-3 sm:h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                       </svg>
@@ -670,23 +670,7 @@
                     maxlength="{{ isBangladesh ? '10' : '15' }}"
                     required 
                   />
-                </div>
-                
-              <div class="text-red-600 ">
-                @if (isContinueClicked && firstInvalidField === 'contactMobile'  && employeeForm.controls['contactMobile'].errors?.['required']) {
-                <span class="mt-4 text-sm">Contact Number can not be empty
-                </span>
-                }
-                @else if (isBangladesh && (employeeForm.controls['contactMobile'].errors?.['minlength'] || employeeForm.controls['contactMobile'].errors?.['maxlength'])) {
-                  <span class="mt-4 text-sm">
-                    Contact Number must be 10 digits and won't start from 0
-                  </span>
-                }
-                
-                @else if (employeeForm.controls['contactMobile'].errors?.['mobile']) {
-                  <span class="mt-4 text-sm">Please enter a valid mobile number</span>
-                }
-            </div>          
+                </div>        
               </div>
             </div>
               </div>
@@ -694,7 +678,8 @@
       <!-- billing address -->
                  <div class="flex-col items-start gap-5 p-6 mx-auto mt-6 bg-white shadow-lg max-w-7xl rounded-2xl">
                 <h2 class="flex items-center mb-4 text-[#0E73A9] font-inter text-[18px] font-semibold leading-[27px]">
-                  <span class="mr-2 icon icon-phone"></span>Billing address
+                  <img src="assets/images/payment-receipt.svg" alt="payment receipt" class="mr-2 w-5 h-5" />
+                  Billing address
                 </h2>
                 <!-- Contact -->
             <div class="flex flex-col gap-2 sm:flex-row sm:gap-4 ">
@@ -739,7 +724,7 @@
                       type="button"
                       (click)="toggleDropdownCountryBilling()"
                     >
-                      <span class="mr-1">{{ currentCountry.phoneCode }}</span>
+                      <span class="mr-1">({{ currentCountry.phoneCode }})</span>
                       <svg class="w-2 h-2 ml-1 sm:w-3 sm:h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                       </svg>
