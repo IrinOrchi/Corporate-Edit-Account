@@ -568,7 +568,6 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
       const requestPayload = { OutsideBd: '1', DistrictId: '', CountryId: '' };
       this.checkNamesService.getLocations(requestPayload).subscribe({
         next: (response: any) => {
-          console.log("Full countries response:", response);
   
           if (response.responseCode === 1 && Array.isArray(response.data)) {
             const countryData = response.data;
@@ -580,21 +579,13 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
               }));
               resolve();
             } else {
-              console.error('No countries found in the response.');
               this.countries = [];
-              reject(new Error('No countries found'));
             }
           } else {
-            console.error('Unexpected responseCode or response format:', response);
             this.countries = [];
-            reject(new Error('Invalid response format'));
           }
         },
-        error: (error: any) => {
-          console.error('Error fetching countries:', error);
-          this.countries = [];
-          reject(error);
-        }
+        
       });
     });
   }
@@ -613,13 +604,11 @@ private fetchDistricts(): Promise<void> {
           this.thanas = [];
           resolve();
         } else {
-          console.error('Unexpected responseCode or response format:', response);
           this.districts = [];
           reject(new Error('Invalid response format'));
         }
       },
       error: (error: any) => {
-        console.error('Error fetching districts:', error);
         this.districts = [];
         reject(error);
       }
@@ -849,7 +838,6 @@ private FetchCompanyInformation(): void {
             
             if (facilities.inclusionPolicy !== undefined) {
               const inclusionPolicyValue = facilities.inclusionPolicy.toString();
-              console.log('Setting inclusion policy to:', inclusionPolicyValue);
               this.employeeForm.patchValue({
                 inclusionPolicy: inclusionPolicyValue
               });
@@ -857,7 +845,6 @@ private FetchCompanyInformation(): void {
 
             if (facilities.support !== undefined) {
               const supportValue = facilities.support.toString();
-              console.log('Setting support to:', supportValue);
               this.employeeForm.patchValue({
                 support: supportValue
               });
@@ -865,7 +852,6 @@ private FetchCompanyInformation(): void {
 
             if (facilities.training !== undefined) {
               const trainingValue = facilities.training.toString();
-              console.log('Setting training to:', trainingValue);
               this.employeeForm.patchValue({
                 training: trainingValue
               });
@@ -897,43 +883,7 @@ private FetchCompanyInformation(): void {
             }
             companySizeControl.setValue(companySizeValue);
           }
-          
-          if (response.data.industryName && Array.isArray(response.data.industryName)) {
-            this.allIndustryTypes = response.data.industryName.map((industry: { organizationId: number; organizationName: string }) => ({
-              IndustryValue: industry.organizationId,
-              IndustryName: industry.organizationName
-            }));
-            
-            this.filteredIndustryTypes = [...this.allIndustryTypes];
-            
-            this.selectedIndustries = [];
-            
-            if (response.data.industryIds && Array.isArray(response.data.industryIds)) {
-              const selectedIds = response.data.industryIds.map(
-                (industry: { organizationTypeId: string }) => industry.organizationTypeId
-              );
-              
-              this.allIndustryTypes.forEach(industry => {
-                if (selectedIds.includes(industry.IndustryValue.toString())) {
-                  this.selectedIndustries.push({
-                    IndustryValue: industry.IndustryValue,
-                    IndustryName: industry.IndustryName
-                  });
-                }
-              });
-              
-              const selectedValues = this.selectedIndustries
-                .map(industry => industry.IndustryValue)
-                .join(',');
-              this.employeeForm.controls['industryTypeArray'].setValue(selectedValues);
-              
-              const industryNames = this.selectedIndustries
-                .map(industry => industry.IndustryName)
-                .join(', ');
-              this.employeeForm.controls['industryName'].setValue(industryNames);
-            }
-          }
-
+     
           if (response.data.recordContactPerson && response.data.recordContactPerson.length > 0) {
             this.contactPersons = response.data.recordContactPerson;
             
