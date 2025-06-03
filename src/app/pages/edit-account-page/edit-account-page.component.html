@@ -888,12 +888,17 @@
                         <input type="radio"
                          name="disabilityInclusRadPolSupport"
                          id="disabilityInclusRadPol3" 
-                         value="1" [defaultChecked]="1" 
+                         [value]="'1'"
                          [formControl]="formControlSignals()['support']">
                         <span class="ml-1 question">Yes</span>
                     </label>
                     <label class="mr-4 radio-inline" for="disabilityInclusRadPol4">
-                        <input type="radio" class =custom-radio name="disabilityInclusRadPolSupport" id="disabilityInclusRadPol4" value="2" [formControl]="formControlSignals()['support']">
+                        <input type="radio" 
+                        class="custom-radio" 
+                        name="disabilityInclusRadPolSupport" 
+                        id="disabilityInclusRadPol4" 
+                        [value]="'2'"
+                        [formControl]="formControlSignals()['support']">
                         <span class="ml-1 question">No</span>
                     </label>
                 </fieldset>  
@@ -901,11 +906,19 @@
                 <fieldset class="mb-4">
                   <legend class="text-[#212121] font-inter text-[16px] font-semibold leading-[24px]">Do you provide Disability Inclusion Training for your Employees?</legend>
                   <label class="mr-4 radio-inline" for="disabilityInclusRadPol5">
-                      <input type="radio" name="disabilityInclus" id="disabilityInclusRadPol5" value="1" [defaultChecked]="1" [formControl]="formControlSignals()['training']">
+                      <input type="radio" 
+                      name="disabilityInclus" 
+                      id="disabilityInclusRadPol5" 
+                      [value]="'1'"
+                      [formControl]="formControlSignals()['training']">
                       <span class="ml-1 question">Yes</span>
                   </label>
                   <label class="mr-4 radio-inline " for="disabilityInclusRadPol6">
-                      <input type="radio" name="disabilityInclus" id="disabilityInclusRadPol6" value="2" [formControl]="formControlSignals()['training']">
+                      <input type="radio" 
+                      name="disabilityInclus" 
+                      id="disabilityInclusRadPol6" 
+                      [value]="'2'"
+                      [formControl]="formControlSignals()['training']">
                       <span class="ml-1 question">No</span>
                   </label>
               </fieldset> 

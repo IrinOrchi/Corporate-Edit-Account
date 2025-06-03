@@ -86,12 +86,12 @@ filteredCountriesList = this.countrie;
     contactEmail: new FormControl('', [Validators.required, Validators.email, noWhitespaceValidator()]),
     contactMobile: new FormControl({ value: '', disabled: true }, [Validators.required]),
     inclusionPolicy: new FormControl<string>(''),
-    support: new FormControl(0),
+    support: new FormControl<string>(''),
     disabilityWrap: new FormControl(''),
     billingAddress: new FormControl(''),
     billingEmail: new FormControl(''),
     billingContact: new FormControl(''),
-    training: new FormControl(0),
+    training: new FormControl<string>(''),
     industryName: new FormControl('', [Validators.maxLength(100),]),
     hidEntrepreneur: new FormControl(''),
     rlNoStatus: new FormControl(''),
@@ -846,13 +846,32 @@ private FetchCompanyInformation(): void {
           this.companyData = response.data.companyInformation[0]; 
           console.log('Company Data from API:', this.companyData);
 
-          // Set Disability Inclusion Policy
-          if (this.companyData.companyFacilities?.inclusionPolicy !== undefined) {
-            const inclusionPolicyValue = this.companyData.companyFacilities.inclusionPolicy.toString();
-            console.log('Setting inclusion policy to:', inclusionPolicyValue);
-            this.employeeForm.patchValue({
-              inclusionPolicy: inclusionPolicyValue
-            });
+          if (this.companyData.companyFacilities) {
+            const facilities = this.companyData.companyFacilities;
+            
+            if (facilities.inclusionPolicy !== undefined) {
+              const inclusionPolicyValue = facilities.inclusionPolicy.toString();
+              console.log('Setting inclusion policy to:', inclusionPolicyValue);
+              this.employeeForm.patchValue({
+                inclusionPolicy: inclusionPolicyValue
+              });
+            }
+
+            if (facilities.support !== undefined) {
+              const supportValue = facilities.support.toString();
+              console.log('Setting support to:', supportValue);
+              this.employeeForm.patchValue({
+                support: supportValue
+              });
+            }
+
+            if (facilities.training !== undefined) {
+              const trainingValue = facilities.training.toString();
+              console.log('Setting training to:', trainingValue);
+              this.employeeForm.patchValue({
+                training: trainingValue
+              });
+            }
           }
 
           const facilitiesForDisabilitiesControl = this.employeeForm.get('facilitiesForDisabilities');
@@ -1114,12 +1133,10 @@ private FetchCompanyInformation(): void {
   }
 
   onProfileImageUploaded(file: File) {
-    // Here you would typically upload the file to your server
-    // For now, we'll just create a local preview
+
     const reader = new FileReader();
     reader.onload = () => {
       this.profileImageUrl = reader.result as string;
-      // Update the profile icon in the UI
       const profileIcon = document.querySelector('.icon-commercial') as HTMLElement;
       if (profileIcon) {
         profileIcon.style.backgroundImage = `url(${this.profileImageUrl})`;
@@ -1133,5 +1150,5 @@ private FetchCompanyInformation(): void {
   isValueInDiList(value: string): boolean {
     return this.companyData?.companyFacilities?.diList?.some((v: string | number) => String(v) === value) ?? false;
   }
-  // Unblock kore diyen kintu
+ 
 }
