@@ -1,19 +1,19 @@
 
 
-.custom-radio-container {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 16px;
-  width: auto; 
-  height: 52px; 
-  border: 1px solid #DAE5EC;
-  border-radius: 8px;
-  background: white;
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  flex-shrink: 0; 
-}
+  .custom-radio-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    width: 124px;
+    height: 52px;
+    border: 1px solid #DAE5EC;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
   .custom-radio-container:hover {
     border-color: #0F6DDB;
   }

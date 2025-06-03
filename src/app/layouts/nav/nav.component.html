@@ -1,0 +1,361 @@
+<div id="headerhide">
+  <div class="bg-[#e8eff3] py-[10px]">
+    <div
+      class="max-w-5xl lg:max-w-6xl xl:max-w-[1420px] 2xl:max-w-[1330px] xl:ml-[46px] xl:mr-[60px] 2xl:ps-2 2xl:mx-auto  2xl:pe-4">
+      <div class="flex items-center justify-between pl-[14px]">
+        <div class="flex-1">
+          <a class="flex ml-8" href="https://recruiter.bdjobs.com">
+            <img src="https://Corporate3.bdjobs.com/images/bdjobs-recruiter-logo.svg" class="w-[256px]" />
+          </a>
+        </div>
+
+        <div class="flex-1 text-right pr-[14px] mr-8">
+          <a href="https://corporate3.bdjobs.com/services.asp?from=recruiter"
+            class="py-3 px-[18px] inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-[#0e73a9]  hover:bg-[#225e7e]  text-white disabled:opacity-50 disabled:pointer-events-none">Service
+            Packages
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- main navigation -->
+
+  <header
+    class="relative flex flex-wrap sm:justify-start sm:flex-nowrap  w-full bg-white border-b border-gray-300 shadow-sm text-sm py-2">
+    <nav class="2xl:max-w-[82rem] mx-auto 2xl:px-4 xl:px-[66px] w-full sm:flex sm:items-center sm:justify-between "
+      aria-label="Global">
+      <div class="flex items-center gap-4 ml-8">
+        <a class="font-semibold text-base text-[#263238] whitespace-nowrap 
+          hover:underline hover:decoration-[2px] hover:underline-offset-[21px] hover:text-[#0e73a9]"
+          href="https://recruiter.bdjobs.com/dashboard" aria-current="page" style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600;">
+          Job Dashboard
+        </a>
+        <div class="relative w-28 h-8">
+          <a href="https://recruiter.bdjobs.com/talent-search-dashboard/" aria-current="page">
+            <img src="assets/images/Talent Search Logo2.svg" alt="Talent Search" class="w-full h-full">
+          </a>
+          <!-- <div class="absolute top-[41.5px] w-[60px] h-0.5 bg-[#0E73A9]"></div> -->
+        </div>
+        <!-- <a class="font-semibold text-base text-[#263238] whitespace-nowrap hover:underline-offset-[21px] hover:underline hover:decoration-[2px] hover:text-[#0e73a9]"
+          href="https://corporate3.bdjobs.com/Analytics/default.asp?from=recruiter" aria-current="page" style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600;">
+          Analytics
+        </a> -->
+
+        <div class="sm:hidden">
+          <button type="button" class="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm 
+             disabled:opacity-50 disabled:pointer-events-none" data-hs-collapse="#navbar-with-mega-menu"
+            aria-controls="navbar-with-mega-menu" aria-label="Toggle navigation">
+            <svg class="hs-collapse-open:hidden flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+              height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="3" x2="21" y1="6" y2="6" />
+              <line x1="3" x2="21" y1="12" y2="12" />
+              <line x1="3" x2="21" y1="18" y2="18" />
+            </svg>
+            <svg class="hs-collapse-open:block hidden flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg"
+              width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
+
+
+
+      <div id="navbar-with-mega-menu"
+        class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:block">
+        <div class="flex flex-col gap-2 mt-5 sm:flex-row sm:items-center sm:justify-end sm:mt-0 sm:ps-2 sm:pr-0">
+          @if(!loadingJobPostingService()){
+          <!-- Job posting Access -->
+          <app-dropdown class="relative">
+            <div dropdown-trigger class="flex items-center">
+              <div class="relative size-12">
+                <svg class="size-full " width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200" stroke-width="2"></circle>
+                  <g class="origin-center -rotate-90 transform">
+                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#008A22]" stroke-width="2"
+                      stroke-dasharray="101" stroke-dashoffset="75" [attr.stroke-dashoffset]="100 - (jobPostingAccessPercentage || 0)"></circle>
+                  </g>
+                </svg>
+                <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                  <span class="text-center text-xs font-bold text-[#008A22]">{{jobPostingAccessPercentage}}%</span>
+                </div>
+              </div>
+              <span class="ps-2 max-w-36 truncate text-[#0e73a9]">Job Posting</span>
+              <span class="icon-sort-down text-[#0e73a9] " style="transform: scale(0.6);"></span>
+            </div>
+            <div dropdown-content>
+              <div class="flex items-start gap-1 p-2">
+                <div class="relative size-12">
+                  <svg class="size-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200" stroke-width="2"></circle>
+                    <g class="origin-center -rotate-90 transform">
+                      <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#008A22]" stroke-width="2"
+                        stroke-dasharray="101" stroke-dashoffset="75" [attr.stroke-dashoffset]="100 - (jobPostingAccessPercentage || 0)"></circle>
+                    </g>
+                  </svg>
+                  <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                    <span class="text-center text-xs font-bold text-[#0e73a9]">{{jobPostingAccessPercentage}}%</span>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-semibold text-xs">Standard Listing</span>
+                  <span class="text-[#0e73a9] font-bold text-sm mb-2">{{jobPostingService.basicListLimit}}/{{jobPostingService.maxJob}}</span>
+                  <span class="font-semibold text-xs">Premium Listing</span>
+                  <span class="text-[#0e73a9] font-bold text-sm">{{jobPostingService.standoutLimit}}/{{jobPostingService.maxStandout}}</span>
+                  <span class="font-semibold text-xs">Premium Plus</span>
+                  <span class="text-[#0e73a9] font-bold text-sm">{{jobPostingService.standoutPremiumLimit}}/{{jobPostingService.maxStandoutPremium}}</span>
+                </div>
+              </div>
+              <hr />
+              <div class="flex items-center justify-center py-2">
+                <a href="https://Corporate3.bdjobs.com/ServiceHistory.asp?from=recruiter" target="_blank"
+                  class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-gray-800 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">View
+                  Packages <span class="icon-right-arrow-big"></span></a>
+              </div>
+            </div>
+          </app-dropdown>
+
+          }
+
+          @if(navData?.smsPackage){
+          <!-- sms dropdown -->
+          <app-dropdown class="relative">
+            <div dropdown-trigger class="flex items-center">
+              <div class="relative size-12">
+                <svg class="size-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200" stroke-width="2"></circle>
+                  <g class="origin-center -rotate-90 transform">
+                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#A65108]" stroke-width="2"
+                      stroke-dasharray="101" stroke-dashoffset="75" [attr.stroke-dashoffset]="100 - smsPercent"></circle>
+                  </g>
+                </svg>
+                <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                  <span class="text-center text-xs font-bold text-[#A65108]">{{smsPercent || 0}}%</span>
+                </div>
+              </div>
+              <span class="ps-2 max-w-36 truncate text-[#0e73a9]">SMS</span>
+              <div class="ml-1 inline-flex items-center justify-center text-gray-700">
+                <span class="icon-sort-down text-[#0e73a9]" style="transform: scale(0.6);"></span>
+              </div>
+            </div>
+            <div dropdown-content>
+              <div class="flex items-start gap-1 p-2">
+                <div class="relative size-12">
+                  <svg class="size-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200" stroke-width="2"></circle>
+                    <g class="origin-center -rotate-90 transform">
+                      <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#A65108]" stroke-width="2"
+                        stroke-dasharray="101" stroke-dashoffset="75" [attr.stroke-dashoffset]="100 - smsPercent"></circle>
+                    </g>
+                  </svg>
+                  <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                    <span class="text-center text-xs font-bold text-[#A65108]">{{smsPercent || 0}}%</span>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-semibold text-xs">Available SMS</span>
+                  <span class="text-[#0e73a9] font-bold text-sm mb-2">{{navData.smsRemaining}}/{{navData.smsPurchased}}</span>
+                  <span class="font-semibold text-xs">Send SMS</span>
+                  <span class="text-[#0e73a9] font-bold text-sm">{{navData.smsSend}}</span>
+                </div>
+              </div>
+            </div>
+          </app-dropdown>
+          }
+
+          @if(!loadingCvSearchService()){
+          <!-- cv bank dropdown -->
+          <app-dropdown class="relative">
+            <div dropdown-trigger class="flex items-center">
+              <div class="relative size-12">
+                <svg class="size-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200" stroke-width="2"></circle>
+                  <g class="origin-center -rotate-90 transform">
+                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#A65108]" stroke-width="2"
+                      stroke-dasharray="101" stroke-dashoffset="75" [attr.stroke-dashoffset]="100 - (cvBankPercentage || 0)"></circle>
+                  </g>
+                </svg>
+                <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                  <span class="text-center text-xs font-bold text-[#A65108]">{{cvBankPercentage}}%</span>
+                </div>
+              </div>
+              <span class="ps-2 max-w-36 truncate text-[#0e73a9]">Talent Search</span>
+              <span class="icon-sort-down text-[#0e73a9] " style="transform: scale(0.6);"></span>
+
+            </div>
+            <div dropdown-content>
+              <div class="flex items-start gap-1 p-2">
+                <div class="relative size-12">
+                  <svg class="size-full" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-200" stroke-width="2"></circle>
+                    <g class="origin-center -rotate-90 transform">
+                      <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#A65108]" stroke-width="2"
+                        stroke-dasharray="101" stroke-dashoffset="75" [attr.stroke-dashoffset]="100 - (cvBankPercentage || 0)"></circle>
+                    </g>
+                  </svg>
+                  <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                    <span class="text-center text-xs font-bold text-[#A65108]">{{cvBankPercentage}}%</span>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-semibold text-xs">Available CVs</span>
+                  <span class="text-[#0e73a9] font-bold text-sm mb-2">{{cvSearchService.available}}/{{cvSearchService.limit}}</span>
+                  <span class="font-semibold text-xs">Viewed CVs</span>
+                  <span class="text-[#0e73a9] font-bold text-sm">{{cvSearchService.viewed}}</span>
+                </div>
+              </div>
+              <hr />
+              <div class="flex items-center justify-center py-2">
+                <a href="https://Corporate3.bdjobs.com/ServiceHistory.asp?from=recruiter" target="_blank"
+                  class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-gray-800 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">View
+                  Packages <span class="icon-right-arrow-big"></span></a>
+              </div>
+            </div>
+          </app-dropdown>
+          }
+
+          @if(!loadingCreditSystem()){
+          <!-- credit system dropdown -->
+          <app-dropdown class="relative min-h-[38px] flex items-center border-l-0">
+            <div dropdown-trigger class="flex items-center h-[38px]">
+              <img src="https://recruiter.bdjobs.com/assets/images/credit-system.svg" alt="" class="h-[26px]" />
+              <span class="ps-2 max-w-36 truncate text-[#0e73a9] flex items-center -mt-1">
+                Credit:
+                <span class="px-1">
+                  {{ checkExpiration(creditSystem.validityDate) ? 0 : (creditSystem.remainingCredit || 0) }}
+                </span>
+              </span>
+              <div class="inline-flex items-center justify-center text-gray-700 -mt-1">
+                <span class="icon-sort-down text-[#0e73a9]" style="transform: scale(0.6) translateY(-1px);"></span>
+              </div>
+            </div>
+            <div dropdown-content>
+              <div class="p-1">
+                @if (creditSystem.totalCredit === 0) {
+                <div class="flex flex-col items-center justify-center text-center">
+                  <img class="h-[36px]" src="https://corporate3.bdjobs.com/images/credit-empty.svg" alt="" />
+                  <span class="my-2">You have no credit</span>
+                  <hr class="my-2 w-full" />
+                  <button type="button" class="bg-[#286090] p-2 text-white rounded-md" (click)="openAddCreditModal()">
+                    Add Credit
+                  </button>
+                </div>
+                } @else if(creditSystem.haveTokenAccess){
+                <div class="flex items-center gap-2">
+                  <img class="h-[36px]" src="https://recruiter.bdjobs.com/assets/images/credit-system.svg" alt="" />
+                  <div class="flex flex-col font-semibold text-xs gap-1 text-[#333]">
+                    <div>
+                      <h3>Available Credit</h3>
+                      <p class="text-[#0E73A9] font-bold">
+                        {{ creditSystem.remainingCredit }}/{{ creditSystem.totalCredit }}
+                      </p>
+                    </div>
+                    <div>
+                      <h3 class="crdtitle">Validity</h3>
+                      <p [ngClass]="{'text-[#b71c1c]': checkExpiration(creditSystem.validityDate), 'text-[#0E73A9]': !checkExpiration(creditSystem.validityDate)}"
+                        class="text-[12px] font-bold m-0">
+                        {{ checkExpiration(creditSystem.validityDate) ? 'Expired' : (creditSystem.validityDate |
+                          date:'dd MMM yyyy') }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <hr class="my-2" />
+                <div class="text-center">
+                  <a href="https://recruiter.bdjobs.com/credit-system"
+                    class="py-2 px-3 inline-flex items-center gap-x-2 text-xs font-semibold rounded-lg border border-transparent bg-[#0c6290ea] text-white hover:bg-[#0C6290] disabled:opacity-50 disabled:pointer-events-none">
+                    Credit Overview
+                    <span class="icon-right-arrow-big iright"></span>
+                  </a>
+                </div>
+                }
+              </div>
+            </div>
+          </app-dropdown>
+          }
+          <!-- profile dropdown -->
+          <app-dropdown class="relative border-l-0 mr-8">
+            <div dropdown-trigger class="flex items-center">
+              <img class="inline-block w-[38px] h-[38px] border-2 border-[#DDF2FD] rounded-full" [src]="companyLogoURL || 'https://recruiter.bdjobs.com/assets/images/default-company.png'"
+                alt="Image Description" />
+              <span class="ps-2 text-[#0e73a9] max-w-[150px] truncate">
+                {{companyName || 'Company Profile'}}</span>
+              <div class="ml-1 inline-flex items-center justify-center text-gray-700">
+                <span class="icon-sort-down text-[#0e73a9]" style="transform: scale(0.6);"></span>
+              </div>
+            </div>
+            <div dropdown-content>
+              <a href="https://Corporate3.bdjobs.com/Billings.asp"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-taka]:text-white"><span
+                  class="icon-taka itaka text-[#337ab7]"></span>
+                <span class="icolor">Billings</span></a>
+
+              <a href="https://Corporate3.bdjobs.com/ServiceHistory.asp"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-service-list]:text-white"><span
+                  class="icon-service-list text-[#337ab7]"></span>
+                <span class="icolor">Subscribed Services</span></a>
+
+              <a href="https://Corporate3.bdjobs.com/corporate_editaccount.asp"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-edit]:text-white"><span
+                  class="icon-edit text-[#337ab7]"></span>
+                <span class="icolor">Edit Account</span></a>
+
+              <a href="https://recruiter.bdjobs.com/communication/"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-com]:text-white"><span
+                  class="icon-com text-[#337ab7]"></span>
+                <span class="icolor">Communication</span></a>
+              <a href="https://Corporate3.bdjobs.com/support.asp"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-help]:text-white"><span
+                  class="icon-help text-[#337ab7]"></span>
+                <span class="icolor">Support </span></a>
+
+              <a href="https://Corporate3.bdjobs.com/CompanyUserManagementSetting.asp"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-cog]:text-white"><span
+                  class="icon-cog text-[#337ab7]"></span>
+                <span class="icolor">Settings </span></a>
+                   <a href="https://corporate3.bdjobs.com/Analytics/default.asp?from=recruiter"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200">
+                <img src="https://recruiter.bdjobs.com/assets/images/analytics-up.svg" 
+                     alt="Analytics Icon" 
+                     class="h-[18px] analytics-icon"
+                     style="filter: invert(31%) sepia(98%) saturate(1234%) hue-rotate(182deg) brightness(87%) contrast(101%);" />
+                <style>
+                  a:hover .analytics-icon {
+                    filter: brightness(0) invert(1) !important;
+                  }
+                </style>
+                <span class="icolor">Analytics</span></a>
+              <hr class="my-2" />
+              @if(isAdminUser){
+              <a href="https://Corporate3.bdjobs.com/loginInfo.asp"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-lock-reset]:text-white"><span
+                  class="icon-lock-reset text-[#337ab7]"></span>
+                <span class="icolor">Change Password </span></a>
+              <a href="https://recruiter.bdjobs.com/usermanagement/"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-user-cog]:text-white"><span
+                  class="icon-user-cog text-[#337ab7]"></span>
+                <span class="icolor">User Management </span></a>
+              } @else {
+              <a class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200"
+                href="https://recruiter.bdjobs.com/usermanagement/?from=recruiter">User
+                Settings</a>
+              }
+
+              <hr class="my-2" />
+              <a href="https://Corporate3.bdjobs.com/logout.asp"
+                class="flex items-center gap-x-3.5 py-2 px-3 text-sm text-gray-800 hover:bg-[#337ab7] hover:text-white transition-colors duration-200 [&:hover_.icon-sign-off]:text-white"><span
+                  class="icon-sign-off text-[#337ab7]"></span>
+                <span class="icolor">Sign Out</span></a>
+            </div>
+          </app-dropdown>
+        </div>
+      </div>
+    </nav>
+  </header>
+</div>

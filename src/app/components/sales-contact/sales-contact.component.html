@@ -1,0 +1,24 @@
+<div class="flex items-center justify-between bg-[#eee] p-8 shadow-lg w-full" *ngIf="!isSalesPersonDataEmpty()">
+    <div class="flex flex-col w-1/2 pl-20 self-center py-8">
+      <h2 class="text-xl font-bold text-gray-900">Need Assistance?</h2>
+      <p class="text-lg font-semibold text-gray-700">Reach out to our sales person.</p>
+    </div>
+  
+    <div class="flex items-center gap-5 w-1/2">
+      <img 
+        [src]="'https://bdjobs.com/ContactSalesPerson/' + salesPersonData?.salesPersonImage" 
+        alt="Sales Contact Person" 
+        class="w-[120px] h-[120px] rounded-full border border-black shadow-sm"
+      />
+        <div class="text-gray-900 font-sans">
+        <p class="text-[#1a1919] text-[18px] font-semibold">Sales Contact Person</p>
+        <p class="text-[#595959] text-base font-medium leading-6 mb-1">{{salesPersonData?.salesPersonName}}</p>
+        <p class="text-[#595959] text-base font-medium leading-6 mb-1">{{salesPersonData?.salesPersonDesignation}}</p>
+        <p class="text-[#595959] text-base font-medium leading-6 mb-1">{{salesPersonData?.salesPersonContact}}</p>
+        <p class="text-[#595959] text-base font-medium leading-6 mb-1">
+          <a [href]="'mailto:' + salesPersonData?.salesPersonEmail" class="text-[#595959] hover:underline">{{salesPersonData?.salesPersonEmail}}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  

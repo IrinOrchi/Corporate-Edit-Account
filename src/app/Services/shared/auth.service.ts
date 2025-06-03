@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { UserCredentials } from '../../Models/company';
 import { CookieService } from 'ngx-cookie-service';
+import { UserCredentials } from '../../Models/company';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -30,6 +31,6 @@ export class AuthService {
 
   hasValidToken(): boolean {
     const token = this.cookieService.get('AUTHTOKEN');
-    return !!token; 
+    return !!token; // Check if token exists
   }
 }

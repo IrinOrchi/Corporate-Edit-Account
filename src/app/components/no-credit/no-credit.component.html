@@ -1,0 +1,62 @@
+<div class="rounded-lg w-[800px] overflow-hidden bg-white">
+  <div class="bg-white py-1 px-2 flex justify-between items-center border-b border-gray-200">
+    <div></div>
+    <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700">
+      <span class="text-[32px] mr-2">&times;</span>
+    </button>
+  </div>
+
+  <div class="p-8">
+    <div class="flex justify-center mb-6">
+      <img
+        src="https://recruiter.bdjobs.com/assets/images/RedeemCredit.svg"
+        alt="No credits icon"
+        class="h-24 w-24"
+      />
+    </div>
+
+    <h2 class="text-[25px] font-semibold text-[#0e73a9] mb-1 text-center font-['Inter']" style="font-weight: 600;">
+      You currently have no Credits
+    </h2>
+
+    <p class="text-[15.4px] text-[#0E73A9] mb-4 text-center font-['Inter']" style="font-weight: 400;">
+      Please insert any Referral Code you have to add credit
+    </p>
+
+    <div class="space-y-2 max-w-md mx-auto">
+      <label
+        for="referralCode"
+        class="block text-[21px] text-gray-700 text-center font-['Inter'] mb-1"
+        style="font-weight: 500;"
+      >
+        Referral Code
+      </label>
+      <input
+        id="referralCode"
+        type="text"
+        [formControl]="referralCodeControl"
+        placeholder="Enter Referral Code"
+        class="block w-full border border-gray-600 rounded-md mb-6 px-3 py-2 text-base focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 font-['Inter']"
+      />
+      
+      @if(errorMessage) {
+        <div class="text-red-500 text-center mb-4">{{ errorMessage }}</div>
+      }
+      
+      <div class="flex justify-center pb-4">
+        <button
+          (click)="submitReferralCode()"
+          [disabled]="isLoading"
+          class="py-2 px-4 mb-10 mt-2 bg-[#0E73A9] text-white text-base font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 hover:bg-[#0c5d8a] font-['Inter'] disabled:opacity-50"
+        >
+          @if(isLoading) {
+            <span>Processing...</span>
+          } @else {
+            <span>Submit</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  

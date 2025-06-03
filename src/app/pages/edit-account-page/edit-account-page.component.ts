@@ -8,16 +8,14 @@ import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { IndustryTypeResponseDTO, IndustryType, LocationResponseDTO, RLNoRequestModel } from '../../Models/company';
 import { ContactPerson } from '../../Models/company';
-import { ErrorModalComponent } from "../../components/error-modal/error-modal.component";
 import { RadioGroupComponent } from '../../components/radio-group/radio-group.component';
-import { PricingPolicyComponent } from '../../components/pricing-policy/pricing-policy.component';
 import { MathCaptchaComponent } from '../../components/math-captcha/math-captcha.component';
 import { filePath,countrie ,disabilities} from '../../constants/file-path.constants';
-import { AddIndustryModalComponent } from "../../components/add-industry-modal/add-industry-modal.component";
 import { AuthService } from '../../Services/shared/auth.service';
 import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespaceValidator, noBlacklistCharacters, companyAddressValidator } from '../../utils/validators';
 import { Router } from '@angular/router';
 import { ProfileImageModalComponent } from '../../components/profile-image-modal/profile-image-modal.component';
+import { AddIndustryModalComponent } from '../../components/add-industry-modal/add-industry-modal.component';
 
 
 
@@ -25,7 +23,7 @@ import { ProfileImageModalComponent } from '../../components/profile-image-modal
   selector: 'app-edit-account-page',
   standalone: true,
   imports: [RadioGroupComponent,InputFieldComponent,
-    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,AddIndustryModalComponent,ProfileImageModalComponent],
+    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,AddIndustryModalComponent,ProfileImageModalComponent,InputFieldComponent],
   templateUrl: './edit-account-page.component.html',
   styleUrls: ['./edit-account-page.component.scss']
 })

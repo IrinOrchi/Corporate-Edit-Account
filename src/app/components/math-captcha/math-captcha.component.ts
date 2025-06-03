@@ -7,69 +7,81 @@ import { InputFieldComponent } from '../input-field/input-field.component';
 @Component({
   selector: 'app-math-captcha',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, InputFieldComponent],
   templateUrl: './math-captcha.component.html',
   styleUrls: ['./math-captcha.component.scss']
 })
 export class MathCaptchaComponent implements OnInit {
   @Input() employeeForm!: FormGroup;
 
-  operand1 = signal(this.randomNumber(5, 10)); 
-  operand2 = signal(this.randomNumber(1, 5)); 
+  operand1 = signal(this.randomNumber());
+  operand2 = signal(this.randomNumber());
   operator = signal(this.randomOperator());
 
   expressionDisplay = computed(() => {
     const operatorSymbol = this.operator() === '/' ? '÷' : this.operator();
     return `${this.operand1()} ${operatorSymbol} ${this.operand2()}`;
   });
-
   captchaAnswer = computed(() => this.evaluateCaptcha());
-
+  
   get captchaInput(): FormControl {
-    return this.employeeForm.get('captchaInput') as FormControl;
+    return this.employeeForm.get('captchaInput') as FormControl; 
   }
 
   ngOnInit() {
     this.captchaInput.valueChanges
-      .pipe(debounceTime(500), distinctUntilChanged())
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
       .subscribe((userAnswer) => {
         this.validateAnswerOnChange(userAnswer);
       });
   }
-
   isCaptchaValid(): boolean {
-    const userAnswer = this.captchaInput.value?.trim();
-    if (!userAnswer) {
-      return false;
-    }
-    const numericAnswer = parseFloat(userAnswer);
-    return !isNaN(numericAnswer) && Math.abs(numericAnswer - this.captchaAnswer()) < 0.01;
+    const userAnswer = parseFloat(this.captchaInput.value ?? '');
+    return !isNaN(userAnswer) && Math.abs(userAnswer - this.captchaAnswer()) < 0.01; 
   }
 
-  // Generate a new captcha
   generateCaptcha() {
     this.operator.set(this.randomOperator());
 
-    const op1 = this.randomNumber(5, 10);
-    const op2 = this.randomNumber(1, op1); 
+    if (this.operator() === '-') {
+      const [op1, op2] = [this.randomNumber(), this.randomNumber()];
+      this.operand1.set(op1);
+      this.operand2.set(op2);
+    } else if (this.operator() === '*') {
+      const [op1, op2] = [this.randomNumber(), this.randomNumber()].sort((a, b) => a - b);
+      this.operand1.set(op1);
+      this.operand2.set(op2);
+    } else if (this.operator() === '/') {
+      let op1 = this.randomNumber();
+      let op2 = this.randomNumber();
+      while (op2 === 0) {
+        op2 = this.randomNumber();
+      }
+      if (op1 < op2) [op1, op2] = [op2, op1]; 
+      this.operand1.set(op1);
+      this.operand2.set(op2);
+    } else {
+      this.operand1.set(this.randomNumber());
+      this.operand2.set(this.randomNumber());
+    }
 
-    this.operand1.set(op1);
-    this.operand2.set(op2);
-
+    // Reset the captcha input and clear errors
     this.captchaInput.reset();
     this.captchaInput.setErrors(null);
   }
 
-  private randomNumber(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min; 
+  private randomNumber(): number {
+    return Math.floor(Math.random() * 10) + 1;
   }
 
   private randomOperator(): string {
-    const operators = ['+', '-', '*'];
+    const operators = ['+', '-', '*', '/'];
     return operators[Math.floor(Math.random() * operators.length)];
   }
 
-  // Evaluate the captcha based on the operator and operands
   private evaluateCaptcha(): number {
     const op1 = this.operand1();
     const op2 = this.operand2();
@@ -77,10 +89,12 @@ export class MathCaptchaComponent implements OnInit {
       case '+': return op1 + op2;
       case '-': return op1 - op2;
       case '*': return op1 * op2;
+      case '/': return parseFloat((op1 / op2).toFixed(2));
       default: return 0;
     }
   }
 
+  // Validate answer on input change without setting errors
   private validateAnswerOnChange(userAnswer: string | null | undefined) {
     if (userAnswer && userAnswer.trim() !== '') {
       const answer = Number(userAnswer);
@@ -90,6 +104,7 @@ export class MathCaptchaComponent implements OnInit {
     }
   }
 
+  // Validate on blur to set errors and show the error message
   validateAnswerOnBlur(userAnswer: string | null | undefined) {
     if (userAnswer && userAnswer.trim() !== '') {
       const answer = parseFloat(userAnswer);

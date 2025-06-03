@@ -9,11 +9,6 @@
 .form-group {
   @apply mb-4;
 }
-body.no-scroll {
-  overflow: hidden;   
-  height: 100%;       
-  width: 100%;        
-}
 
 select.form-control, 
 textarea.form-control {

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { BackToTopComponent } from '../../components/Shared/shared/back-to-top/back-to-top.component';
+import { BackToTopComponent } from '../../components/Shared/back-to-top/back-to-top.component';
 
 @Component({
   selector: 'app-footer-bottom',
   standalone: true,
-  imports: [CommonModule,BackToTopComponent],
+  imports: [CommonModule, BackToTopComponent],
   templateUrl: './footer-bottom.component.html',
   styleUrl: './footer-bottom.component.scss'
 })

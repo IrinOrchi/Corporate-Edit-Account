@@ -1,0 +1,51 @@
+<div *ngIf="isOpen()" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 ">
+  <div class="bg-white w-[960px] p-6 rounded-lg shadow-lg border border-gray-300 max-h-[400px] relative">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="flex items-center text-[18px] ml-40 font-semibold text-[#0c6899]">
+        <span class="mr-2 icon icon-edit"></span> Email Template Editor
+      </h2>
+      <button (click)="closeModal()" class="text-gray-600 hover:text-gray-800 cursor-pointer rounded-full bg-gray-200 p-3 w-6 h-6 flex items-center justify-center absolute top-0 right-0 mt-2 mr-2">
+        <span class="text-xs icon icon-times-o"></span>
+      </button>
+    </div>
+
+    <!-- Inner Board -->
+    <div class="w-full max-w-xl mx-auto p-4 bg-white rounded-md border border-gray-300">
+      
+      <!-- Template Name Field -->
+      <div class="mb-4">
+        <label for="txtTemplateTitle" class="block text-sm font-semibold text-gray-700">
+          Template Name <small>(required)</small>
+        </label>
+        <input type="text" 
+               class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed" 
+               name="txtTemplateTitle" 
+               id="txtTemplateTitle" 
+               placeholder="Type template name" 
+               value="Invitation" 
+               aria-label="Template name" 
+               maxlength="15" 
+               readonly />
+      </div>
+
+      <!-- Template Text Field -->
+      <div class="mb-2">
+        <label for="txtTemplateText" class="block text-[14px] font-semibold text-gray-700">
+          Template Text <small>(required)</small>
+        </label>
+        <textarea aria-label="Template Text" 
+                  name="txtTemplateText" 
+                  id="txtTemplateText" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed" 
+                  maxlength="3400" 
+                  rows="5" 
+                  readonly>
+After review of your application, the Selection Committee/we is/are very interested in interviewing you for the position of (Job Title). This email confirms the phone conversation in which we scheduled your interview for (date), from (time period, ex. 1 – 2 PM) in (room and location). If you have any questions, please call me at 017X-XXXXXXX.
+        </textarea>
+      </div>
+
+    </div>
+  </div>
+</div>
