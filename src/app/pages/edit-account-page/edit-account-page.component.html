@@ -419,32 +419,34 @@
   <div 
     class="lg:grid lg:grid-cols-3 grid grid-cols-1 items-start gap-[24px] self-stretch industry-list" 
     [class.expanded]="showAll">
-    @if (filteredIndustryTypes.length > 0) {
-      @for (item of getTypes(); track item.IndustryValue) {
+    @if (allIndustryNames && allIndustryNames.length > 0) {
+      @for (item of allIndustryNames; track item.industryId) {
         <div class="flex items-center text-xs sm:text-sm">
           <input 
             name="industry_type"
-            id="industry_type_{{item.IndustryValue}}"
+            id="industry_type_{{item.industryId}}"
             type="checkbox" 
-            [value]="item.IndustryValue" 
-            [checked]="isIndustryChecked(item.IndustryValue)"
+            [value]="item.industryId" 
+            [checked]="isIndustryChecked(item.industryId)"
             class="w-3 h-3 text-blue-600 border shadow-inner cursor-pointer sm:w-4 sm:h-4 checkbox-input border-black/30 checked:bg-blue-600 checked:border-blue-600" 
             (change)="onIndustryCheckboxChange($event, item)" />
           <label 
-          for="industry_type_{{item.IndustryValue}}" 
-          class="ml-2 text-xs sm:text-sm font-inter text-black leading-[1.42857143]">
-            {{ item.IndustryName }}
+            for="industry_type_{{item.industryId}}" 
+            class="ml-2 text-xs sm:text-sm font-inter text-black leading-[1.42857143]">
+            {{ item.industryName }}
           </label>
         </div>
       }
-    } 
+    } @else {
+      <div class="text-gray-500">No industries available</div>
+    }
   </div>
 
   @if (!showAll) {
     <button 
       type="button"
-      class="text-[#0E73A9] text-sm font-semibold  focus:outline-none underline" 
-      [hidden]="filteredIndustryTypes.length <= 9 || showAll"
+      class="text-[#0E73A9] text-sm font-semibold focus:outline-none underline" 
+      [hidden]="allIndustryNames.length <= 9 || showAll"
       (click)="toggleShowAll()">
       See more
     </button>

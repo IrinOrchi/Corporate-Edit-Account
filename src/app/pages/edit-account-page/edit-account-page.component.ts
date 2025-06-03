@@ -48,6 +48,7 @@ export class EditAccountPageComponent implements OnInit {
   industryTypes: IndustryTypeResponseDTO[] = [];
   allIndustryTypes: IndustryTypeResponseDTO[] = []; 
   filteredIndustryTypes: IndustryTypeResponseDTO[] = [];
+  allIndustryNames: { industryId: number; industryName: string }[] = [];
   countries: LocationResponseDTO[] = [];
   districts: LocationResponseDTO[] = [];
   thanas: LocationResponseDTO[] = [];
@@ -450,7 +451,7 @@ onNewIndustryAdded(event: { IndustryName: string }): void {
             }
             this.selectedIndustries.push(newIndustry);
             const selectedValues = this.selectedIndustries
-              .map((industry) => industry.IndustryValue)
+              .map((industry: { IndustryValue: number; IndustryName: string }) => industry.IndustryValue)
               .join(',');
             this.employeeForm.controls['industryTypeArray'].setValue(selectedValues);
           }
@@ -469,15 +470,34 @@ onNewIndustryTypeChange(newIndustryId: number): void {
 onIndustryTypeChange(selectedIndustryId: string | number): void {
     const parsedIndustryId = parseInt(selectedIndustryId as string, 10); 
     if (!isNaN(parsedIndustryId)) {
-      this.fetchIndustryTypes(parsedIndustryId); 
+      this.fetchIndustryTypes(parsedIndustryId).then(() => {
+        // Update allIndustryNames based on the selected industry type
+        if (parsedIndustryId === -1) {
+          // If "All" is selected, show all industries
+          this.allIndustryNames = this.allIndustryTypes.map(type => ({
+            industryId: type.IndustryValue,
+            industryName: type.IndustryName
+          }));
+        } else {
+          // Filter industries based on the selected type
+          this.allIndustryNames = this.industryTypes.map(type => ({
+            industryId: type.IndustryValue,
+            industryName: type.IndustryName
+          }));
+        }
+      });
     } else {
       this.filteredIndustryTypes = [...this.industryTypes];
     }
   }
  
  
-  onIndustryCheckboxChange(event: Event, industry: IndustryTypeResponseDTO): void {
+  onIndustryCheckboxChange(event: Event, industry: { industryId: number; industryName: string }): void {
     const isChecked = (event.target as HTMLInputElement).checked;
+    const industryDTO: IndustryTypeResponseDTO = {
+      IndustryValue: industry.industryId,
+      IndustryName: industry.industryName
+    };
   
     if (isChecked) {
       if (this.selectedIndustries.length >= 10) {
@@ -485,34 +505,33 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
         (event.target as HTMLInputElement).checked = false;
         return;
       }
-      this.selectedIndustries.push(industry);
+      this.selectedIndustries.push(industryDTO);
     } else {
       this.selectedIndustries = this.selectedIndustries.filter(
-        (selected) => selected.IndustryValue !== industry.IndustryValue
+        selected => selected.IndustryValue !== industry.industryId
       );
-  
-      const currentIndustryId = this.selectedIndustryId;
+         const currentIndustryId = this.selectedIndustryId;
       const newlyAddedIndustriesForId = this.newlyAddedIndustriesnew[currentIndustryId];
       if (newlyAddedIndustriesForId) {
         const index = newlyAddedIndustriesForId.findIndex(
-          (newIndustry) => newIndustry.IndustryValue === industry.IndustryValue
+          (newIndustry) => newIndustry.IndustryValue === industry.industryId
         );
   
         if (index !== -1) {
           newlyAddedIndustriesForId.splice(index, 1);
           this.industryTypes = this.industryTypes.filter(
-            (type) => type.IndustryValue !== industry.IndustryValue
+            (type) => type.IndustryValue !== industry.industryId
           );
           this.filteredIndustryTypes = [...this.industryTypes];
         }
-      }
+      } 
     }
+
     const selectedValues = this.selectedIndustries
-      .map((industry) => industry.IndustryValue)
+      .map((industry: { IndustryValue: number; IndustryName: string }) => industry.IndustryValue)
       .join(',');
     this.employeeForm.controls['industryTypeArray'].setValue(selectedValues);
     this.employeeForm.controls['industryTypeArray'].markAsTouched();
-
   }
    
   isIndustryChecked(industryValue: number): boolean {
@@ -520,42 +539,20 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
       (industry) => industry.IndustryValue === industryValue
     );
   }
-  removeIndustry(industry: { IndustryValue: number; IndustryName: string }): void {
-    this.selectedIndustries = this.selectedIndustries.filter(
-      (selected) => selected.IndustryValue !== industry.IndustryValue
-    );
-  
-    const currentIndustryId = this.selectedIndustryId;
-    const newlyAddedIndustriesForId = this.newlyAddedIndustriesnew[currentIndustryId];
-  
-    if (newlyAddedIndustriesForId) {
-      const index = newlyAddedIndustriesForId.findIndex(
-        (newIndustry) => newIndustry.IndustryValue === industry.IndustryValue
-      );
-  
-      if (index !== -1) {
-        newlyAddedIndustriesForId.splice(index, 1);
-        this.industryTypes = this.industryTypes.filter(
-          (type) => type.IndustryValue !== industry.IndustryValue
-        );
-  
-        this.filteredIndustryTypes = [...this.industryTypes];
-      }
-    }
-  
-    const selectedValues = this.selectedIndustries
-      .map((industry) => industry.IndustryValue)
-      .join(',');
-    this.employeeForm.controls['industryTypeArray'].setValue(selectedValues);
-  
-    const updatedIndustryNames = this.selectedIndustries
-      .map((industry) => industry.IndustryName)
-      .join(', ');
-    this.employeeForm.controls['industryName'].setValue(updatedIndustryNames);
-  
+  removeIndustry(industry: IndustryTypeResponseDTO): void {
     const checkbox = document.getElementById(
       `industry_type_${industry.IndustryValue}`
-    ) as HTMLInputElement;
+    ) as HTMLInputElement | null;
+
+    this.selectedIndustries = this.selectedIndustries.filter(
+      selected => selected.IndustryValue !== industry.IndustryValue
+    );
+
+    const selectedValues = this.selectedIndustries
+      .map((industry: { IndustryValue: number; IndustryName: string }) => industry.IndustryValue)
+      .join(',');
+    this.employeeForm.controls['industryTypeArray'].setValue(selectedValues);
+
     if (checkbox) {
       checkbox.checked = false;
     }
@@ -832,6 +829,26 @@ private FetchCompanyInformation(): void {
         if (response && response.data && response.data.companyInformation && response.data.companyInformation.length > 0) {
           this.companyData = response.data.companyInformation[0]; 
           console.log('Company Data from API:', this.companyData);
+
+          // Handle industry data
+          if (response.data.allIndustryNames) {
+            this.allIndustryNames = response.data.allIndustryNames;
+          }
+          
+          // Handle selected industries
+          if (response.data.industryName) {
+            const selectedIndustries = response.data.industryName.map((industry: any) => ({
+              IndustryValue: industry.industryId,
+              IndustryName: industry.industryName
+            }));
+            this.selectedIndustries = selectedIndustries;
+            
+            // Update form control with selected industry values
+            const selectedValues = selectedIndustries
+              .map((industry: { IndustryValue: number; IndustryName: string }) => industry.IndustryValue)
+              .join(',');
+            this.employeeForm.controls['industryTypeArray'].setValue(selectedValues);
+          }
 
           if (this.companyData.companyFacilities) {
             const facilities = this.companyData.companyFacilities;
