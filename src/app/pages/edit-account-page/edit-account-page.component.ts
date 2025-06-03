@@ -431,10 +431,17 @@ onNewIndustryAdded(event: { IndustryName: string }): void {
     
               if (!this.industryTypes.find((industry) => industry.IndustryName.toLowerCase() === orgTypeName.toLowerCase())) {
                 this.industryTypes.push(backendIndustry);
+                // Add to allIndustryNames if it's a new industry
+                if (!this.allIndustryNames.find(industry => industry.industryId === orgTypeId)) {
+                  this.allIndustryNames.push({
+                    industryId: orgTypeId,
+                    industryName: orgTypeName
+                  });
+                }
               }
               this.selectedIndustries.push(backendIndustry);
             
-          } 
+          }
              
             else if (response.dataContext === 'Organization not found') {
             const newIndustry: IndustryTypeResponseDTO = {
@@ -448,6 +455,10 @@ onNewIndustryAdded(event: { IndustryName: string }): void {
             if (this.selectedIndustryId === currentIndustryId) {
               this.industryTypes.push(newIndustry);
               this.filteredIndustryTypes = [...this.industryTypes];
+              this.allIndustryNames.push({
+                industryId: newIndustry.IndustryValue,
+                industryName: newIndustry.IndustryName
+              });
             }
             this.selectedIndustries.push(newIndustry);
             const selectedValues = this.selectedIndustries
@@ -471,15 +482,12 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
     const parsedIndustryId = parseInt(selectedIndustryId as string, 10); 
     if (!isNaN(parsedIndustryId)) {
       this.fetchIndustryTypes(parsedIndustryId).then(() => {
-        // Update allIndustryNames based on the selected industry type
         if (parsedIndustryId === -1) {
-          // If "All" is selected, show all industries
           this.allIndustryNames = this.allIndustryTypes.map(type => ({
             industryId: type.IndustryValue,
             industryName: type.IndustryName
           }));
         } else {
-          // Filter industries based on the selected type
           this.allIndustryNames = this.industryTypes.map(type => ({
             industryId: type.IndustryValue,
             industryName: type.IndustryName
@@ -510,7 +518,7 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
       this.selectedIndustries = this.selectedIndustries.filter(
         selected => selected.IndustryValue !== industry.industryId
       );
-         const currentIndustryId = this.selectedIndustryId;
+      const currentIndustryId = this.selectedIndustryId;
       const newlyAddedIndustriesForId = this.newlyAddedIndustriesnew[currentIndustryId];
       if (newlyAddedIndustriesForId) {
         const index = newlyAddedIndustriesForId.findIndex(
@@ -519,12 +527,15 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
   
         if (index !== -1) {
           newlyAddedIndustriesForId.splice(index, 1);
+          this.allIndustryNames = this.allIndustryNames.filter(
+            item => item.industryId !== industry.industryId
+          );
           this.industryTypes = this.industryTypes.filter(
             (type) => type.IndustryValue !== industry.industryId
           );
           this.filteredIndustryTypes = [...this.industryTypes];
         }
-      } 
+      }
     }
 
     const selectedValues = this.selectedIndustries
@@ -547,6 +558,25 @@ onIndustryTypeChange(selectedIndustryId: string | number): void {
     this.selectedIndustries = this.selectedIndustries.filter(
       selected => selected.IndustryValue !== industry.IndustryValue
     );
+
+    const currentIndustryId = this.selectedIndustryId;
+    const newlyAddedIndustriesForId = this.newlyAddedIndustriesnew[currentIndustryId];
+    if (newlyAddedIndustriesForId) {
+      const index = newlyAddedIndustriesForId.findIndex(
+        (newIndustry) => newIndustry.IndustryValue === industry.IndustryValue
+      );
+
+      if (index !== -1) {
+        newlyAddedIndustriesForId.splice(index, 1);
+        this.allIndustryNames = this.allIndustryNames.filter(
+          item => item.industryId !== industry.IndustryValue
+        );
+        this.industryTypes = this.industryTypes.filter(
+          (type) => type.IndustryValue !== industry.IndustryValue
+        );
+        this.filteredIndustryTypes = [...this.industryTypes];
+      }
+    }
 
     const selectedValues = this.selectedIndustries
       .map((industry: { IndustryValue: number; IndustryName: string }) => industry.IndustryValue)
@@ -677,13 +707,11 @@ private fetchThanas(districtFormattedValue: string): Promise<void> {
           }));
           resolve();
         } else {
-          console.error('Unexpected responseCode or response format:', response);
           this.thanas = [];
           reject(new Error('Invalid response format'));
         }
       },
       error: (error: any) => {
-        console.error('Error fetching thanas:', error);
         this.thanas = [];
         reject(error);
       }
