@@ -85,7 +85,7 @@ filteredCountriesList = this.countrie;
     contactDesignation: new FormControl('', [Validators.required, noWhitespaceValidator()]),
     contactEmail: new FormControl('', [Validators.required, Validators.email, noWhitespaceValidator()]),
     contactMobile: new FormControl({ value: '', disabled: true }, [Validators.required]),
-    inclusionPolicy: new FormControl(0),
+    inclusionPolicy: new FormControl<string>(''),
     support: new FormControl(0),
     disabilityWrap: new FormControl(''),
     billingAddress: new FormControl(''),
@@ -846,6 +846,15 @@ private FetchCompanyInformation(): void {
           this.companyData = response.data.companyInformation[0]; 
           console.log('Company Data from API:', this.companyData);
 
+          // Set Disability Inclusion Policy
+          if (this.companyData.companyFacilities?.inclusionPolicy !== undefined) {
+            const inclusionPolicyValue = this.companyData.companyFacilities.inclusionPolicy.toString();
+            console.log('Setting inclusion policy to:', inclusionPolicyValue);
+            this.employeeForm.patchValue({
+              inclusionPolicy: inclusionPolicyValue
+            });
+          }
+
           const facilitiesForDisabilitiesControl = this.employeeForm.get('facilitiesForDisabilities');
           if (facilitiesForDisabilitiesControl) {
             facilitiesForDisabilitiesControl.setValue(this.companyData.facilityPWD ? 1 : 0);
@@ -854,18 +863,20 @@ private FetchCompanyInformation(): void {
           const companySizeControl = this.employeeForm.get('companySize');
           if (companySizeControl && this.companyData.minimumEmployee !== undefined && this.companyData.maximumEmployee !== undefined) {
             let companySizeValue = '';
-            if (this.companyData.minimumEmployee <= 10 && this.companyData.maximumEmployee <= 10) {
-              companySizeValue = '1-10';
-            } else if (this.companyData.minimumEmployee <= 25 && this.companyData.maximumEmployee <= 25) {
-              companySizeValue = '11-25';
-            } else if (this.companyData.minimumEmployee <= 50 && this.companyData.maximumEmployee <= 50) {
+            const maxEmp = this.companyData.maximumEmployee;
+            
+            if (maxEmp <= 25) {
+              companySizeValue = '1-25';
+            } else if (maxEmp <= 50) {
               companySizeValue = '26-50';
-            } else if (this.companyData.minimumEmployee <= 100 && this.companyData.maximumEmployee <= 100) {
+            } else if (maxEmp <= 100) {
               companySizeValue = '51-100';
-            } else if (this.companyData.minimumEmployee <= 500 && this.companyData.maximumEmployee <= 500) {
+            } else if (maxEmp <= 500) {
               companySizeValue = '101-500';
-            } else if (this.companyData.minimumEmployee > 500) {
-              companySizeValue = '500+';
+            } else if (maxEmp <= 1000) {
+              companySizeValue = '501-1000';
+            } else {
+              companySizeValue = '1000+';
             }
             companySizeControl.setValue(companySizeValue);
           }
@@ -1118,4 +1129,9 @@ private FetchCompanyInformation(): void {
     };
     reader.readAsDataURL(file);
   }
+
+  isValueInDiList(value: string): boolean {
+    return this.companyData?.companyFacilities?.diList?.some((v: string | number) => String(v) === value) ?? false;
+  }
+  // Unblock kore diyen kintu
 }

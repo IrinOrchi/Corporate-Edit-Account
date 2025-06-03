@@ -865,8 +865,7 @@
                     type="radio" 
                     name="disabilityInclusRadPol" 
                     id="disabilityInclusRadPol1"
-                    value="1" 
-                    [defaultChecked]="1" 
+                    [value]="'1'"
                     [formControl]="formControlSignals()['inclusionPolicy']"
                     >
                     <span class="ml-1 question">Yes</span>
@@ -875,7 +874,7 @@
                     <input type="radio" 
                     name="disabilityInclusRadPol" 
                     id="disabilityInclusRadPol2" 
-                    value="2" 
+                    [value]="'2'"
                     [formControl]="formControlSignals()['inclusionPolicy']">
                     <span class="ml-1 question">No</span>
                 </label>
@@ -921,7 +920,7 @@
           @for (item of disabilities; track item) {
             <div class="flex items-start">
               <input name="disability_type" 
-                    [checked]="formControlSignals()['disabilityWrap'].value?.includes(item.value)" 
+                    [checked]="isValueInDiList(item.value)" 
                     type="checkbox" 
                     id="disability_wrap_{{item.value}}"
                     [value]="item.value" 
