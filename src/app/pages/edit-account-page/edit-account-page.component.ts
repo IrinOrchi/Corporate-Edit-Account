@@ -120,18 +120,14 @@ filteredCountriesList = this.countrie;
   selectedIndustryId: number = 0;
   isBangladesh: boolean = false;
   searchControl: FormControl = new FormControl(''); 
-
-  private usernameSubject: Subject<string> = new Subject();
-  private companyNameSubject: Subject<string> = new Subject();
   contactPersons: ContactPerson[] = [];
   selectedContactPerson: ContactPerson | null = null;
   showProfileImageModal = false;
   profileImageUrl: string | null = null;
   constructor(private checkNamesService: CheckNamesService , private authService: AuthService ,
-    private router: Router) {}
+  private router: Router) {}
   ngOnInit(): void {
-    console.log('Component initialized');
-    console.log('Company ID from localStorage:', localStorage.getItem('CompanyId'));
+   
 
     this.searchControl.valueChanges
     .pipe(debounceTime(300)) 
@@ -236,72 +232,7 @@ filteredCountriesList = this.countrie;
       country.name.toLowerCase().includes(query)
     );
   }
- 
-  // rl
-  // onRLNoBlur(): void {
-  //   this.employeeForm.controls['rlNo'].markAsTouched();
-  
-  //   if (this.rlNoHasValue && this.employeeForm.controls['rlNo'].invalid) {
-  //     this.showError = true;
-  //     this.rlErrorMessage = 'RL Number is required';  
-  //     this.showErrorModal = true; 
-  //   } else {
-  //     this.showError = false; 
-  //     this.showErrorModal = false; 
-  //   }
-  
-  //   if (this.rlNoHasValue && this.employeeForm.controls['rlNo'].valid) {
-  //     this.verifyRLNo();
-  //   }
-  // }
-  
-  // verifyRLNo(): void {
-  //   const rlNo: string = this.employeeForm.get('rlNo')?.value?.toString();
-  //   const companyName: string = this.employeeForm.get('companyName')?.value?.toString();
-  
-  //   if (rlNo && companyName) {
-  //     const rlRequest: RLNoRequestModel = { RLNo: rlNo };
-  //     console.log('Company Name Input:', companyName);
-  //     this.checkNamesService.verifyRLNo(rlRequest).subscribe({
-  //       next: (response: any) => {
-  //         console.log('RL No Response:', response);
-  
-  //         if (
-  //           response.responseType === 'Success' &&
-  //           response.responseCode === 1 &&
-  //           response.data?.error === '0' &&
-  //           response.data?.company_Name === companyName
-  //         ) {
-  //           this.showError = false;
-  //           this.rlErrorMessage = '';
-  //           this.showErrorModal = false;
-  //         } else {
-  //           this.showError = true;
-  //           this.rlErrorMessage =
-  //             response.data?.error !== '0'
-  //               ? 'Invalid RL No.'
-  //               : 'Company name does not match.';
-  //           this.showErrorModal = true;
-  //         }
-  //       },
-  //       error: (error: any) => {
-  //         console.error('Error verifying RL No:', error);
-  //         this.showError = true;
-  //         this.rlErrorMessage = 'An error occurred while verifying RL No.';
-  //         this.showErrorModal = true;
-  //       },
-  //     });
-  //   } else {
-  //     this.showError = true;
-  //     this.rlErrorMessage = 'RL No and Company Name are required.';
-  //     this.showErrorModal = true;
-  //   }
-  // }
-  // closeModal(): void {
-  // this.employeeForm.controls['rlNo'].reset();
-  // this.rlNoHasValue = false; 
-  // this.showErrorModal = false; 
-  // }
+
   // Fetch all industries
   fetchIndustries(): void {
     this.checkNamesService.getAllIndustryIds().pipe(
