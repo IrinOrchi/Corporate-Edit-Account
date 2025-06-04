@@ -16,14 +16,15 @@ import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespac
 import { Router } from '@angular/router';
 import { ProfileImageModalComponent } from '../../components/profile-image-modal/profile-image-modal.component';
 import { AddIndustryModalComponent } from '../../components/add-industry-modal/add-industry-modal.component';
+import { SettingsSidebarComponent } from "../../components/settings-sidebar/settings-sidebar.component";
 
 
 
 @Component({
   selector: 'app-edit-account-page',
   standalone: true,
-  imports: [RadioGroupComponent,InputFieldComponent,
-    TextAreaComponent,ReactiveFormsModule,FormsModule,CommonModule,AddIndustryModalComponent,ProfileImageModalComponent,InputFieldComponent],
+  imports: [RadioGroupComponent, InputFieldComponent,
+    TextAreaComponent, ReactiveFormsModule, FormsModule, CommonModule, AddIndustryModalComponent, ProfileImageModalComponent, InputFieldComponent, SettingsSidebarComponent],
   templateUrl: './edit-account-page.component.html',
   styleUrls: ['./edit-account-page.component.scss']
 })

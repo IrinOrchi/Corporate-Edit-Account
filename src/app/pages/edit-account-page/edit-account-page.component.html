@@ -1,15 +1,18 @@
-<div  class="bg-[#F9FAFB] w-auto sm:w-auto h-auto ">
-  
+<h1 class="text-2xl font-semibold text-gray-900 mb-1">Settings</h1>
+<p class="text-sm text-gray-600 mb-6">Set up your bdjobs recruiter presence and hiring needs.</p>
+<div class="flex items-start">
+  <app-settings-sidebar></app-settings-sidebar>
+  <div class="bg-[#F9FAFB] w-auto sm:w-auto h-auto ">
     <!-- Form -->
-    <form action="" [formGroup]="employeeForm" (ngSubmit)="onContinue()">
+    <form action="" [formGroup]="employeeForm" (ngSubmit)="onContinue()" class="pt-0 mt-0">
 
   
       <!-- Company Details Section -->
-      <div class="flex-col items-start gap-5 p-6 mx-auto mt-12 border border-gray-200 bg-white shadow-lg max-w-7xl rounded-xl ">
+      <div class="flex-col items-start gap-5 pb-6 pl-6 pr-6 mx-auto border border-gray-200 bg-white shadow-lg max-w-7xl rounded-xl pt-0 ">
          <!-- Header Section -->
       <div
         id="resImg"
-        class="flex flex-col md:flex-row justify-center items-center w-full h-[200px] md:h-[250px] bg-contain bg-center bg-no-repeat mx-auto -mt-12 mb-4"
+        class="flex flex-col md:flex-row justify-center items-center w-full h-[200px] md:h-[250px] bg-contain bg-center bg-no-repeat mx-auto mb-4"
         style="background-image: url('assets/images/editAccountHeader.svg');">
       </div>
 
