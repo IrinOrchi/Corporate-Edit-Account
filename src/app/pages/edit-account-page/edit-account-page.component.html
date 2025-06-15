@@ -854,7 +854,7 @@
     <input name="facility_for_disability" 
            id="facility_for_disability" 
            type="checkbox" 
-           [formControl]="formControlSignals()['facilitiesForDisabilities']"
+           [formControl]="formControlSignals()['facilityForDisability']"
            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded cursor-pointer focus:ring-blue-500 focus:ring-offset-0 focus:ring-2">
     <label for="facility_for_disability" 
            class="ml-2 text-base font-normal text-black cursor-pointer">
@@ -869,7 +869,7 @@
 
 
   
-  @if (employeeForm.get('facilitiesForDisabilities')?.value === 1) {
+  @if (employeeForm.get('facilityForDisability')?.value === 1) {
       <div  id="DisabilityPanel" class="block -mr-2">
 <div class="container flex flex-wrap p-4 mx-auto mt-2 mb-4 -ml-2 rounded-lg" style="background-image: url('/assets/images/disability.svg'); background-size: 60%; background-repeat: no-repeat; background-position: right;">
   

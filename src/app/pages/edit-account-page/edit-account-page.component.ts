@@ -62,7 +62,7 @@ filteredCountriesList = this.countrie;
 
   employeeForm: FormGroup = new FormGroup({
     
-    facilitiesForDisabilities: new FormControl(0),
+    facilityForDisability: new FormControl(0),
     username: new FormControl('', [Validators.required, noBlacklistCharacters]),  
     password: new FormControl('', [Validators.required,Validators.maxLength(10), noBlacklistCharacters]),
     confirmPassword: new FormControl('', [Validators.required]),
@@ -96,10 +96,10 @@ filteredCountriesList = this.countrie;
     hidEntrepreneur: new FormControl(''),
     rlNoStatus: new FormControl(''),
     outsideBDCompanyAddressBng: new FormControl(''),
-    captchaInput: new FormControl('', [Validators.required, Validators.maxLength(2),Validators.pattern('^[0-9]*$')]),
+    // captchaInput: new FormControl('', [Validators.required, Validators.maxLength(2),Validators.pattern('^[0-9]*$')]),
     companyAddressBangla: new FormControl('',[banglaTextValidator()]),
     rlNo: new FormControl({value: null, disabled: true},[Validators.pattern('^[0-9]*$')]),
-    isPolicyAcceptedControl: new FormControl('')
+    // isPolicyAcceptedControl: new FormControl('')
   },{ validators: passwordMatchValidator() }
 );
   formControlSignals = computed(() => {
@@ -170,9 +170,9 @@ filteredCountriesList = this.countrie;
       console.log('Parent Component - Selected Industry ID:', selectedIndustryId);
 
     });
-    this.employeeForm.get('facilitiesForDisabilities')?.valueChanges.subscribe((value: boolean) => {
+    this.employeeForm.get('facilityForDisability')?.valueChanges.subscribe((value: boolean) => {
       this.employeeForm.patchValue({
-        facilitiesForDisabilities: value ? 1 : 0,
+        facilityForDisability: value ? 1 : 0,
       }, { emitEvent: false });
     });
     this.employeeForm.get('country')?.valueChanges.subscribe((value: string) => {
@@ -835,9 +835,9 @@ private FetchCompanyInformation(): void {
             }
           }
 
-          const facilitiesForDisabilitiesControl = this.employeeForm.get('facilitiesForDisabilities');
-          if (facilitiesForDisabilitiesControl) {
-            facilitiesForDisabilitiesControl.setValue(this.companyData.facilityPWD ? 1 : 0);
+          const facilityForDisabilityControl = this.employeeForm.get('facilityForDisability');
+          if (facilityForDisabilityControl) {
+            facilityForDisabilityControl.setValue(this.companyData.facilityPWD ? 1 : 0);
           }
 
           const companySizeControl = this.employeeForm.get('companySize');
