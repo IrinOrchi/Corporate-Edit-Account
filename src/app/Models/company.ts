@@ -73,7 +73,7 @@ export interface ContactPerson {
 // }
 
 export interface UpdateAccountRequestModel {
-  industryType: string;
+  industryTypeArray: string;
   preIndustryTypes: string;
   companyId: string;
   industryName: string;

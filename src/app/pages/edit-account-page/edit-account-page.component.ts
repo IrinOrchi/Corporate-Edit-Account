@@ -96,10 +96,8 @@ filteredCountriesList = this.countrie;
     hidEntrepreneur: new FormControl(''),
     rlNoStatus: new FormControl(''),
     outsideBDCompanyAddressBng: new FormControl(''),
-    // captchaInput: new FormControl('', [Validators.required, Validators.maxLength(2),Validators.pattern('^[0-9]*$')]),
     companyAddressBangla: new FormControl('',[banglaTextValidator()]),
     rlNo: new FormControl({value: null, disabled: true},[Validators.pattern('^[0-9]*$')]),
-    // isPolicyAcceptedControl: new FormControl('')
   },{ validators: passwordMatchValidator() }
 );
   formControlSignals = computed(() => {
@@ -130,7 +128,6 @@ filteredCountriesList = this.countrie;
   constructor(private checkNamesService: CheckNamesService , private authService: AuthService ,
   private router: Router) {}
   ngOnInit(): void {
-   
 
     this.searchControl.valueChanges
     .pipe(debounceTime(300)) 
@@ -139,7 +136,6 @@ filteredCountriesList = this.countrie;
     });
 
     this.FetchCompanyInformation();
-   
     this.isBangladesh = true;
     this.fetchIndustries();
     this.setupSearch();
@@ -202,7 +198,6 @@ filteredCountriesList = this.countrie;
             this.employeeForm.get('companyAddress')?.updateValueAndValidity();
             this.employeeForm.get('outSideBd')?.updateValueAndValidity();
             this.employeeForm.get('outsideBDCompanyAddress')?.updateValueAndValidity();
-
           });
     this.employeeForm.get('district')?.valueChanges.subscribe(districtId => {
       if (districtId) {
@@ -757,11 +752,11 @@ onContinue() {
     
     // request data
     const requestData: UpdateAccountRequestModel = {
-      industryType: formValues.industryType || '',
+      industryTypeArray: formValues.industryTypeArray || '',
       preIndustryTypes: this.selectedIndustries.map(i => i.IndustryValue).join(','),
       companyId: localStorage.getItem('CompanyId') || '',
       industryName: formValues.industryName || '',
-      country: this.selectedCountry?.OptionValue || '',
+      country: this.selectedCountry?.OptionText || '',
       companyName: formValues.companyName || '',
       companyNameBangla: formValues.companyNameBangla || '',
       district: formValues.district || '',
