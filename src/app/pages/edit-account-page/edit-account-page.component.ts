@@ -125,6 +125,8 @@ filteredCountriesList = this.countrie;
   selectedContactPerson: ContactPerson | null = null;
   showProfileImageModal = false;
   profileImageUrl: string | null = null;
+  private industryCounter = -1; 
+
   constructor(private checkNamesService: CheckNamesService , private authService: AuthService ,
   private router: Router) {}
   ngOnInit(): void {
@@ -353,50 +355,60 @@ filteredCountriesList = this.countrie;
     this.toggleBodyScroll(false);
   }
 
+  private formatIndustryName(industryName: string, industryTypeId: number): string {
+    return `${this.industryCounter--}_${industryName}_${industryTypeId}`;
+  }
+
   onNewIndustryAdded(event: { IndustryName: string }): void {
     const industryName = event.IndustryName.trim(); 
     const currentIndustryId = this.selectedIndustryId;
-    const currentIndustryNames = this.employeeForm.controls['industryName'].value;
-    const updatedIndustryNames = currentIndustryNames
-      ? `${currentIndustryNames}, ${industryName}`
-      : industryName;
-    this.employeeForm.controls['industryName'].setValue(updatedIndustryNames);
+    
     this.checkNamesService.organizationCheck(industryName).subscribe({
       next: (response: any) => {
         if (response.responseCode === 200) {
-          if (response.responseCode === 200) {
-            const responseData = response.data;
-            if (responseData && responseData.success && responseData.data === true) {
-              const { orgTypeName, orgTypeId, industryId } = responseData;
+          if (response.data && response.data.success && response.data.data === true) {
+            const { orgTypeName, orgTypeId, industryId } = response.data;
     
-              const isAlreadyChecked = this.selectedIndustries.some(
-                (industry) => industry.IndustryName.toLowerCase() === orgTypeName.toLowerCase()
-              );
+            const isAlreadyChecked = this.selectedIndustries.some(
+              (industry) => industry.IndustryName.toLowerCase() === orgTypeName.toLowerCase()
+            );
     
-              if (isAlreadyChecked) {
-                alert('You have already added this industry.');
-                return;
+            if (isAlreadyChecked) {
+              alert('You have already added this industry.');
+              return;
+            }
+
+            const formattedIndustryName = this.formatIndustryName(orgTypeName, industryId);
+            const currentIndustryNames = this.employeeForm.controls['industryName'].value;
+            const updatedIndustryNames = currentIndustryNames
+              ? `${currentIndustryNames}*#*${formattedIndustryName}`
+              : formattedIndustryName;
+            this.employeeForm.controls['industryName'].setValue(updatedIndustryNames);
+    
+            const backendIndustry: IndustryTypeResponseDTO = {
+              IndustryValue: orgTypeId,
+              IndustryName: orgTypeName,
+            };
+    
+            if (!this.industryTypes.find((industry) => industry.IndustryName.toLowerCase() === orgTypeName.toLowerCase())) {
+              this.industryTypes.push(backendIndustry);
+              if (!this.allIndustryNames.find(industry => industry.industryId === orgTypeId)) {
+                this.allIndustryNames.push({
+                  industryId: orgTypeId,
+                  industryName: orgTypeName
+                });
               }
-              const backendIndustry: IndustryTypeResponseDTO = {
-                IndustryValue: orgTypeId,
-                IndustryName: orgTypeName,
-              };
-    
-              if (!this.industryTypes.find((industry) => industry.IndustryName.toLowerCase() === orgTypeName.toLowerCase())) {
-                this.industryTypes.push(backendIndustry);
-                // Add to allIndustryNames if it's a new industry
-                if (!this.allIndustryNames.find(industry => industry.industryId === orgTypeId)) {
-                  this.allIndustryNames.push({
-                    industryId: orgTypeId,
-                    industryName: orgTypeName
-                  });
-                }
-              }
-              this.selectedIndustries.push(backendIndustry);
-            
+            }
+            this.selectedIndustries.push(backendIndustry);
           }
-             
-            else if (response.dataContext === 'Organization not found') {
+          else if (response.dataContext === 'Organization not found') {
+            const formattedIndustryName = this.formatIndustryName(industryName, currentIndustryId);
+            const currentIndustryNames = this.employeeForm.controls['industryName'].value;
+            const updatedIndustryNames = currentIndustryNames
+              ? `${currentIndustryNames}*#*${formattedIndustryName}`
+              : formattedIndustryName;
+            this.employeeForm.controls['industryName'].setValue(updatedIndustryNames);
+
             const newIndustry: IndustryTypeResponseDTO = {
               IndustryValue: Date.now() % 2147483647, 
               IndustryName: industryName,
@@ -418,7 +430,6 @@ filteredCountriesList = this.countrie;
               .map((industry: { IndustryValue: number; IndustryName: string }) => industry.IndustryValue)
               .join(',');
             this.employeeForm.controls['industryTypeArray'].setValue(selectedValues);
-          }
           }
         }
       },
