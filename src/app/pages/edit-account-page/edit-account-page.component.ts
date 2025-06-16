@@ -323,13 +323,37 @@ filteredCountriesList = this.countrie;
     }
     this.formControlSignals()['disabilityWrap'].setValue(currentValues.join(','));
   }
-addNewIndustry(): void {
-  this.showAddIndustryModal = true;
-}
-closeAddIndustryModal(): void {
-  this.showAddIndustryModal = false;
-}
-onNewIndustryAdded(event: { IndustryName: string }): void {
+  private toggleBodyScroll(disable: boolean) {
+    const body = document.body;
+    if (disable) {
+      const scrollY = window.scrollY;
+      body.style.position = 'fixed';
+      body.style.top = `-${scrollY}px`;
+      body.style.width = '100%';
+      body.style.overflow = 'hidden';
+      body.setAttribute('data-scroll-y', scrollY.toString());
+    } else {
+      const scrollY = parseInt(body.getAttribute('data-scroll-y') || '0');
+      body.style.removeProperty('position');
+      body.style.removeProperty('top');
+      body.style.removeProperty('width');
+      body.style.removeProperty('overflow');
+      window.scrollTo(0, scrollY);
+      body.removeAttribute('data-scroll-y');
+    }
+  }
+
+  addNewIndustry(): void {
+    this.showAddIndustryModal = true;
+    this.toggleBodyScroll(true);
+  }
+
+  closeAddIndustryModal(): void {
+    this.showAddIndustryModal = false;
+    this.toggleBodyScroll(false);
+  }
+
+  onNewIndustryAdded(event: { IndustryName: string }): void {
     const industryName = event.IndustryName.trim(); 
     const currentIndustryId = this.selectedIndustryId;
     const currentIndustryNames = this.employeeForm.controls['industryName'].value;
@@ -404,10 +428,10 @@ onNewIndustryAdded(event: { IndustryName: string }): void {
     });
   }
 
-onNewIndustryTypeChange(newIndustryId: number): void {
-  this.employeeForm.get('industryType')?.setValue(newIndustryId); 
-}
-onIndustryTypeChange(selectedIndustryId: string | number): void {
+  onNewIndustryTypeChange(newIndustryId: number): void {
+    this.employeeForm.get('industryType')?.setValue(newIndustryId); 
+  }
+  onIndustryTypeChange(selectedIndustryId: string | number): void {
     const parsedIndustryId = parseInt(selectedIndustryId as string, 10); 
     if (!isNaN(parsedIndustryId)) {
       this.fetchIndustryTypes(parsedIndustryId).then(() => {
