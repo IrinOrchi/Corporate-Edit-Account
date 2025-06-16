@@ -6,7 +6,7 @@ import { InputFieldComponent } from '../../components/input-field/input-field.co
 import { TextAreaComponent } from '../../components/text-area/text-area.component';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { IndustryTypeResponseDTO, IndustryType, LocationResponseDTO, RLNoRequestModel } from '../../Models/company';
+import { IndustryTypeResponseDTO, IndustryType, LocationResponseDTO, RLNoRequestModel, UpdateAccountRequestModel } from '../../Models/company';
 import { ContactPerson } from '../../Models/company';
 import { RadioGroupComponent } from '../../components/radio-group/radio-group.component';
 import { MathCaptchaComponent } from '../../components/math-captcha/math-captcha.component';
@@ -63,11 +63,11 @@ filteredCountriesList = this.countrie;
   employeeForm: FormGroup = new FormGroup({
     
     facilityForDisability: new FormControl(0),
-    username: new FormControl('', [Validators.required, noBlacklistCharacters]),  
-    password: new FormControl('', [Validators.required,Validators.maxLength(10), noBlacklistCharacters]),
-    confirmPassword: new FormControl('', [Validators.required]),
+    username: new FormControl('', [ noBlacklistCharacters]),  
+    password: new FormControl('', noBlacklistCharacters),
+    confirmPassword: new FormControl('',),
     companyName: new FormControl('', [Validators.required, noWhitespaceValidator()]),
-    companyNameBangla: new FormControl('',[banglaTextValidator()]),
+    companyNameBangla: new FormControl('',),
     yearsOfEstablishMent: new FormControl('', [Validators.required, yearValidator()]),
     companySize: new FormControl('', [Validators.required]),
     country: new FormControl('',[Validators.required]), 
@@ -145,8 +145,6 @@ filteredCountriesList = this.countrie;
     this.fetchCountries();
     this.updateFlagPath();
     this.searchTerm.valueChanges.subscribe(() => this.filterCountries());
-
-    // Add real-time validation for company address
     this.employeeForm.get('companyAddress')?.valueChanges
       .pipe(
         debounceTime(300),
@@ -211,9 +209,8 @@ filteredCountriesList = this.countrie;
     });
     this.fetchContactPersons();
     
-    // Add subscription to contact person changes
-    this.employeeForm.get('contactName')?.valueChanges.subscribe((event: Event) => {
-      this.onContactPersonSelect(event);
+    this.employeeForm.get('contactName')?.valueChanges.subscribe((value: string) => {
+      this.onContactPersonSelect(value);
     });
   }
   filterCountries(): LocationResponseDTO[] {
@@ -708,77 +705,120 @@ toggleShowAll() {
 }
 
 onContinue() {
+  console.log('onContinue called');
   this.isContinueClicked = true;
   this.isLoading = true;
-  console.log('Current form values:', this.employeeForm.value);
- 
-  const controls = this.employeeForm.controls;
-  let firstInvalidKey: string | null = null;
-  let firstErrorMsgElement: HTMLElement | null = null;
 
-  for (const key in controls) {
-    if (controls.hasOwnProperty(key)) {
-      const control = controls[key];
+  // Mark all fields as touched to trigger validation
+  Object.keys(this.employeeForm.controls).forEach(key => {
+    const control = this.employeeForm.get(key);
+    control?.markAsTouched();
+  });
 
-      if (control.invalid) {
-        control.markAsTouched();
-        if (key === 'industryTypeArray' && control.errors?.['required']) {
-        }
-        if (control.errors) {
-          console.error(`Validation error in ${key}:`, control.errors);
-          if (control.errors['required']) {
-            console.error(`The field "${key}" is required.`);
-          }
-        }
+  console.log('Form valid:', this.employeeForm.valid);
+  console.log('Form values:', this.employeeForm.value);
+  console.log('Form errors:', this.employeeForm.errors);
+  console.log('Form controls:', Object.keys(this.employeeForm.controls).map(key => ({
+    key,
+    valid: this.employeeForm.get(key)?.valid,
+    errors: this.employeeForm.get(key)?.errors,
+    value: this.employeeForm.get(key)?.value,
+    disabled: this.employeeForm.get(key)?.disabled
+  })));
 
-        const errorElements = document.querySelectorAll(`[data-error-for="${key}"]`);
-        
-        for (const errorElement of Array.from(errorElements)) {
-          if (!firstErrorMsgElement) {
-            firstErrorMsgElement = errorElement as HTMLElement;
-          }
-        }
+  // Get raw form values including disabled controls
+  const rawFormValues = this.employeeForm.getRawValue();
+  console.log('Raw form values:', rawFormValues);
 
-        if (!firstInvalidKey) {
-          firstInvalidKey = key;
-          this.firstInvalidField = key;
-        }
+  if (this.employeeForm.valid) {
+    // Get form values including disabled controls
+    const formValues = this.employeeForm.getRawValue();
+    
+    // Prepare the request data
+    const requestData: UpdateAccountRequestModel = {
+      industryType: formValues.industryType || '',
+      preIndustryTypes: this.selectedIndustries.map(i => i.IndustryValue).join(','),
+      companyId: localStorage.getItem('CompanyId') || '',
+      industryName: formValues.industryName || '',
+      country: this.selectedCountry?.OptionValue || '',
+      companyName: formValues.companyName || '',
+      companyNameBangla: formValues.companyNameBangla || '',
+      district: formValues.district || '',
+      thana: formValues.thana || '',
+      outSideBdCompanyAddress: formValues.outsideBDCompanyAddress || '',
+      companyAddress: formValues.companyAddress || '',
+      outSideBdCompanyAddressBng: formValues.outsideBDCompanyAddressBng || '',
+      companyAddressBng: formValues.companyAddressBangla || '',
+      outSideCity: formValues.outSideBd || '',
+      rlNo: formValues.rlNo || '',
+      billingAddress: formValues.billingAddress || '',
+      billingContact: formValues.billingContact || '',
+      billingEmail: formValues.billingEmail || '',
+      contactId: parseInt(formValues.contactName) || 0,
+      facilityForDisability: formValues.facilityForDisability === 1 ? 1 : 0,
+      yearsOfEstablishMent: parseInt(formValues.yearsOfEstablishMent) || 0,
+      companySize: formValues.companySize || '',
+      userId: localStorage.getItem('UserId') || '',
+      tradeNo: formValues.tradeNo || '',
+      webUrl: formValues.webUrl || '',
+      businessDesc: formValues.businessDesc || '',
+      inclusionPolicy: parseInt(formValues.inclusionPolicy) || 0,
+      support: parseInt(formValues.support) || 0,
+      training: parseInt(formValues.training) || 0,
+      disabilityWrap: this.getSelectedDisabilityValues()
+    };
+
+    console.log('Request data prepared:', requestData);
+
+    // Call the API
+    console.log('Making API call...');
+    this.checkNamesService.updateAccount(requestData).subscribe({
+      next: (response) => {
+        console.log('API call successful:', response);
+        this.isLoading = false;
+        // Handle successful response
+        this.router.navigate(['/account-created-successfully']);
+      },
+      error: (error) => {
+        console.error('API call failed:', error);
+        this.isLoading = false;
+        // Handle error - show error message to user
+        this.showError = true;
+        this.showErrorModal = true;
+      }
+    });
+  } else {
+    console.log('Form is invalid');
+    this.isLoading = false;
+    // Find the first invalid field
+    const firstInvalidField = Object.keys(this.employeeForm.controls).find(
+      key => {
+        const control = this.employeeForm.get(key);
+        return control?.invalid && !control?.disabled;
+      }
+    );
+    if (firstInvalidField) {
+      console.log('First invalid field:', firstInvalidField);
+      this.firstInvalidField = firstInvalidField;
+      // Scroll to the first invalid field
+      const element = document.getElementById(firstInvalidField);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
   }
+}
 
-  if (firstErrorMsgElement) {
-    firstErrorMsgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    this.isLoading = false;
-    return;
-  } 
-  
-  if (firstInvalidKey) {
-    const element = document.getElementById(firstInvalidKey);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      element.focus();
+private getSelectedDisabilityValues(): number[] {
+  const selectedValues: number[] = [];
+  const disabilityCheckboxes = document.querySelectorAll('input[name="disability_type"]:checked');
+  disabilityCheckboxes.forEach((checkbox: Element) => {
+    const value = parseInt((checkbox as HTMLInputElement).value);
+    if (!isNaN(value)) {
+      selectedValues.push(value);
     }
-    this.isLoading = false;
-    return;
-  }
-
- 
-
-  if (this.employeeForm.valid) {
-    const payload = this.employeeForm.value;
-    this.checkNamesService.insertAccount(payload).subscribe({
-      next: (response) => {
-        console.log('Account created successfully:', response);
-        this.router.navigate(['/account-created-successfully']);
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error creating account:', error);
-        alert('There was an error creating the account. Please try again.');
-      },
-    });
-  }
+  });
+  return selectedValues;
 }
 
 //edit account
@@ -1016,9 +1056,15 @@ private FetchCompanyInformation(): void {
     });
   }
 
-  onContactPersonSelect(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const contactId = select.value;
+  onContactPersonSelect(eventOrValue: Event | string): void {
+    let contactId: string;
+    
+    if (eventOrValue instanceof Event) {
+      const select = eventOrValue.target as HTMLSelectElement;
+      contactId = select.value;
+    } else {
+      contactId = eventOrValue;
+    }
     
     if (!contactId) {
       this.employeeForm.patchValue({
@@ -1033,19 +1079,13 @@ private FetchCompanyInformation(): void {
     const selectedPerson = this.contactPersons.find(person => person.contactId.toString() === contactId);
     
     if (selectedPerson) {
-      this.selectedContactPerson = selectedPerson;
-      
-      let mobileNumber = selectedPerson.mobile;
-      if (this.isBangladesh && mobileNumber.startsWith('0')) {
-        mobileNumber = mobileNumber.substring(1);
-      }
-
       this.employeeForm.patchValue({
-        contactName: contactId, 
         contactDesignation: selectedPerson.designation,
         contactEmail: selectedPerson.email,
-        contactMobile: mobileNumber
-      }, { emitEvent: false }); 
+        contactMobile: this.isBangladesh && selectedPerson.mobile.startsWith('0') 
+          ? selectedPerson.mobile.substring(1) 
+          : selectedPerson.mobile
+      });
     }
   }
 

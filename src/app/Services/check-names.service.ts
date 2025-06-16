@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs'; 
-import { CheckNamesResponseDTO, CompanyNameCheckRequestDTO, IndustryTypeResponseDTO, IndustryType, LocationRequestDTO, LocationResponseDTO, IndustryTypeRequestDTO, RLNoRequestModel, CreateAccountResponseDTO } from '../Models/company';
+import { CheckNamesResponseDTO, CompanyNameCheckRequestDTO, IndustryTypeResponseDTO, IndustryType, LocationRequestDTO, LocationResponseDTO, IndustryTypeRequestDTO, RLNoRequestModel, CreateAccountResponseDTO, UpdateAccountRequestModel } from '../Models/company';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +16,7 @@ export class CheckNamesService {
   private organizationCheckUrl = 'https://api.bdjobs.com/employeraccount/api/CorporateCommon/OrganizationCheck';
   private insertAccountApiUrl = 'https://api.bdjobs.com/employeraccount/api/CreateAccount/insert';
   private editAccountApiUrl = 'https://api.bdjobs.com/EmployerAccount/api/EditAccount/GetEditAccount';
+  private updateAccountApiUrl = 'https://gateway.bdjobs.com/recruiter-account/api/EditAccount/UpdateAccount';
   constructor(private http: HttpClient) {}
 
 
@@ -175,6 +176,15 @@ export class CheckNamesService {
       catchError((error) => {
         console.error('Error fetching company information:', error);
         return throwError(() => new Error('Error fetching company information'));
+      })
+    );
+  }
+
+  updateAccount(data: UpdateAccountRequestModel): Observable<any> {
+    return this.http.post<any>(this.updateAccountApiUrl, data).pipe(
+      catchError((error) => {
+        console.error('Error updating account:', error);
+        return throwError(() => new Error('Failed to update account'));
       })
     );
   }

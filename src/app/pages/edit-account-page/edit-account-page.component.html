@@ -969,18 +969,16 @@
       </section>
       </div>
             <section class="flex justify-end mx-auto mt-8 max-w-7xl">
-              <div 
-              class="relative inline-flex">
-            <button 
-            type="button"
-            class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[16px] font-inter px-5 py-3 shadow-md transition duration-300 ease-linear"
-            class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[16px] font-inter px-5 py-3 shadow-md transition duration-300 ease-linear"  
-             >
-              <span *ngIf="isLoading" class="mr-2 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              Save 
-            </button>
-          </div>
-              </section>
+              <div class="relative inline-flex">
+                <button 
+                  type="submit"
+                  [disabled]="isLoading"
+                  class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[16px] font-inter px-5 py-3 shadow-md transition duration-300 ease-linear hover:bg-[#048a3f] disabled:opacity-50 disabled:cursor-not-allowed">
+                  <span *ngIf="isLoading" class="mr-2 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Save 
+                </button>
+              </div>
+            </section>
               <div class="mt-6">
                 {{formValue | json}}
               </div>

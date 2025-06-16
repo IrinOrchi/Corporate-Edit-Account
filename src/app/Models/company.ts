@@ -71,3 +71,36 @@ export interface ContactPerson {
 //   requestedData: string; 
 //   data: any;            
 // }
+
+export interface UpdateAccountRequestModel {
+  industryType: string;
+  preIndustryTypes: string;
+  companyId: string;
+  industryName: string;
+  country: string;
+  companyName: string;
+  companyNameBangla: string;
+  district: string;
+  thana: string;
+  outSideBdCompanyAddress: string;
+  companyAddress: string;
+  outSideBdCompanyAddressBng: string;
+  companyAddressBng: string;
+  outSideCity: string;
+  rlNo: string;
+  billingAddress: string;
+  billingContact: string;
+  billingEmail: string;
+  contactId: number;
+  facilityForDisability: number;
+  yearsOfEstablishMent: number;
+  companySize: string;
+  userId: string;
+  tradeNo: string;
+  webUrl: string;
+  businessDesc: string;
+  inclusionPolicy: number;
+  support: number;
+  training: number;
+  disabilityWrap: number[];
+}
