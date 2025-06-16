@@ -728,6 +728,8 @@ firstInvalidField: string | null = null;
 isContinueClicked: boolean = false;
 rlNoHasValue: boolean = false;
 isLoading: boolean = false;
+errorMessage: string = '';
+showValidationError: boolean = false;
 
 onInputChange(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -740,36 +742,20 @@ toggleShowAll() {
 }
 
 onContinue() {
-  console.log('onContinue called');
   this.isContinueClicked = true;
   this.isLoading = true;
+  this.errorMessage = '';
+  this.showValidationError = false;
 
-  // Mark all fields as touched to trigger validation
   Object.keys(this.employeeForm.controls).forEach(key => {
     const control = this.employeeForm.get(key);
     control?.markAsTouched();
   });
 
-  console.log('Form valid:', this.employeeForm.valid);
-  console.log('Form values:', this.employeeForm.value);
-  console.log('Form errors:', this.employeeForm.errors);
-  console.log('Form controls:', Object.keys(this.employeeForm.controls).map(key => ({
-    key,
-    valid: this.employeeForm.get(key)?.valid,
-    errors: this.employeeForm.get(key)?.errors,
-    value: this.employeeForm.get(key)?.value,
-    disabled: this.employeeForm.get(key)?.disabled
-  })));
-
-  // Get raw form values including disabled controls
-  const rawFormValues = this.employeeForm.getRawValue();
-  console.log('Raw form values:', rawFormValues);
-
   if (this.employeeForm.valid) {
-    // Get form values including disabled controls
     const formValues = this.employeeForm.getRawValue();
     
-    // Prepare the request data
+    // request data
     const requestData: UpdateAccountRequestModel = {
       industryType: formValues.industryType || '',
       preIndustryTypes: this.selectedIndustries.map(i => i.IndustryValue).join(','),
@@ -803,29 +789,37 @@ onContinue() {
       disabilityWrap: this.getSelectedDisabilityValues()
     };
 
-    console.log('Request data prepared:', requestData);
-
-    // Call the API
-    console.log('Making API call...');
     this.checkNamesService.updateAccount(requestData).subscribe({
       next: (response) => {
-        console.log('API call successful:', response);
         this.isLoading = false;
-        // Handle successful response
-        this.router.navigate(['/account-created-successfully']);
+        
+        if (response.responseType === 'Success' && response.responseCode === 1 && response.data === 'Update Successfully') {
+          this.router.navigate(['/account-created-successfully']);
+        } else {
+          alert('Error updating account. Please try again.');
+        }
       },
       error: (error) => {
-        console.error('API call failed:', error);
         this.isLoading = false;
-        // Handle error - show error message to user
-        this.showError = true;
-        this.showErrorModal = true;
+
+        if (error.error?.responseType === 'Error' && error.error?.dataContext) {
+          const validationErrors = error.error.dataContext;
+          if (Array.isArray(validationErrors)) {
+            validationErrors.forEach(err => {
+              console.error(`Validation Error - Field: ${err.invalidValue}, Message: ${err.message}`);
+              alert(`Error: ${err.message}`);
+              if (err.invalidValue === 'IndustryType') {
+                this.employeeForm.get('industryType')?.setErrors({ 'apiError': true });
+              }
+            });
+          }
+        } else {
+          alert('Error updating account. Please try again.');
+        }
       }
     });
   } else {
-    console.log('Form is invalid');
     this.isLoading = false;
-    // Find the first invalid field
     const firstInvalidField = Object.keys(this.employeeForm.controls).find(
       key => {
         const control = this.employeeForm.get(key);
@@ -833,9 +827,7 @@ onContinue() {
       }
     );
     if (firstInvalidField) {
-      console.log('First invalid field:', firstInvalidField);
       this.firstInvalidField = firstInvalidField;
-      // Scroll to the first invalid field
       const element = document.getElementById(firstInvalidField);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
