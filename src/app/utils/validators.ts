@@ -92,3 +92,25 @@ export function companyAddressValidator(): ValidatorFn {
     return null;
   };
 }
+
+export function urlValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    
+    if (!value) {
+      return null; 
+    }
+
+    if (!value.toLowerCase().startsWith('https://') && !value.toLowerCase().startsWith('http://')) {
+      return { invalidUrl: true };
+    }
+
+    try {
+      new URL(value);
+    } catch {
+      return { invalidUrl: true };
+    }
+
+    return null;
+  };
+}

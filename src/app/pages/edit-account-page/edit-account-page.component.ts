@@ -12,7 +12,7 @@ import { RadioGroupComponent } from '../../components/radio-group/radio-group.co
 import { MathCaptchaComponent } from '../../components/math-captcha/math-captcha.component';
 import { filePath,countrie ,disabilities} from '../../constants/file-path.constants';
 import { AuthService } from '../../Services/shared/auth.service';
-import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespaceValidator, noBlacklistCharacters, companyAddressValidator } from '../../utils/validators';
+import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespaceValidator, noBlacklistCharacters, companyAddressValidator, urlValidator } from '../../utils/validators';
 import { Router } from '@angular/router';
 import { ProfileImageModalComponent } from '../../components/profile-image-modal/profile-image-modal.component';
 import { AddIndustryModalComponent } from '../../components/add-industry-modal/add-industry-modal.component';
@@ -80,7 +80,7 @@ filteredCountriesList = this.countrie;
     industryTypeArray: new FormControl('', [Validators.required]),
     businessDesc: new FormControl(''),
     tradeNo: new FormControl(''),
-    webUrl: new FormControl(''),
+    webUrl: new FormControl('', [urlValidator()]),
     contactName: new FormControl('', [Validators.required, noWhitespaceValidator()]),
     contactDesignation: new FormControl('', [Validators.required, noWhitespaceValidator()]),
     contactEmail: new FormControl('', [Validators.required, Validators.email, noWhitespaceValidator()]),
@@ -208,6 +208,13 @@ filteredCountriesList = this.countrie;
     
     this.employeeForm.get('contactName')?.valueChanges.subscribe((value: string) => {
       this.onContactPersonSelect(value);
+    });
+
+    // webUrl validation
+    this.employeeForm.get('webUrl')?.valueChanges.subscribe((value: string) => {
+      if (value && !value.toLowerCase().startsWith('https://') && !value.toLowerCase().startsWith('http://')) {
+        this.employeeForm.get('webUrl')?.markAsTouched();
+      }
     });
   }
   filterCountries(): LocationResponseDTO[] {
@@ -750,6 +757,8 @@ onContinue() {
   if (this.employeeForm.valid) {
     const formValues = this.employeeForm.getRawValue();
     
+    const formattedWebUrl = formValues.webUrl ? this.formatUrl(formValues.webUrl) : '';
+    
     // request data
     const requestData: UpdateAccountRequestModel = {
       industryTypeArray: formValues.industryTypeArray || '',
@@ -776,7 +785,7 @@ onContinue() {
       companySize: formValues.companySize || '',
       userId: localStorage.getItem('UserId') || '',
       tradeNo: formValues.tradeNo || '',
-      webUrl: formValues.webUrl || '',
+      webUrl: formattedWebUrl,
       businessDesc: formValues.businessDesc || '',
       inclusionPolicy: parseInt(formValues.inclusionPolicy) || 0,
       support: parseInt(formValues.support) || 0,
@@ -826,6 +835,13 @@ onContinue() {
       const element = document.getElementById(firstInvalidField);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        const fieldElement = document.querySelector(`[name="${firstInvalidField}"]`) || 
+                           document.querySelector(`[id="${firstInvalidField}"]`) ||
+                           document.querySelector(`[id="website_url"]`);
+        if (fieldElement) {
+          fieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
     }
   }
@@ -1138,4 +1154,13 @@ private FetchCompanyInformation(): void {
     return this.companyData?.companyFacilities?.diList?.some((v: string | number) => String(v) === value) ?? false;
   }
  
+  formatUrl(url: string): string {
+    if (!url) return url;
+    
+    if (!url.match(/^https?:\/\//)) {
+      return `https://${url}`;
+    }
+    
+    return url;
+  }
 }

@@ -546,7 +546,12 @@
                     [maxLength]="50"
                     [isRequired]="false"
                     >
-                    </app-input-field>           
+                    </app-input-field>
+                    <div class="text-red-600">
+                      @if(isContinueClicked && employeeForm.controls['webUrl'].errors?.['invalidUrl']) {
+                        <span class="error-message">Please enter a valid URL</span>
+                      }
+                    </div>           
                 </div>   
           </div>
               </div>
