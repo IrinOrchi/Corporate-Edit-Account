@@ -18,8 +18,6 @@ import { ProfileImageModalComponent } from '../../components/profile-image-modal
 import { AddIndustryModalComponent } from '../../components/add-industry-modal/add-industry-modal.component';
 import { SettingsSidebarComponent } from "../../components/settings-sidebar/settings-sidebar.component";
 
-
-
 @Component({
   selector: 'app-edit-account-page',
   standalone: true,
@@ -44,7 +42,6 @@ export class EditAccountPageComponent implements OnInit {
   showAddIndustryButton: boolean = false; 
   fieldsOrder: string[] = [];
   newlyAddedIndustriesnew: { [key: number]: IndustryTypeResponseDTO[] } = {};
-
   industries: BehaviorSubject<IndustryType[]> = new BehaviorSubject<IndustryType[]>([]);
   industryTypes: IndustryTypeResponseDTO[] = [];
   allIndustryTypes: IndustryTypeResponseDTO[] = []; 
@@ -61,7 +58,6 @@ currentFlagPath = this.filePath['Bangladesh'];
 filteredCountriesList = this.countrie;
 
   employeeForm: FormGroup = new FormGroup({
-    
     facilityForDisability: new FormControl(0),
     username: new FormControl('', [ noBlacklistCharacters]),  
     password: new FormControl('', noBlacklistCharacters),
@@ -164,7 +160,6 @@ filteredCountriesList = this.countrie;
       this.onIndustryTypeChange(selectedIndustryId);
       this.selectedIndustryId = selectedIndustryId;
       console.log('Parent Component - Selected Industry ID:', selectedIndustryId);
-
     });
     this.employeeForm.get('facilityForDisability')?.valueChanges.subscribe((value: boolean) => {
       this.employeeForm.patchValue({
@@ -737,12 +732,10 @@ onInputChange(event: Event) {
   const input = event.target as HTMLInputElement;
   input.value = input.value.replace(/[^0-9]/g, '');
   this.rlNoHasValue = input.value.trim().length > 0;
-
 }
 toggleShowAll() {
   this.showAll = !this.showAll;
 }
-
 onContinue() {
   this.isContinueClicked = true;
   this.isLoading = true;
@@ -798,7 +791,7 @@ onContinue() {
         this.isLoading = false;
         
         if (response.responseType === 'Success' && response.responseCode === 1 && response.data === 'Update Successfully') {
-          this.router.navigate(['/account-created-successfully']);
+          this.router.navigate(['/account-updated-successfully']);
         } else {
           alert('Error updating account. Please try again.');
         }

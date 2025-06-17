@@ -15,7 +15,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: "account-created-successfully",
+        path: "account-updated-successfully",
         component: SuccessfulAccountComponent,
         // canActivate: [AuthGuard]
     },
