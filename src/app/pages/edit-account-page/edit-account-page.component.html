@@ -855,25 +855,59 @@
   </h3>  
 
   <!-- Checkbox -->
-  <div class="flex items-center mb-4">
-    <input name="facility_for_disability" 
-           id="facility_for_disability" 
-           type="checkbox" 
-           [formControl]="formControlSignals()['facilityForDisability']"
-           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded cursor-pointer focus:ring-blue-500 focus:ring-offset-0 focus:ring-2">
-    <label for="facility_for_disability" 
-           class="ml-2 text-[14px] font-normal text-black cursor-pointer">
-      Facilities for Person with Disabilities
+  <div class="mb-4">
+    <label class="block text-[16px] font-semibold text-gray-900 mb-2">
+      Does your company have facilities for person with disabilities?
+      <a href="https://corporate3.bdjobs.com/disability-inclusion-practices.asp" target="_blank" class="text-[#0E73A9] underline text-[14px] font-normal ml-2">Learn more</a>
     </label>
-  </div>            
+    <div class="flex gap-6">
+      <!-- Yes Card -->
+      <label
+        class="relative flex flex-col justify-between cursor-pointer border rounded-lg p-4 w-[240px] min-h-[100px] transition-all duration-200
+          text-gray-900
+          flex-shrink-0
+          "
+        [ngClass]="{
+          'bg-[#F4F9FC] border-[#0E73A9] shadow-md': employeeForm.get('facilityForDisability')?.value == 1,
+          'bg-white border-[#DAE5EC]': employeeForm.get('facilityForDisability')?.value != 1
+        }"
+      >
+        <!-- Radio at top right -->
+        <input
+          type="radio"
+          name="facility_for_disability"
+          [value]="1"
+          [formControl]="formControlSignals()['facilityForDisability']"
+          class="absolute top-3 right-3 accent-[#0E73A9] w-5 h-5"
+        />
+        <span class="text-lg font-semibold mb-2 mt-2">Yes</span>
+        <span class="text-[15px] font-semibold text-gray-600">Facilities for person with Disabilities here.</span>
+      </label>
+      <!-- No Card -->
+      <label
+        class="relative flex flex-col justify-between cursor-pointer border rounded-lg p-4 w-[240px] min-h-[100px] transition-all duration-200
+          text-gray-900
+          flex-shrink-0
+          "
+        [ngClass]="{
+          'bg-[#F4F9FC] border-[#0E73A9] shadow-md': employeeForm.get('facilityForDisability')?.value == 0,
+          'bg-white border-[#DAE5EC]': employeeForm.get('facilityForDisability')?.value != 0
+        }"
+      >
+        <!-- Radio at top right -->
+        <input
+          type="radio"
+          name="facility_for_disability"
+          [value]="0"
+          [formControl]="formControlSignals()['facilityForDisability']"
+          class="absolute top-3 right-3 accent-[#0E73A9] w-5 h-5"
+        />
+        <span class="text-lg font-semibold mb-2 mt-2">No</span>
+        <span class="text-[15px] font-semibold text-gray-600">Facilities for person with Disabilities here.</span>
+      </label>
+    </div>
+  </div>
 
-  <a href="https://corporate3.bdjobs.com/disability-inclusion-practices.asp" target="_blank" 
-     class="text-[#0E73A9] font-inter text-[14px] font-normal leading-[20px] underline">
-    Click to learn more
-  </a>
-
-
-  
   @if (employeeForm.get('facilityForDisability')?.value === 1) {
       <div  id="DisabilityPanel" class="block -mr-2">
 <div class="container flex flex-wrap p-4 mx-auto mt-2 mb-4 -ml-2 rounded-lg" style="background-image: url('/assets/images/disability.svg'); background-size: 60%; background-repeat: no-repeat; background-position: right;">
@@ -980,7 +1014,7 @@
                   [disabled]="isLoading"
                   class="box-border m-0 font-inherit overflow-visible text-center font-normal leading-normal align-middle whitespace-nowrap touch-manipulation select-none border border-transparent rounded inline-flex items-center bg-[#05A44B] text-white text-[14px] font-inter px-4 py-2.5 shadow-md transition duration-300 ease-linear hover:bg-[#048a3f] disabled:opacity-50 disabled:cursor-not-allowed">
                   <span *ngIf="isLoading" class="mr-2 spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  Save 
+                  Save Changes
                 </button>
               </div>
             </section>
