@@ -15,7 +15,7 @@ export class CheckNamesService {
   private rlnoapiUrl = 'https://api.bdjobs.com/employeraccount/api/CorporateCommon/RlNoCheck';
   private organizationCheckUrl = 'https://api.bdjobs.com/employeraccount/api/CorporateCommon/OrganizationCheck';
   private insertAccountApiUrl = 'https://api.bdjobs.com/employeraccount/api/CreateAccount/insert';
-  private editAccountApiUrl = 'https://api.bdjobs.com/EmployerAccount/api/EditAccount/GetEditAccount';
+  private editAccountApiUrl = 'https://gateway.bdjobs.com/recruiter-account/api/EditAccount/GetEditAccount';
   private updateAccountApiUrl = 'https://gateway.bdjobs.com/recruiter-account/api/EditAccount/UpdateAccount';
   constructor(private http: HttpClient) {}
 
