@@ -84,7 +84,6 @@ export function companyAddressValidator(): ValidatorFn {
       return { invalidPattern: true };
     }
 
-    // Check if input is less than 10 characters
     if (value.length < 10) {
       return { minlength: true };
     }
