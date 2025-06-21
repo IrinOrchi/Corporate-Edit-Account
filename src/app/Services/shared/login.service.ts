@@ -38,9 +38,7 @@ export class LoginService {
   //   ? 'domain=test4&'
   //   : '';
 
-  // private readonly DOMAIN_PARAM_ONLY = window.location.href.includes('test4')
-  //   ? '?domain=test4'
-  //   : '';
+  
 
   private readonly API_ENDPOINT: string =
     // 'https://testr.bdjobs.com/authentication/api/authentication';
