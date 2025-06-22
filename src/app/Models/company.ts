@@ -104,3 +104,67 @@ export interface UpdateAccountRequestModel {
   training: number;
   disabilityWrap: number[];
 }
+
+export interface CompanyLogoResponse {
+  responseType: string;
+  dataContext: null;
+  responseCode: number;
+  requestedData: null;
+  data: CompanyLogo[];
+}
+
+export interface CompanyLogo {
+  logoName: string;
+  isActive: number;
+}
+
+export interface CompanyLogoUploadResponse {
+  responseType: string;
+  dataContext: null;
+  responseCode: number;
+  requestedData: null;
+  data: {
+    filePath: string;
+  };
+}
+
+export interface CompanyLogoValidationError {
+  errorCode: number;
+  name: string;
+  invalidValue: string;
+  message: string;
+}
+
+export interface CompanyLogoErrorResponse {
+  responseType: string;
+  dataContext: CompanyLogoValidationError[];
+  responseCode: number;
+  requestedData: null;
+  data: null;
+}
+
+export interface CompanyLogoDeleteRequest {
+  companyId: string;
+  logoName: string;
+}
+
+export interface CompanyLogoDeleteResponse {
+  responseType: string;
+  dataContext: null;
+  responseCode: number;
+  requestedData: null;
+  data: string;
+}
+
+export interface CompanyLogoUpdateRequest {
+  companyId: string;
+  logoName?: string;
+}
+
+export interface CompanyLogoUpdateResponse {
+  responseType: string;
+  dataContext: null;
+  responseCode: number;
+  requestedData: null;
+  data: string;
+}
