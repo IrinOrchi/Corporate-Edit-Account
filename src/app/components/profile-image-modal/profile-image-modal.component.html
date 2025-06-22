@@ -8,7 +8,8 @@
         </div>
         <div class="flex-col">
           <h2 class="text-[#212121] text-[20px] font-bold font-inter tracking-tight">Company logo</h2>
-          <p class="text-[#595959] text-[16px] font-normal font-inter leading-normal">You didn't upload your company logo yet</p>
+          <p *ngIf="latestImages.length === 0" class="text-[#595959] text-[16px] font-normal font-inter leading-normal">You didn't upload your company logo yet</p>
+          <p *ngIf="latestImages.length > 0" class="text-[#595959] text-[16px] font-normal font-inter leading-normal">Select a logo to display as your profile picture</p>
         </div>
       </div>
       <button 
@@ -22,8 +23,8 @@
     <!-- Modal Body -->
     <div class="px-8 py-6">
       <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
-        <div 
-          class="border-2 border-dashed rounded-lg p-4 flex items-center justify-center min-h-[200px] mb-6 relative"
+        <!-- Main Preview Area -->
+        <div class="border-2 border-dashed rounded-lg p-4 flex items-center justify-center min-h-[200px] mb-6 relative"
           [class.border-blue-500]="isDragging"
           [class.bg-blue-50]="isDragging"
           [class.border-gray-300]="!isDragging"
@@ -36,66 +37,76 @@
                <div class="w-16 h-16 flex items-center justify-center">
                  <img src="assets/images/Logoimage.svg" alt="Company Logo" class="w-16 h-16 object-contain">
                </div>
-                <p 
-                  class="text-[#0E73A9] text-lg font-medium mb-1 underline cursor-pointer"
+              <p class="text-[#0E73A9] text-lg font-medium mb-1 underline cursor-pointer"
                   (click)="triggerFileInput()">
                   Click here to upload your file
                 </p>
                 <p class="text-[#595959] text-sm">*Logo width must be within 300 pixels and height must be within 300 pixels.</p>
             </div>
-          } @else {
-            <div class="relative w-full h-full flex items-center justify-center">
-              <img [src]="previewUrl" alt="Preview" class="max-h-[300px] max-w-full object-contain rounded-lg">
-              <button 
-                type="button"
-                class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
-                (click)="removeImage(); $event.stopPropagation()">
-                ✕
-              </button>
+          }
+          @if (previewUrl) {
+            <div class="relative w-[120px] h-[120px] flex items-center justify-center mx-auto">
+              <img [src]="previewUrl" alt="Preview" class="w-full h-full object-contain rounded-lg">
             </div>
           }
-          <input 
-            type="file" 
-            id="fileInput" 
-            accept="image/*" 
-            class="hidden" 
-            (change)="onFileSelected($event)"
-            formControlName="image">
-        </div>
-
-        <!-- Smaller Images and Upload Button -->
-        <div class="grid grid-cols-4 gap-4">
-          @for (i of [].constructor(gridSize); let index = $index; track index) {
-            @if (uploadedImages[index]) {
-              <div 
-                class="w-20 h-20 border rounded-lg flex items-center justify-center cursor-pointer"
-                [class.border-blue-500]="uploadedImages[index].file === selectedFile"
-                (click)="selectImage(uploadedImages[index])">
-                 <img [src]="uploadedImages[index].previewUrl" alt="Smaller Logo" class="w-full h-full object-contain p-1">
-              </div>
-            } @else if (index === uploadedImages.length && uploadedImages.length < 4) {
-              <!-- Upload Button -->
-              <div 
-                class="w-20 h-20 border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
-                (click)="triggerFileInput()">
-                <i class="icon icon-plus text-xl text-gray-500"></i>
-                <span class="text-sm text-gray-700">Upload</span>
-              </div>
-            } @else {
-              <div class="w-20 h-20 border rounded-lg flex items-center justify-center bg-gray-100">
-                 <!-- Empty slot placeholder -->
-              </div>
-            }
+          <input type="file" id="fileInput" accept="image/*" class="hidden" (change)="onFileSelected($event)">
+          
+          <!-- Trash icon in top right corner of container -->
+          @if (previewUrl) {
+            <button type="button"
+              class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
+              (click)="removeImage(); $event.stopPropagation()">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
           }
         </div>
+
+        <!-- Label for bottom row -->
+        <div *ngIf="latestImages.length > 0" class="text-sm text-gray-700 font-medium mb-2">Select a logo to display as your profile picture</div>
+        <!-- Bottom row of latest images -->
+        <div class="flex flex-row gap-4 mb-4">
+          @for (imgUrl of latestImages; track imgUrl) {
+            <div class="relative w-16 h-16 border rounded-lg flex items-center justify-center cursor-pointer"
+              [class.border-blue-500]="selectedImageUrl === imgUrl"
+              (click)="selectImageFromApi(imgUrl)">
+              <img [src]="imgUrl" alt="Logo" class="w-full h-full object-contain rounded-lg">
+              <input type="radio" class="absolute top-1 right-1 w-4 h-4 accent-blue-600" [checked]="selectedImageUrl === imgUrl" />
+              </div>
+          }
+          <!-- Upload button card -->
+          <div class="w-16 h-16 border-2 border-dashed rounded-lg flex flex-col items-center justify-center transition-colors"
+            [class.cursor-pointer]="latestImages.length < 4"
+            [class.hover:bg-gray-50]="latestImages.length < 4"
+            [class.opacity-50]="latestImages.length >= 4"
+            (click)="triggerFileInput()">
+            <i class="icon icon-plus text-xl text-gray-500"></i>
+            <span class="text-sm text-gray-700">Upload</span>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+          <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p class="text-red-600 text-sm whitespace-pre-line">{{ errorMessage }}</p>
+          </div>
+        }
 
         <!-- Use Button -->
         <div class="mt-6 flex justify-end">
-          <button 
-            type="submit"
-            class="px-6 py-3 bg-[#05A44B] text-white rounded-lg hover:bg-[#05A44B]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            [disabled]="!uploadForm.valid">
-            Use
+          <button type="submit"
+            class="px-6 py-3 bg-[#05A44B] text-white rounded-lg hover:bg-[#05A44B]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            [disabled]="!selectedImageUrl || isUploading">
+            @if (isUploading) {
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Uploading...
+            } @else {
+              Use
+            }
           </button>
         </div>
       </form>
