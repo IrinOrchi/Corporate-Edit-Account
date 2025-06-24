@@ -1,10 +1,10 @@
-import { Component, computed, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, HostListener, OnInit, ViewChild, Renderer2, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CheckNamesService } from '../../Services/check-names.service';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { InputFieldComponent } from '../../components/input-field/input-field.component';
 import { TextAreaComponent } from '../../components/text-area/text-area.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { IndustryTypeResponseDTO, IndustryType, LocationResponseDTO, RLNoRequestModel, UpdateAccountRequestModel } from '../../Models/company';
 import { ContactPerson } from '../../Models/company';
@@ -16,7 +16,7 @@ import { passwordMatchValidator, yearValidator, banglaTextValidator, noWhitespac
 import { Router } from '@angular/router';
 import { ProfileImageModalComponent } from '../../components/profile-image-modal/profile-image-modal.component';
 import { AddIndustryModalComponent } from '../../components/add-industry-modal/add-industry-modal.component';
-import { SettingsSidebarComponent } from "../../components/settings-sidebar/settings-sidebar.component";
+import { SettingsSidebarComponent } from '../../components/settings-sidebar/settings-sidebar.component';
 
 @Component({
   selector: 'app-edit-account-page',
@@ -86,9 +86,9 @@ export class EditAccountPageComponent implements OnInit {
     inclusionPolicy: new FormControl<string>(''),
     support: new FormControl<string>(''),
     disabilityWrap: new FormControl(''),
-    billingAddress: new FormControl('',[Validators.required]),
-    billingEmail: new FormControl('',[Validators.required]),
-    billingContact: new FormControl('',[Validators.required]),
+    billingAddress: new FormControl(''),
+    billingEmail: new FormControl(''),
+    billingContact: new FormControl(''),
     training: new FormControl<string>(''),
     industryName: new FormControl('', [Validators.maxLength(100)]),
     hidEntrepreneur: new FormControl(''),
@@ -134,11 +134,14 @@ export class EditAccountPageComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   showValidationError = false;
+  private readonly LOGO_BASE_URL = 'https://corporate.bdjobs.com/logos/';
 
   constructor(
     private checkNamesService: CheckNamesService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit(): void {
@@ -222,6 +225,8 @@ export class EditAccountPageComponent implements OnInit {
         this.employeeForm.get('webUrl')?.markAsTouched();
       }
     });
+
+    this.fetchCompanyLogo();
   }
 
   filterCountries(): LocationResponseDTO[] {
@@ -636,18 +641,35 @@ export class EditAccountPageComponent implements OnInit {
   }
 
   filterIndustryTypes(query: string): void {
-    if (!query) {
-      this.filteredIndustryTypes = [...this.allIndustryTypes];
+    const lowerCaseQuery = query?.toLowerCase() || '';
+    const industryTypeId = Number(this.employeeForm.get('industryType')?.value);
+    
+    let sourceIndustries: IndustryTypeResponseDTO[];
+
+    if (industryTypeId === -1) {
+      sourceIndustries = this.allIndustryTypes;
     } else {
-      const lowerQuery = query.toLowerCase();
-      this.filteredIndustryTypes = this.allIndustryTypes.filter(type =>
-        type.IndustryName.toLowerCase().includes(lowerQuery)
-      );
+      sourceIndustries = this.newlyAddedIndustriesnew[industryTypeId] || [];
+    }
+    
+    if (sourceIndustries) {
+        const filtered = sourceIndustries.filter(
+            (industry: IndustryTypeResponseDTO) =>
+            industry.IndustryName.toLowerCase().includes(lowerCaseQuery)
+        );
+
+        this.allIndustryNames = filtered.map(item => ({
+            industryId: item.IndustryValue,
+            industryName: item.IndustryName
+        }));
+    } else {
+        this.allIndustryNames = [];
     }
   }
 
   onCategoryChange(event: Event): void {
-    const selectedIndustryId = parseInt((event.target as HTMLSelectElement).value);
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedIndustryId = parseInt(selectElement.value);
     this.fetchIndustryTypes(selectedIndustryId);
     this.onIndustryTypeChange(selectedIndustryId);
     this.showAddIndustryButton = false;
@@ -990,22 +1012,35 @@ export class EditAccountPageComponent implements OnInit {
 
   openProfileImageModal() {
     this.showProfileImageModal = true;
+    this.renderer.addClass(this.document.body, 'modal-open');
   }
+
   closeProfileImageModal() {
     this.showProfileImageModal = false;
+    this.renderer.removeClass(this.document.body, 'modal-open');
   }
-  onProfileImageUploaded(file: File) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.profileImageUrl = reader.result as string;
-      const profileIcon = document.querySelector('.icon-commercial') as HTMLElement;
-      if (profileIcon) {
-        profileIcon.style.backgroundImage = `url(${this.profileImageUrl})`;
-        profileIcon.style.backgroundSize = 'cover';
-        profileIcon.style.backgroundPosition = 'center';
-      }
-    };
-    reader.readAsDataURL(file);
+
+  onProfileImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.profileImageUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onProfileImageUploaded(imageUrl: string) {
+    if (imageUrl === 'uploaded') {
+      // If a new image was uploaded, just refresh the logo to get the latest active one.
+    this.fetchCompanyLogo();
+    } else {
+      // If an existing image was selected, update the profile view.
+      this.profileImageUrl = `${imageUrl}?v=${new Date().getTime()}`;
+    }
+    this.showProfileImageModal = false;
   }
 
   isValueInDiList(value: string): boolean {
@@ -1016,5 +1051,27 @@ export class EditAccountPageComponent implements OnInit {
     if (!url) return url;
     if (!url.match(/^https?:\/\//)) return `https://${url}`;
     return url;
+  }
+
+  private fetchCompanyLogo(): void {
+    const companyId = localStorage.getItem('CompanyId');
+    if (!companyId) {
+      console.error('Company ID not found in localStorage');
+      return;
+    }
+
+    this.checkNamesService.getCompanyLogos(companyId).subscribe({
+      next: (response) => {
+        if (response.responseCode === 1 && response.data) {
+          const activeLogo = response.data.find(logo => logo.isActive === 1);
+          if (activeLogo) {
+            this.profileImageUrl = `${this.LOGO_BASE_URL}${activeLogo.logoName}?v=${new Date().getTime()}`;
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching company logo:', error);
+      }
+    });
   }
 }

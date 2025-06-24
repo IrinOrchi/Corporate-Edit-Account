@@ -1,50 +1,39 @@
-<h1 class="text-[26px] font-semibold text-gray-900 mb-1 ml-6 mt-4">Settings</h1>
-<div class="flex items-center justify-between ml-6 mb-6">
-  <p class="text-[14px] text-gray-600">Set up your bdjobs recruiter presence and hiring needs.</p>
-  <div class="flex gap-4 mr-8">
-    <button class="flex items-center px-3 py-2 border border-[#2e7d32] hover:border-[#276a2b] text-[#2e7d32] hover:text-[#276a2b] rounded-lg text-[14px]">
-      <span class="mr-2 icon icon-search"></span> Search Talent
-    </button>
-    <button class="flex items-center px-3 py-2 bg-[#2e7d32] hover:bg-[#276a2b] text-white rounded-lg text-[14px]">
-      <span class="mr-2 icon icon-plus"></span> Post a new Job
-    </button>
+
+  <div class="flex flex-col justify-center ml-44 mt-6 mb-2">
+    <h2 class="text-[18px] font-semibold text-gray-900 mb-0">Edit Company Information</h2>
+    <p class="text-[14px] text-gray-600 mt-0">Set up your bdjobs recruiter presence and hiring needs.</p>
   </div>
-</div>
+
 <div class="flex items-start">
   <app-settings-sidebar></app-settings-sidebar>
   <div class="bg-[#F9FAFB] w-auto sm:w-auto h-auto ">
     <!-- Form -->
     <form action="" [formGroup]="employeeForm" (ngSubmit)="onContinue()" class="pt-0 mt-0">
+    <!-- Company Details Section -->
 
-  
-      <!-- Company Details Section -->
-      <div class="flex-col items-start gap-5 pb-6 pl-6 pr-6 mx-auto border border-gray-200 bg-white shadow-lg max-w-6xl rounded-xl pt-0 ">
-         <!-- Header Section -->
-      <div
-        id="resImg"
-        class="flex flex-col md:flex-row justify-center items-center w-full h-[180px] md:h-[220px] bg-contain bg-center bg-no-repeat mx-auto mb-4"
-        style="background-image: url('assets/images/editAccountHeader.svg');">
-      </div>
+    <div class="flex-col items-start gap-5 pb-6 pl-6 pr-6 mx-auto border border-gray-200 bg-white shadow-lg max-w-6xl rounded-xl pt-0 ">
 
-        <!-- Container for Icon and Name -->
-        <div class="flex items-center mb-8 -mt-20 ml-6">
-          <div class="relative w-16 h-16 bg-white border border-gray-200 rounded-lg shadow flex items-center justify-center mr-4">
-            @if (profileImageUrl) {
-              <img [src]="profileImageUrl" alt="Company Profile" class="w-full h-full object-cover rounded-lg">
-            } @else {
-              <span class="icon icon-commercial text-gray-600 text-3xl"></span>
-            }
-            <span 
-              class="absolute top-[-6px] right-[-6px] w-6 h-6 rounded-full flex items-center justify-center cursor-pointer bg-white shadow-md hover:bg-gray-50"
-              (click)="openProfileImageModal()">
-              <img src="assets/images/profile icon.svg" alt="Profile Icon" class="w-[24px] h-[24px]">
-            </span>
-          </div>
-          <!-- Company Name -->
-          <div class="flex-1 flex items-center">
-            <span class="text-lg font-semibold text-gray-900">{{ employeeForm.controls['companyName'].value }}</span>
-          </div>
+    <!-- Company Logo/Avatar and Name Row -->
+    <div class="flex items-center mb-8 mt-8 ml-0">
+      <div class="flex flex-col items-center mr-2 relative w-20">
+        <div class="relative w-16 h-16 rounded-full flex items-center justify-center cursor-pointer" 
+             [ngClass]="{
+               'bg-gray-600': !profileImageUrl, 
+               'bg-white': profileImageUrl
+             }"
+             (click)="openProfileImageModal()">
+          <img *ngIf="profileImageUrl" [src]="profileImageUrl" alt="Company Profile" class="w-full h-full object-cover rounded-full" />
+          <img *ngIf="!profileImageUrl" src="assets/images/uploadPhoto.svg" alt="Upload Icon" class="w-7 h-7 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+          <button *ngIf="profileImageUrl" (click)="$event.stopPropagation(); openProfileImageModal()" type="button" class="absolute -top-1 -right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-none">
+            <img src="assets/images/profile icon.svg" alt="Edit Profile" class="w-7 h-7" />
+          </button>
         </div>
+        <span *ngIf="!profileImageUrl" class="text-[11px] text-gray-500 mt-2 -mr-4 whitespace-nowrap w-[110px] text-center">Upload your Company logo</span>
+      </div>
+      <div class="flex-1 flex items-start ml-2">
+        <span class="text-lg font-semibold text-gray-900 self-start mt-1">{{ employeeForm.controls['companyName'].value }}</span>
+      </div>
+    </div>
 
         <h2 class="flex items-center mb-4 text-[#0E73A9] font-inter text-[16px] font-semibold leading-[24px]">
           <span class="mr-2 icon icon-commercial"></span> Company Details Information
@@ -166,7 +155,6 @@
                 <i class="icon icon-angle-bottom text-[8px] sm:text-[9px] md:text-[9px] lg:text-[9px]"></i>
               </span>
             </button>
-            
             <!-- Dropdown List -->
             @if (isOpen) {
               <div
@@ -435,15 +423,17 @@
     [class.expanded]="showAll">
     @if (allIndustryNames && allIndustryNames.length > 0) {
       @for (item of (showAll ? allIndustryNames : allIndustryNames.slice(0, 9)); track item.industryId) {
-        <div class="flex items-center text-xs sm:text-sm min-h-[20px]">
+        <div class="flex items-start text-xs sm:text-sm min-h-[20px]">
           <input 
             name="industry_type"
             id="industry_type_{{item.industryId}}"
             type="checkbox" 
             [value]="item.industryId" 
             [checked]="isIndustryChecked(item.industryId)"
-            class="w-3 h-3 text-blue-600 border shadow-inner cursor-pointer sm:w-4 sm:h-4 checkbox-input border-black/30 checked:bg-blue-600 checked:border-blue-600 flex-shrink-0" 
-            (change)="onIndustryCheckboxChange($event, item)" />
+            class="h-[16px] w-[16px] text-blue-600 cursor-pointer border-2 shadow-inner border-black/30 
+                    checked:bg-blue-600 checked:border-blue-600 checked:appearance-auto" 
+                    style="min-width: 16px; min-height: 16px;"
+                    (change)="onIndustryCheckboxChange($event, item)" />
           <label 
             for="industry_type_{{item.industryId}}" 
             class="ml-2 text-xs sm:text-sm font-inter text-black leading-[1.42857143]">
@@ -517,18 +507,18 @@
           
             </div>
             <div class="flex-1">
-              <label for="rlNo" class="block mb-1.5 text-[14px] font-semibold text-gray-700">
-                RL No.<span class="ml-2 text-[14px] font-inter font-normal text-[#757575]">(Only for Recruiting Agency)</span>
-              </label>
-              <input
-                class="mb-2 px-4 py-[12px] h-[45px] w-full font-inter rounded-lg border border-[#DAE5EC] bg-[#eee] shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB] disabled:bg-[#eee] text-[14px]"
+              <app-input-field
+                label="RL No."
+                subLabel="(Only for Recruiting Agency)"
                 name="rlNo"
-                [formControl]="formControlSignals()['rlNo']"
+                [control]="formControlSignals()['rlNo']"
                 id="rlNo"
                 placeholder="Enter Number Only"
-                maxlength="6"
+                [maxLength]="6"
+                [disabled]="true"
                 [ngClass]="{'opacity-75': true}"
-              />
+              >
+              </app-input-field>
               <div class="text-red-600 text-[13px]">
                 @if(employeeForm.controls['rlNo'].touched && employeeForm.controls['rlNo'].errors?.['required']) {
                   <span class="error-message">This is required</span>
@@ -591,63 +581,67 @@
                 </div>
               </div>
               <div class="flex-1">
-                <app-input-field
-                label="Contact Person's Designation"
-                name="txtDesignation"
-                id="contactDesignation"
-                [control]="formControlSignals()['contactDesignation']"
-                placeholder="Type contact person's designation"
-                [value]="''"
-                [maxLength]="100"
-                [isRequired]="true"
-                [disabled]="true"
-                [ngClass]="{'opacity-75': true}"
-                >
-              </app-input-field>
-              <div class="text-red-600 text-[13px]">
-                @if (
-                isContinueClicked &&
-                firstInvalidField === 'contactDesignation' &&
-                (employeeForm.controls['contactDesignation'].errors?.['required'] || employeeForm.controls['contactDesignation'].errors?.['whitespace'])
-              ) {
-                <span class="error-message">
-                  Contact Person's Designation can not be empty</span>
-              }
-            </div>
+                <label for="contactDesignation" class="block mb-2 text-[14px] font-semibold text-gray-700">
+                  Contact Person's Designation <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contactDesignation"
+                  name="txtDesignation"
+                  class="h-[45px] gap-3 px-4 py-[12px] w-full rounded-lg border border-[#DAE5EC] bg-[#eee] shadow-[0_1px_2px_rgba(0,0,0,0.05)] text-[14px] opacity-75 focus:outline-none focus:border-[#DAE5EC]"
+                  [formControl]="formControlSignals()['contactDesignation']"
+                  placeholder="Type contact person's designation"
+                  maxlength="100"
+                  required
+                  [disabled]="true"
+                  readonly
+                />
+                <div class="text-red-600 text-[13px]">
+                  @if (
+                  isContinueClicked &&
+                  firstInvalidField === 'contactDesignation' &&
+                  (employeeForm.controls['contactDesignation'].errors?.['required'] || employeeForm.controls['contactDesignation'].errors?.['whitespace'])
+                ) {
+                  <span class="error-message">
+                    Contact Person's Designation can not be empty</span>
+                }
+              </div>
               </div>
             </div>
           
             <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
               <div class="flex-1">
-                <app-input-field
-                label="Contact Person's Email"
-                name="txtContactEmail"
-                id="contactEmail"
-                [control]="formControlSignals()['contactEmail']"
-                placeholder="Type contact person's email"
-                [value]="''"
-                [maxLength]="45"
-                [isRequired]="true"
-                [disabled]="true"
-              [ngClass]="{'opacity-75': true}"
-                >
-              </app-input-field>
-              <div class="text-red-600 text-[13px]">
-                @if (
-                  isContinueClicked &&
-                  firstInvalidField === 'contactEmail' &&
-                  (employeeForm.controls['contactEmail'].errors?.['required'] || employeeForm.controls['contactEmail'].errors?.['whitespace'])
-                ) {
-                  <span class="error-message">
-                    Contact Person's Email can not be empty                  </span>
-                }
-                @else if (employeeForm.controls['contactEmail'].errors?.['email']) {
-                  <span class="error-message">Please enter a valid email address</span>
-                }
-            </div>
+                <label for="contactEmail" class="block mb-2 mt-4 text-[14px] font-semibold text-gray-700">
+                  Contact Person's Email <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="contactEmail"
+                  name="txtContactEmail"
+                  class="h-[45px] gap-3 px-4 py-[12px] w-full rounded-lg border border-[#DAE5EC] bg-[#eee] shadow-[0_1px_2px_rgba(0,0,0,0.05)] text-[14px] opacity-75 focus:outline-none focus:border-[#DAE5EC]"
+                  [formControl]="formControlSignals()['contactEmail']"
+                  placeholder="Type contact person's email"
+                  maxlength="45"
+                  required
+                  [disabled]="true"
+                  readonly
+                />
+                <div class="text-red-600 text-[13px]">
+                  @if (
+                    isContinueClicked &&
+                    firstInvalidField === 'contactEmail' &&
+                    (employeeForm.controls['contactEmail'].errors?.['required'] || employeeForm.controls['contactEmail'].errors?.['whitespace'])
+                  ) {
+                    <span class="error-message">
+                      Contact Person's Email can not be empty                  </span>
+                  }
+                  @else if (employeeForm.controls['contactEmail'].errors?.['email']) {
+                    <span class="error-message">Please enter a valid email address</span>
+                  }
+                </div>
               </div>
               <div class="flex-1 dropdown-container">
-                <label for="contactMobile" class="block mb-2 text-[14px] font-semibold text-gray-700">
+                <label for="contactMobile" class="block mb-2 mt-4 text-[14px] font-semibold text-gray-700">
                   Contact Person's Mobile <span class="text-red-500">*</span>
                 </label>
                 <div class="h-[45px] flex  bg-[#eee]  items-center border border-[#DAE5EC] rounded-lg px-1.5 sm:px-3 py-2 w-full h[24px] shadow-[0_1px_2px_rgba(0,0,0,0.05)] focus:outline-none focus:border-[#0F6DDB]">
@@ -655,13 +649,15 @@
                     [src]="currentFlagPath" 
                     alt="Flag" 
                     class="w-4 h-4 mr-1 cursor-pointer" 
+                    [ngClass]="{'opacity-75': true}"
                     (click)="toggleDropdownCountry()" 
                   />
                   <div class="relative flex items-center">
                     <button 
                       class="flex items-center  bg-[#eee]  sm:py-2 pl-1 pr-1 sm:px-3 text-[14px] font-inter text-gray-900 border-r border-[#DAE5EC] hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 focus:outline-none"
                       type="button"
-                      [ngClass]="{'opacity-75': true}"
+                      [ngClass]="{'opacity-75 ': true}"
+                      [disabled]="true"
                       (click)="toggleDropdownCountry()"
                     >
                       <span class="mr-1">({{ currentCountry.phoneCode }})</span>
@@ -874,7 +870,6 @@
             </div>
               </div>
 
-
  <div class="max-w-6xl p-6 mx-auto flex-col mt-6 items-start gap-5 rounded-2xl bg-white border border-[#DAE5EC]">
 
 <!-- Accessibility Profile -->
@@ -1020,7 +1015,8 @@
                     (change)="onCheckboxChange($event)" 
                     class="h-[16px] w-[16px] text-blue-600 cursor-pointer border-2 shadow-inner border-black/30 
                             checked:bg-blue-600 checked:border-blue-600 checked:appearance-auto" 
-                    style="min-width: 16px; min-height: 16px;">
+                            style="min-width: 16px; min-height: 16px;"
+                            >
               <label for="disability_wrap_{{item.value}}"  class="text-[14px] leading-[1.42857143] font-inter text-black box-border ml-2">
                 {{ item.label }}
               </label>
