@@ -101,9 +101,9 @@ export class LoginService {
 
   private serviceInfoData = new BehaviorSubject<NavResponse | undefined>(undefined);
   public serviceInfoData$ = this.serviceInfoData.asObservable();
-  public companyId: string = '';
-  public userId: string = '';
-  public decodeId: string = '';
+  // public companyId: string = '';
+  // public userId: string = '';
+  // public decodeId: string = '';
 
   constructor(
     private router: Router,
